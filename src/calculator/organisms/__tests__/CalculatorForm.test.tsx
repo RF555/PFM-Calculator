@@ -1,5 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { CalculatorForm } from "../CalculatorForm";
 
@@ -137,5 +138,33 @@ describe("CalculatorForm", () => {
     await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
     await pick("Shape", "Square Bar");
     expect(screen.getByLabelText("Side (mm)")).toHaveValue("");
+  });
+
+  // A stable vi.fn() cannot catch this: the bug only shows up when the host
+  // passes a fresh inline callback every render (the ordinary way to write
+  // one) AND that callback stores a non-primitive in host state. Without
+  // ref-wrapping onCalculate, the effect re-runs every render, which sets
+  // host state, which re-renders, forever.
+  it("does not loop when the host passes an inline callback storing an object", () => {
+    let renders = 0;
+    function Host() {
+      renders++;
+      if (renders > 40) throw new Error(`render loop: ${renders}`);
+      const [quote, setQuote] = useState<{ kg: number | null }>({ kg: null });
+      return (
+        <>
+          <CalculatorForm
+            materials={MATERIALS}
+            defaultUnit="mm"
+            defaultMassUnit="kg"
+            defaultQuantity={1}
+            onCalculate={(r) => setQuote({ kg: r ? r.totalKg : null })}
+          />
+          <span data-testid="q">{String(quote.kg)}</span>
+        </>
+      );
+    }
+    render(<Host />);
+    expect(screen.getByTestId("q")).toBeInTheDocument();
   });
 });

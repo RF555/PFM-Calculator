@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useState } from "react";
+import { useEffect, useId, useMemo, useReducer, useRef, useState } from "react";
 import { SegmentedControl } from "../atoms/SegmentedControl";
 import { QuantityField } from "../atoms/QuantityField";
 import { GradeCombobox } from "../molecules/GradeCombobox";
@@ -8,7 +8,7 @@ import { ShapeCombobox } from "../molecules/ShapeCombobox";
 import { m3ToCm3, mm3ToM3, weightKg } from "../model/calculate";
 import { calcReducer, initialState } from "../model/reducer";
 import type { Material } from "../model/schema";
-import { SHAPES, checkConstraints, volumeMm3 } from "../model/shapes";
+import { SHAPES, checkConstraints, volumeMm3, type ShapeId } from "../model/shapes";
 import type { MassUnit, Unit } from "../model/types";
 import { DimensionFieldset } from "./DimensionFieldset";
 import "./CalculatorForm.css";
@@ -16,7 +16,7 @@ import "./CalculatorForm.css";
 export interface CalculationResult {
   materialId: string;
   gradeId: string;
-  shapeId: string;
+  shapeId: ShapeId;
   unitKg: number;
   totalKg: number;
   quantity: number;
@@ -48,6 +48,10 @@ export function CalculatorForm({
   materials, defaultUnit, defaultMassUnit, defaultQuantity,
   onCalculate, onCopy, onUnitChange,
 }: Props) {
+  // React's useId() is stable across a component's lifetime and unique per
+  // mounted instance, so two calculators on one page never collide on the
+  // ids their fields need for <label for> and aria-controls association.
+  const idPrefix = useId();
   const [state, dispatch] = useReducer(
     calcReducer,
     { defaultUnit, defaultMassUnit, defaultQuantity },
@@ -93,9 +97,28 @@ export function CalculatorForm({
     };
   }, [result, material, grade, state.shapeId, state.quantity]);
 
+  // Hosts commonly pass inline arrow callbacks, which get a new identity on
+  // every render. Depending on the callback itself would re-run this effect
+  // every time the host re-renders — and since the effect calls back into
+  // host state, that can loop forever if the host stores a non-primitive.
+  // Stashing the latest callback in a ref keeps the effect dependent only on
+  // `report`, which already only changes when the computed result changes.
+  const onCalculateRef = useRef(onCalculate);
   useEffect(() => {
-    onCalculate?.(report);
-  }, [report, onCalculate]);
+    onCalculateRef.current = onCalculate;
+  });
+  const onCopyRef = useRef(onCopy);
+  useEffect(() => {
+    onCopyRef.current = onCopy;
+  });
+  const onUnitChangeRef = useRef(onUnitChange);
+  useEffect(() => {
+    onUnitChangeRef.current = onUnitChange;
+  });
+
+  useEffect(() => {
+    onCalculateRef.current?.(report);
+  }, [report]);
 
   // Parse errors and constraint violations share one map; both only surface
   // once the field has been touched.
@@ -116,7 +139,7 @@ export function CalculatorForm({
           value={state.unit}
           onChange={(v) => {
             dispatch({ type: "SET_UNIT", unit: v as Unit });
-            onUnitChange?.(v as Unit);
+            onUnitChangeRef.current?.(v as Unit);
           }}
         />
         <SegmentedControl
@@ -129,16 +152,19 @@ export function CalculatorForm({
 
       <div className="pfm-form__selectors">
         <MaterialCombobox
+          idPrefix={idPrefix}
           materials={materials}
           value={state.materialId}
           onChange={(id) => dispatch({ type: "SELECT_MATERIAL", materialId: id })}
         />
         <GradeCombobox
+          idPrefix={idPrefix}
           material={material}
           value={state.gradeId}
           onChange={(id) => dispatch({ type: "SELECT_GRADE", gradeId: id })}
         />
         <ShapeCombobox
+          idPrefix={idPrefix}
           value={state.shapeId}
           onChange={(id) => {
             setTouched({});
@@ -149,6 +175,7 @@ export function CalculatorForm({
 
       {state.shapeId && (
         <DimensionFieldset
+          idPrefix={idPrefix}
           shapeId={state.shapeId}
           unit={state.unit}
           raw={state.raw}
@@ -160,6 +187,7 @@ export function CalculatorForm({
 
       <div className="pfm-form__footer">
         <QuantityField
+          idPrefix={idPrefix}
           value={state.quantity}
           onChange={(q) => dispatch({ type: "SET_QUANTITY", quantity: q })}
         />
@@ -179,7 +207,7 @@ export function CalculatorForm({
         result={result}
         quantity={state.quantity}
         massUnit={state.massUnit}
-        onCopy={onCopy}
+        onCopy={onCopy && ((text) => onCopyRef.current?.(text))}
       />
     </div>
   );

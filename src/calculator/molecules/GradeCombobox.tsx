@@ -2,15 +2,16 @@ import type { Material } from "../model/schema";
 import { Combobox } from "./Combobox";
 
 interface Props {
+  idPrefix: string;
   material: Material | null;
   value: string | null;
   onChange: (gradeId: string) => void;
 }
 
-export function GradeCombobox({ material, value, onChange }: Props) {
+export function GradeCombobox({ idPrefix, material, value, onChange }: Props) {
   return (
     <Combobox
-      id="pfm-grade"
+      id={`${idPrefix}-grade`}
       label="Grade"
       placeholder="Select grade"
       options={

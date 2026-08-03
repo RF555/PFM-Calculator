@@ -2,6 +2,7 @@ import { NumberField } from "../atoms/NumberField";
 import type { Unit } from "../model/types";
 
 interface Props {
+  idPrefix: string;
   fieldKey: string;
   label: string;
   value: string;
@@ -12,11 +13,11 @@ interface Props {
 }
 
 export function DimensionField({
-  fieldKey, label, value, unit, onChange, onBlur, error,
+  idPrefix, fieldKey, label, value, unit, onChange, onBlur, error,
 }: Props) {
   return (
     <NumberField
-      id={`pfm-dim-${fieldKey}`}
+      id={`${idPrefix}-dim-${fieldKey}`}
       label={`${label} (${unit})`}
       value={value}
       onChange={onChange}

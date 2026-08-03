@@ -2,14 +2,15 @@ import { SHAPES, SHAPE_IDS, type ShapeId } from "../model/shapes";
 import { Combobox } from "./Combobox";
 
 interface Props {
+  idPrefix: string;
   value: ShapeId | null;
   onChange: (shapeId: ShapeId) => void;
 }
 
-export function ShapeCombobox({ value, onChange }: Props) {
+export function ShapeCombobox({ idPrefix, value, onChange }: Props) {
   return (
     <Combobox
-      id="pfm-shape"
+      id={`${idPrefix}-shape`}
       label="Shape"
       placeholder="Select shape"
       options={SHAPE_IDS.map((id) => ({ value: id, label: SHAPES[id].label }))}

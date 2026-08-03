@@ -7,8 +7,8 @@ describe("DimensionGrid", () => {
   it("renders its fields", () => {
     render(
       <DimensionGrid>
-        <DimensionField fieldKey="diameter" label="Diameter" value="50" unit="mm" onChange={() => {}} />
-        <DimensionField fieldKey="length" label="Length" value="1000" unit="mm" onChange={() => {}} />
+        <DimensionField idPrefix="pfm" fieldKey="diameter" label="Diameter" value="50" unit="mm" onChange={() => {}} />
+        <DimensionField idPrefix="pfm" fieldKey="length" label="Length" value="1000" unit="mm" onChange={() => {}} />
       </DimensionGrid>
     );
     expect(screen.getByLabelText("Diameter (mm)")).toHaveValue("50");
@@ -18,7 +18,7 @@ describe("DimensionGrid", () => {
   it("puts the active unit in each label", () => {
     render(
       <DimensionGrid>
-        <DimensionField fieldKey="diameter" label="Diameter" value="2" unit="inch" onChange={() => {}} />
+        <DimensionField idPrefix="pfm" fieldKey="diameter" label="Diameter" value="2" unit="inch" onChange={() => {}} />
       </DimensionGrid>
     );
     expect(screen.getByLabelText("Diameter (inch)")).toBeInTheDocument();
@@ -27,7 +27,7 @@ describe("DimensionGrid", () => {
   it("surfaces a field error", () => {
     render(
       <DimensionGrid>
-        <DimensionField fieldKey="wallThickness" label="Wall Thickness" value="30" unit="mm"
+        <DimensionField idPrefix="pfm" fieldKey="wallThickness" label="Wall Thickness" value="30" unit="mm"
           onChange={() => {}} error="Wall must be less than half the side (under 25.00)" />
       </DimensionGrid>
     );

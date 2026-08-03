@@ -4,6 +4,7 @@ import { SHAPES, type ShapeId } from "../model/shapes";
 import type { Unit } from "../model/types";
 
 interface Props {
+  idPrefix: string;
   shapeId: ShapeId;
   unit: Unit;
   raw: Record<string, string>;
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export function DimensionFieldset({
-  shapeId, unit, raw, errors, onChange, onBlur,
+  idPrefix, shapeId, unit, raw, errors, onChange, onBlur,
 }: Props) {
   return (
     <fieldset className="pfm-fieldset">
@@ -22,6 +23,7 @@ export function DimensionFieldset({
         {SHAPES[shapeId].fields.map((f) => (
           <DimensionField
             key={f.key}
+            idPrefix={idPrefix}
             fieldKey={f.key}
             label={f.label}
             unit={unit}

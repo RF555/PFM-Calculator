@@ -29,6 +29,7 @@ export function Combobox({
 }: ComboboxProps) {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   const selected = options.find((o) => o.value === value);
   const triggerText = disabled
@@ -49,6 +50,7 @@ export function Combobox({
       <FieldLabel htmlFor={id}>{label}</FieldLabel>
       <button
         id={id}
+        ref={triggerRef}
         type="button"
         role="combobox"
         aria-expanded={open}
@@ -70,7 +72,7 @@ export function Combobox({
               if (e.key === "Escape") {
                 e.preventDefault();
                 setOpen(false);
-                document.getElementById(id)?.focus();
+                triggerRef.current?.focus();
               }
             }}
           >
@@ -89,7 +91,7 @@ export function Combobox({
                   onSelect={() => {
                     onChange(o.value);
                     setOpen(false);
-                    document.getElementById(id)?.focus();
+                    triggerRef.current?.focus();
                   }}
                 >
                   {o.label}

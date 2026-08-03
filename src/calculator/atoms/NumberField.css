@@ -1,0 +1,26 @@
+.pfm-calc .pfm-number-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.pfm-calc .pfm-label {
+  font-size: var(--pfm-fs-sm);
+  font-weight: 600;
+  color: var(--pfm-muted);
+}
+
+.pfm-calc .pfm-input {
+  min-height: var(--pfm-control-h);
+  padding: 0 12px;
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-bg);
+  font-variant-numeric: tabular-nums;
+  width: 100%;
+}
+
+.pfm-calc .pfm-input[aria-invalid="true"] {
+  border-color: var(--pfm-danger);
+}

@@ -1,0 +1,6 @@
+.pfm-calc .pfm-field-error {
+  display: block;
+  min-height: 1.25em;
+  font-size: var(--pfm-fs-sm);
+  color: var(--pfm-danger);
+}

@@ -1,0 +1,27 @@
+.pfm-calc .pfm-segmented {
+  display: inline-flex;
+  padding: 3px;
+  gap: 3px;
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-surface);
+}
+
+.pfm-calc .pfm-segmented__option {
+  min-height: calc(var(--pfm-control-h) - 8px);
+  min-width: 56px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: calc(var(--pfm-radius) - 3px);
+  background: transparent;
+  color: var(--pfm-muted);
+  cursor: pointer;
+}
+
+/* Weight and border carry the state as well as colour. */
+.pfm-calc .pfm-segmented__option[data-selected] {
+  background: var(--pfm-bg);
+  border-color: var(--pfm-border);
+  color: var(--pfm-fg);
+  font-weight: 700;
+}

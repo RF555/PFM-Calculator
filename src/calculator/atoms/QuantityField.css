@@ -1,0 +1,18 @@
+.pfm-calc .pfm-quantity { display: flex; flex-direction: column; gap: 4px; }
+
+.pfm-calc .pfm-quantity__row { display: flex; gap: 6px; align-items: stretch; }
+
+.pfm-calc .pfm-quantity__step {
+  width: var(--pfm-control-h);
+  min-height: var(--pfm-control-h);
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-surface);
+  font-size: var(--pfm-fs-lg);
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pfm-calc .pfm-quantity__step:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.pfm-calc .pfm-quantity__input { width: 5ch; text-align: center; }

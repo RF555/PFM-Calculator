@@ -31,6 +31,16 @@ describe("parseDimension", () => {
     if (!r.ok) expect(r.error).toBe(error);
   });
 
+  // A stray minus must not be absorbed by the mixed-fraction separator.
+  // Returning a plausible positive number for malformed input is the exact
+  // hazard this parser replaces.
+  it.each(["1 -1/2", "1- 1/2", "1  -  1/2", "1---1/2", "-1 1/2"])(
+    "rejects %s rather than silently dropping the minus",
+    (raw) => {
+      expect(parseDimension(raw).ok).toBe(false);
+    }
+  );
+
   it("treats empty input as not-yet-entered, not an error", () => {
     expect(parseDimension("")).toEqual({ ok: false, error: "" });
   });

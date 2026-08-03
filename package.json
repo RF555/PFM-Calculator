@@ -11,7 +11,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:ui": "vitest --ui"
+    "test:ui": "vitest --ui",
+    "typecheck": "tsc -p tsconfig.calculator.json --noEmit"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",

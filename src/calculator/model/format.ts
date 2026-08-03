@@ -1,4 +1,3 @@
-const MIN_DECIMALS = 2;
 const MAX_DECIMALS = 4;
 const SIG_FIGS = 4;
 

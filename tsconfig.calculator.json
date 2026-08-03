@@ -1,0 +1,20 @@
+{
+  "// purpose": "Type-checks the deliverable (src/calculator) under full strict mode. The host project that receives this component is likely to use strict, and the harness config (tsconfig.app.json) has strict off, which disables discriminated-union narrowing and hides real type errors.",
+  "compilerOptions": {
+    "target": "ES2020",
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+    "resolveJsonModule": true,
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true
+  },
+  "include": ["src/calculator/**/*.ts", "src/calculator/**/*.tsx"],
+  "exclude": ["src/calculator/**/__tests__/**"]
+}

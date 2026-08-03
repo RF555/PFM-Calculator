@@ -8,7 +8,9 @@
 }
 
 .pfm-calc .pfm-segmented__option {
-  min-height: calc(var(--pfm-control-h) - 8px);
+  /* The button is the tap target, not the group, so it carries the full
+     touch-target height; the group's padding is not tappable. */
+  min-height: var(--pfm-control-h);
   min-width: 56px;
   padding: 0 14px;
   border: 1px solid transparent;

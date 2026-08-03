@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
@@ -47,5 +49,19 @@ describe("SegmentedControl", () => {
     render(<SegmentedControl label="Unit" options={OPTIONS} value="mm" onChange={onChange} />);
     await userEvent.click(screen.getByRole("radio", { name: "inch" }));
     expect(onChange).toHaveBeenCalledWith("inch");
+  });
+
+  // jsdom does not run layout or resolve the stylesheet cascade, so a rendered
+  // option's computed height can't be asserted from a DOM test. Instead this
+  // reads the CSS source directly and checks that the option — the actual tap
+  // target — carries the full 44px touch-target token rather than a reduced
+  // value, so a future "optimisation" can't silently shrink it below 44px.
+  it("keeps the option's tap target at the full touch-target height", () => {
+    const cssPath = join(import.meta.dirname, "../SegmentedControl.css");
+    const css = readFileSync(cssPath, "utf-8");
+    const optionRule = css.slice(css.indexOf(".pfm-segmented__option {"));
+
+    expect(optionRule).toContain("min-height: var(--pfm-control-h);");
+    expect(optionRule).not.toMatch(/min-height:\s*calc\(var\(--pfm-control-h\)\s*-\s*/);
   });
 });

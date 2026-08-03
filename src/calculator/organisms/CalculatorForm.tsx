@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from "react";
+import { useEffect, useMemo, useReducer, useState } from "react";
 import { SegmentedControl } from "../atoms/SegmentedControl";
 import { QuantityField } from "../atoms/QuantityField";
 import { GradeCombobox } from "../molecules/GradeCombobox";
@@ -28,7 +28,8 @@ interface Props {
   defaultUnit: Unit;
   defaultMassUnit: MassUnit;
   defaultQuantity: number;
-  onCalculate?: (result: CalculationResult) => void;
+  /** Receives the result, or null while it is incomplete or invalid. */
+  onCalculate?: (result: CalculationResult | null) => void;
   onCopy?: (text: string) => void;
   onUnitChange?: (unit: Unit) => void;
 }
@@ -72,20 +73,29 @@ export function CalculatorForm({
     if (!complete) return null;
 
     const mm3 = volumeMm3(state.shapeId, state.dimensions);
-    const values = { unitKg: weightKg(mm3, grade.density), volumeCm3: m3ToCm3(mm3ToM3(mm3)) };
+    return { unitKg: weightKg(mm3, grade.density), volumeCm3: m3ToCm3(mm3ToM3(mm3)) };
+  }, [state.shapeId, state.dimensions, grade, violations]);
 
-    onCalculate?.({
-      materialId: material!.id,
+  // Reported from an effect rather than the memo above: notifying the host is
+  // a side effect, and a memo may re-run at React's discretion. null is sent
+  // whenever the result becomes unavailable, so a host that prefills from this
+  // never holds a figure the user can no longer see.
+  const report = useMemo<CalculationResult | null>(() => {
+    if (!result || !material || !grade || !state.shapeId) return null;
+    return {
+      materialId: material.id,
       gradeId: grade.id,
       shapeId: state.shapeId,
-      unitKg: values.unitKg,
-      totalKg: values.unitKg * state.quantity,
+      unitKg: result.unitKg,
+      totalKg: result.unitKg * state.quantity,
       quantity: state.quantity,
-      volumeCm3: values.volumeCm3,
-    });
+      volumeCm3: result.volumeCm3,
+    };
+  }, [result, material, grade, state.shapeId, state.quantity]);
 
-    return values;
-  }, [state.shapeId, state.dimensions, state.quantity, grade, material, violations, onCalculate]);
+  useEffect(() => {
+    onCalculate?.(report);
+  }, [report, onCalculate]);
 
   // Parse errors and constraint violations share one map; both only surface
   // once the field has been touched.

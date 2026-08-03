@@ -112,6 +112,25 @@ describe("CalculatorForm", () => {
     expect(last.unitKg).toBeCloseTo(15.4134, 3);
   });
 
+  it("reports null once a valid result becomes invalid", async () => {
+    const onCalculate = vi.fn();
+    setup({ onCalculate });
+    await pick("Material", "Steel");
+    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Shape", "Square Hollow Section");
+    await userEvent.type(screen.getByLabelText("Side (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "5");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+    expect(onCalculate.mock.calls.at(-1)![0]).not.toBeNull();
+
+    // A wall at or above half the side is impossible. The host must be told,
+    // or it keeps a figure the user can no longer see.
+    await userEvent.clear(screen.getByLabelText("Wall Thickness (mm)"));
+    await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "30");
+
+    expect(onCalculate.mock.calls.at(-1)![0]).toBeNull();
+  });
+
   it("clears dimensions when the shape changes", async () => {
     setup();
     await pick("Shape", "Round Bar");

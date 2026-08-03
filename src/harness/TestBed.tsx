@@ -68,7 +68,9 @@ export function TestBed() {
                 onCopy={(text) => setCopied(text)}
                 onCalculate={(r) =>
                   setLastResult(
-                    `${r.shapeId} · ${r.gradeId} · unit ${r.unitKg.toFixed(6)} kg · total ${r.totalKg.toFixed(6)} kg`
+                    r === null
+                      ? "null — incomplete or invalid; a host must clear any prefilled figure"
+                      : `${r.shapeId} · ${r.gradeId} · unit ${r.unitKg.toFixed(6)} kg · total ${r.totalKg.toFixed(6)} kg`
                   )
                 }
               />

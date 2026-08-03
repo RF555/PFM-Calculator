@@ -56,17 +56,19 @@
   background: #fff;
 }
 
+/* Consumes the component's spacing tokens so the density toggle is visible
+   here the way it will be in the real layout. */
 .prev__inner {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  padding: 20px;
+  gap: calc(var(--pfm-gap) * 2);
+  padding: var(--pfm-pad);
 }
 
 .prev__group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: var(--pfm-gap);
 }
 
 .prev__h {
@@ -95,7 +97,7 @@
 .prev__row {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--pfm-gap);
 }
 
 /* Mirrors the real dimension grid so responsive behaviour can be judged here.
@@ -106,7 +108,7 @@
 .prev__grid {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
+  gap: var(--pfm-gap);
   align-items: flex-start;
 }
 

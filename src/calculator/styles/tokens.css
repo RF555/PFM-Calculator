@@ -11,7 +11,8 @@
   --pfm-focus: #2563eb;
 
   --pfm-radius: 8px;
-  --pfm-gap: 12px;
+  --pfm-gap: 12px;            /* between sibling controls */
+  --pfm-gap-tight: 5px;       /* within a control, e.g. label to input */
   --pfm-pad: 16px;
   --pfm-control-h: 44px;      /* touch target floor */
   --pfm-field-w: 20ch;        /* dimension entries are short; see NumberField.css */
@@ -24,9 +25,13 @@
   --pfm-fs-xl: 1.75rem;
 }
 
+/* Compact trades breathing room for vertical space, for hosts placing the
+   calculator in a constrained container. Control height stays at the 44px
+   touch-target floor. */
 .pfm-calc[data-density="compact"] {
   --pfm-gap: 8px;
-  --pfm-pad: 12px;
+  --pfm-gap-tight: 3px;
+  --pfm-pad: 10px;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -1,6 +1,6 @@
-.pfm-calc .pfm-quantity { display: flex; flex-direction: column; gap: 4px; }
+.pfm-calc .pfm-quantity { display: flex; flex-direction: column; gap: var(--pfm-gap-tight); }
 
-.pfm-calc .pfm-quantity__row { display: flex; gap: 6px; align-items: stretch; }
+.pfm-calc .pfm-quantity__row { display: flex; gap: var(--pfm-gap-tight); align-items: stretch; }
 
 .pfm-calc .pfm-quantity__step {
   width: var(--pfm-control-h);

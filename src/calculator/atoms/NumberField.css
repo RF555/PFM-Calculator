@@ -1,7 +1,7 @@
 .pfm-calc .pfm-number-field {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--pfm-gap-tight);
   min-width: 0;
 }
 

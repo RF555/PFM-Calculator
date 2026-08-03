@@ -1,0 +1,42 @@
+/* Scoped to the component root so host tokens are never overwritten. */
+.pfm-calc {
+  --pfm-bg: #ffffff;
+  --pfm-fg: #16191d;
+  --pfm-muted: #5c6672;
+  --pfm-border: #d7dce2;
+  --pfm-surface: #f6f8fa;
+  --pfm-accent: #1d4ed8;
+  --pfm-accent-fg: #ffffff;
+  --pfm-danger: #b42318;
+  --pfm-focus: #2563eb;
+
+  --pfm-radius: 8px;
+  --pfm-gap: 12px;
+  --pfm-pad: 16px;
+  --pfm-control-h: 44px;      /* touch target floor */
+
+  --pfm-font: system-ui, -apple-system, "Segoe UI", sans-serif;
+  --pfm-font-num: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
+  --pfm-fs-sm: 0.8125rem;
+  --pfm-fs-base: 0.9375rem;
+  --pfm-fs-lg: 1.25rem;
+  --pfm-fs-xl: 1.75rem;
+}
+
+.pfm-calc[data-density="compact"] {
+  --pfm-gap: 8px;
+  --pfm-pad: 12px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pfm-calc {
+    --pfm-bg: #14171a;
+    --pfm-fg: #e8eaed;
+    --pfm-muted: #9aa4b0;
+    --pfm-border: #2c3238;
+    --pfm-surface: #1c2024;
+    --pfm-accent: #60a5fa;
+    --pfm-accent-fg: #0b1220;
+    --pfm-danger: #f97066;
+  }
+}

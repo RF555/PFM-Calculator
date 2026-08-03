@@ -18,7 +18,11 @@
   border-radius: var(--pfm-radius);
   background: var(--pfm-bg);
   font-variant-numeric: tabular-nums;
+  /* Dimension entries are short — "1 1/2", "1234.56". Capping the width keeps
+     the field proportional to its content instead of stretching across a wide
+     container, while still shrinking on narrow ones. */
   width: 100%;
+  max-width: var(--pfm-field-w);
 }
 
 .pfm-calc .pfm-input[aria-invalid="true"] {

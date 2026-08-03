@@ -14,6 +14,7 @@
   --pfm-gap: 12px;
   --pfm-pad: 16px;
   --pfm-control-h: 44px;      /* touch target floor */
+  --pfm-field-w: 20ch;        /* dimension entries are short; see NumberField.css */
 
   --pfm-font: system-ui, -apple-system, "Segoe UI", sans-serif;
   --pfm-font-num: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;

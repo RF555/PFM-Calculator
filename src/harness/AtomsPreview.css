@@ -98,24 +98,16 @@
   gap: 12px;
 }
 
+/* Mirrors the real dimension grid so responsive behaviour can be judged here.
+   Columns are sized to their content rather than dividing the container into
+   equal fractions: fields have a capped width, so `1fr` columns would leave a
+   wide dead gap beside every field. Leftover space collects at the end of the
+   row instead. */
 .prev__grid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: 12px;
-}
-
-/* Mirrors the dimension grid's breakpoints so the responsive behaviour of
-   the real form can be judged here. */
-@container pfm-calc (min-width: 30rem) {
-  .prev__grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@container pfm-calc (min-width: 48rem) {
-  .prev__grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  align-items: flex-start;
 }
 
 .prev__stats {

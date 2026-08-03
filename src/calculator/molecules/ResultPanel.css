@@ -1,0 +1,35 @@
+.pfm-calc .pfm-results {
+  padding: var(--pfm-pad);
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-surface);
+  /* Always rendered, so a result never shifts the layout. */
+  min-height: 96px;
+}
+
+.pfm-calc .pfm-results__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--pfm-gap);
+}
+
+@container pfm-calc (min-width: 30rem) {
+  .pfm-calc .pfm-results__grid { grid-template-columns: repeat(3, auto); }
+}
+
+.pfm-calc .pfm-stat-wrap { display: flex; flex-direction: column; gap: var(--pfm-gap-tight); min-width: 0; }
+
+.pfm-calc .pfm-stat__primary--lg {
+  font-size: var(--pfm-fs-xl);
+  color: var(--pfm-accent);
+}
+
+.pfm-calc .pfm-results__copy {
+  margin-top: var(--pfm-gap);
+  min-height: var(--pfm-control-h);
+  padding: 0 16px;
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-bg);
+  cursor: pointer;
+}

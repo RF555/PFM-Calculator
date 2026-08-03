@@ -1,0 +1,18 @@
+/*
+ * Fields size to their content and wrap when the row runs out of room.
+ *
+ * Equal-fraction grid columns were tried first and rejected: dimension inputs
+ * are capped at --pfm-field-w, so `1fr` tracks left ~195px of dead space
+ * beside every field in a wide container. Wrapping also handles the varying
+ * field count per shape (2 for round bar, 4 for rectangular hollow) without
+ * needing breakpoints tuned to each case.
+ *
+ * No media queries: the host controls our width, so the viewport is the wrong
+ * thing to measure. A 380px drawer on a 2560px monitor must lay out for 380px.
+ */
+.pfm-calc .pfm-dim-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pfm-gap);
+  align-items: flex-start;
+}

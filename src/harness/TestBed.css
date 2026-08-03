@@ -1,0 +1,86 @@
+/* Harness chrome only — deliberately plain so it does not colour judgement
+   of the component's own styling. Never ships. */
+
+.bed {
+  min-height: 100vh;
+  background: #eceff3;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.bed__bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #d7dce2;
+  font-size: 13px;
+}
+
+.bed__bar button {
+  padding: 6px 12px;
+  border: 1px solid #d7dce2;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.bed__bar button[data-on] {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #fff;
+}
+
+.bed__bar strong {
+  margin-left: 12px;
+}
+
+.bed__stage {
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px;
+}
+
+/* Stands in for an arbitrary host container. */
+.bed__frame {
+  max-width: 100%;
+  border: 1px dashed #9aa4b0;
+  border-radius: 10px;
+  background: #fff;
+}
+
+.bed__inner {
+  padding: var(--pfm-pad);
+}
+
+.bed__out {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 16px 48px;
+}
+
+.bed__out h2 {
+  margin: 20px 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a94a0;
+}
+
+.bed__out pre {
+  margin: 0;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #d7dce2;
+  border-radius: 8px;
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 12px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}

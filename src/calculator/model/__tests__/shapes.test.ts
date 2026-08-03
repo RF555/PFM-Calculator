@@ -35,6 +35,16 @@ describe("volumes match reference values", () => {
   });
 });
 
+describe("hex bar against the industry steel formula", () => {
+  // Standard: kg per metre = 0.006798 * F^2, F in mm across flats, steel 7850 kg/m^3.
+  // An external reference, so a regression cannot hide behind a matching
+  // internal expected value.
+  it.each([25, 50, 75])("matches 0.006798*F^2 for F=%i", (F) => {
+    const kg = weightKg(volumeMm3("hexBar", { flatToFlat: F, length: 1000 }), STEEL);
+    expect(kg).toBeCloseTo(0.006798 * F * F, 2);
+  });
+});
+
 describe("constraints reject impossible geometry", () => {
   it.each([
     ["squareHollow", { side: 50, wallThickness: 25, length: 1000 }, "wallThickness"],

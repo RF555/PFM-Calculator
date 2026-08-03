@@ -1,0 +1,503 @@
+{
+  "version": 1,
+  "materials": [
+    {
+      "id": "steel",
+      "name": "Steel",
+      "grades": [
+        {
+          "id": "steel.carbon-steel",
+          "name": "Carbon Steel",
+          "density": 7850
+        },
+        {
+          "id": "steel.alloy-steel",
+          "name": "Alloy Steel",
+          "density": 7850
+        },
+        {
+          "id": "steel.tool-steel",
+          "name": "Tool Steel",
+          "density": 7850
+        }
+      ]
+    },
+    {
+      "id": "stainless",
+      "name": "Stainless",
+      "grades": [
+        {
+          "id": "stainless.304",
+          "name": "304",
+          "density": 8000
+        },
+        {
+          "id": "stainless.304l",
+          "name": "304L",
+          "density": 8000
+        },
+        {
+          "id": "stainless.316",
+          "name": "316",
+          "density": 7980
+        },
+        {
+          "id": "stainless.316l",
+          "name": "316L",
+          "density": 7980
+        },
+        {
+          "id": "stainless.310",
+          "name": "310",
+          "density": 8000
+        },
+        {
+          "id": "stainless.321",
+          "name": "321",
+          "density": 8000
+        },
+        {
+          "id": "stainless.409",
+          "name": "409",
+          "density": 7800
+        },
+        {
+          "id": "stainless.410",
+          "name": "410",
+          "density": 7750
+        },
+        {
+          "id": "stainless.420",
+          "name": "420",
+          "density": 7740
+        },
+        {
+          "id": "stainless.430",
+          "name": "430",
+          "density": 7700
+        },
+        {
+          "id": "stainless.17-4-ph",
+          "name": "17-4 PH",
+          "density": 7800
+        },
+        {
+          "id": "stainless.15-5-ph",
+          "name": "15-5 PH",
+          "density": 7800
+        }
+      ]
+    },
+    {
+      "id": "aluminum",
+      "name": "Aluminum",
+      "grades": [
+        {
+          "id": "aluminum.1050",
+          "name": "1050",
+          "density": 2705
+        },
+        {
+          "id": "aluminum.1100",
+          "name": "1100",
+          "density": 2710
+        },
+        {
+          "id": "aluminum.2014",
+          "name": "2014",
+          "density": 2800
+        },
+        {
+          "id": "aluminum.2017",
+          "name": "2017",
+          "density": 2790
+        },
+        {
+          "id": "aluminum.2024",
+          "name": "2024",
+          "density": 2780
+        },
+        {
+          "id": "aluminum.2124",
+          "name": "2124",
+          "density": 2780
+        },
+        {
+          "id": "aluminum.2219",
+          "name": "2219",
+          "density": 2840
+        },
+        {
+          "id": "aluminum.3003",
+          "name": "3003",
+          "density": 2730
+        },
+        {
+          "id": "aluminum.3004",
+          "name": "3004",
+          "density": 2720
+        },
+        {
+          "id": "aluminum.3105",
+          "name": "3105",
+          "density": 2730
+        },
+        {
+          "id": "aluminum.5052",
+          "name": "5052",
+          "density": 2680
+        },
+        {
+          "id": "aluminum.5083",
+          "name": "5083",
+          "density": 2660
+        },
+        {
+          "id": "aluminum.5086",
+          "name": "5086",
+          "density": 2660
+        },
+        {
+          "id": "aluminum.5754",
+          "name": "5754",
+          "density": 2670
+        },
+        {
+          "id": "aluminum.6013",
+          "name": "6013",
+          "density": 2710
+        },
+        {
+          "id": "aluminum.6061",
+          "name": "6061",
+          "density": 2700
+        },
+        {
+          "id": "aluminum.6063",
+          "name": "6063",
+          "density": 2700
+        },
+        {
+          "id": "aluminum.7050",
+          "name": "7050",
+          "density": 2830
+        },
+        {
+          "id": "aluminum.7075",
+          "name": "7075",
+          "density": 2810
+        },
+        {
+          "id": "aluminum.7150",
+          "name": "7150",
+          "density": 2830
+        },
+        {
+          "id": "aluminum.7175",
+          "name": "7175",
+          "density": 2800
+        },
+        {
+          "id": "aluminum.8000",
+          "name": "8000",
+          "density": 2700
+        },
+        {
+          "id": "aluminum.c-250",
+          "name": "C-250",
+          "density": 2750
+        },
+        {
+          "id": "aluminum.certal",
+          "name": "Certal",
+          "density": 2700
+        },
+        {
+          "id": "aluminum.c210",
+          "name": "C210",
+          "density": 2750
+        }
+      ]
+    },
+    {
+      "id": "copper",
+      "name": "Copper",
+      "grades": [
+        {
+          "id": "copper.standard",
+          "name": "Standard",
+          "density": 8960
+        }
+      ]
+    },
+    {
+      "id": "brass",
+      "name": "Brass",
+      "grades": [
+        {
+          "id": "brass.standard",
+          "name": "Standard",
+          "density": 8500
+        }
+      ]
+    },
+    {
+      "id": "bronze",
+      "name": "Bronze",
+      "grades": [
+        {
+          "id": "bronze.standard",
+          "name": "Standard",
+          "density": 8800
+        }
+      ]
+    },
+    {
+      "id": "titanium",
+      "name": "Titanium",
+      "grades": [
+        {
+          "id": "titanium.gr-1",
+          "name": "Gr.1",
+          "density": 4505
+        },
+        {
+          "id": "titanium.gr-2",
+          "name": "Gr.2",
+          "density": 4500
+        },
+        {
+          "id": "titanium.gr-3",
+          "name": "Gr.3",
+          "density": 4500
+        },
+        {
+          "id": "titanium.gr-4",
+          "name": "Gr.4",
+          "density": 4505
+        },
+        {
+          "id": "titanium.gr-5-ti-6al-4v",
+          "name": "Gr.5 (Ti-6Al-4V)",
+          "density": 4430
+        },
+        {
+          "id": "titanium.gr-7",
+          "name": "Gr.7",
+          "density": 4500
+        },
+        {
+          "id": "titanium.gr-9",
+          "name": "Gr.9",
+          "density": 4470
+        },
+        {
+          "id": "titanium.gr-12",
+          "name": "Gr.12",
+          "density": 4500
+        }
+      ]
+    },
+    {
+      "id": "plastic",
+      "name": "Plastic",
+      "grades": [
+        {
+          "id": "plastic.abs",
+          "name": "ABS",
+          "density": 1050
+        },
+        {
+          "id": "plastic.pvc",
+          "name": "PVC",
+          "density": 1380
+        },
+        {
+          "id": "plastic.epoxy-glass",
+          "name": "Epoxy Glass",
+          "density": 1850
+        },
+        {
+          "id": "plastic.fiberglass",
+          "name": "Fiberglass",
+          "density": 1800
+        },
+        {
+          "id": "plastic.hips",
+          "name": "HIPS",
+          "density": 1040
+        },
+        {
+          "id": "plastic.pa-12",
+          "name": "PA 12",
+          "density": 1010
+        },
+        {
+          "id": "plastic.pa-6",
+          "name": "PA 6",
+          "density": 1140
+        },
+        {
+          "id": "plastic.pa-6-mos2",
+          "name": "PA 6 MOS2",
+          "density": 1250
+        },
+        {
+          "id": "plastic.pa-66",
+          "name": "PA 66",
+          "density": 1150
+        },
+        {
+          "id": "plastic.pa-66-30-gf",
+          "name": "PA 66 30% GF",
+          "density": 1450
+        },
+        {
+          "id": "plastic.pa-66-mos2",
+          "name": "PA 66 MOS2",
+          "density": 1260
+        },
+        {
+          "id": "plastic.pbt-30-gf",
+          "name": "PBT 30% GF",
+          "density": 1530
+        },
+        {
+          "id": "plastic.pc",
+          "name": "PC",
+          "density": 1200
+        },
+        {
+          "id": "plastic.pc-10-gf",
+          "name": "PC 10% GF",
+          "density": 1290
+        },
+        {
+          "id": "plastic.pc-20-gf",
+          "name": "PC 20% GF",
+          "density": 1380
+        },
+        {
+          "id": "plastic.pc-30-gf",
+          "name": "PC 30% GF",
+          "density": 1430
+        },
+        {
+          "id": "plastic.pe",
+          "name": "PE",
+          "density": 940
+        },
+        {
+          "id": "plastic.pe-1000",
+          "name": "PE 1000",
+          "density": 930
+        },
+        {
+          "id": "plastic.pe-500",
+          "name": "PE 500",
+          "density": 950
+        },
+        {
+          "id": "plastic.peek",
+          "name": "PEEK",
+          "density": 1320
+        },
+        {
+          "id": "plastic.peek-30-cf",
+          "name": "PEEK 30% CF",
+          "density": 1440
+        },
+        {
+          "id": "plastic.peek-30-gf",
+          "name": "PEEK 30% GF",
+          "density": 1510
+        },
+        {
+          "id": "plastic.peek-pvx",
+          "name": "PEEK PVX",
+          "density": 1350
+        },
+        {
+          "id": "plastic.peek-tf-10",
+          "name": "PEEK TF 10",
+          "density": 1330
+        },
+        {
+          "id": "plastic.pei",
+          "name": "PEI",
+          "density": 1270
+        },
+        {
+          "id": "plastic.pei-10-gf",
+          "name": "PEI 10% GF",
+          "density": 1360
+        },
+        {
+          "id": "plastic.pei-20-gf",
+          "name": "PEI 20% GF",
+          "density": 1420
+        },
+        {
+          "id": "plastic.pei-30-gf",
+          "name": "PEI 30% GF",
+          "density": 1510
+        },
+        {
+          "id": "plastic.pes",
+          "name": "PES",
+          "density": 1370
+        },
+        {
+          "id": "plastic.pet",
+          "name": "PET",
+          "density": 1380
+        },
+        {
+          "id": "plastic.pet-tf",
+          "name": "PET TF",
+          "density": 1400
+        },
+        {
+          "id": "plastic.phenolic-fabric-novotex",
+          "name": "Phenolic Fabric (Novotex)",
+          "density": 1350
+        },
+        {
+          "id": "plastic.pmma",
+          "name": "PMMA",
+          "density": 1180
+        },
+        {
+          "id": "plastic.pom-c",
+          "name": "POM C",
+          "density": 1410
+        },
+        {
+          "id": "plastic.pom-h",
+          "name": "POM H",
+          "density": 1420
+        },
+        {
+          "id": "plastic.pp",
+          "name": "PP",
+          "density": 905
+        },
+        {
+          "id": "plastic.ppe",
+          "name": "PPE",
+          "density": 1060
+        },
+        {
+          "id": "plastic.ptfe",
+          "name": "PTFE",
+          "density": 2200
+        },
+        {
+          "id": "plastic.pvdf",
+          "name": "PVDF",
+          "density": 1780
+        }
+      ]
+    }
+  ]
+}

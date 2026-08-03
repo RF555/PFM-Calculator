@@ -1,0 +1,125 @@
+/* Harness chrome only — deliberately plain so it does not colour judgement
+   of the component's own styling. Never ships. */
+
+.prev {
+  min-height: 100vh;
+  background: #eceff3;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.prev__bar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #d7dce2;
+  font-size: 13px;
+}
+
+.prev__bar button {
+  padding: 6px 12px;
+  border: 1px solid #d7dce2;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.prev__bar button[data-on] {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+  color: #fff;
+}
+
+.prev__bar strong {
+  margin-left: 12px;
+}
+
+.prev__stage {
+  display: flex;
+  justify-content: center;
+  padding: 32px 16px 64px;
+}
+
+/* Stands in for an arbitrary host container, so container queries are
+   exercised against a real width rather than the viewport. */
+.prev__frame {
+  max-width: 100%;
+  border: 1px dashed #9aa4b0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.prev__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  padding: 20px;
+}
+
+.prev__group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.prev__h {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #8a94a0;
+}
+
+.prev__note {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #6b7480;
+}
+
+.prev__note code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: #eef1f5;
+  font-family: ui-monospace, Menlo, monospace;
+}
+
+.prev__row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.prev__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+/* Mirrors the dimension grid's breakpoints so the responsive behaviour of
+   the real form can be judged here. */
+@container pfm-calc (min-width: 30rem) {
+  .prev__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@container pfm-calc (min-width: 48rem) {
+  .prev__grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.prev__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}

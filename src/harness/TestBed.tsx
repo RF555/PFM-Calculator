@@ -1,12 +1,6 @@
 import { useState } from "react";
-import materialsFile from "../calculator/data/materials.json";
-import type { Material } from "../calculator/model/schema";
-import { CalculatorForm } from "../calculator/organisms/CalculatorForm";
-import "../calculator/styles/tokens.css";
-import "../calculator/styles/base.css";
+import { MaterialCalculator } from "../calculator";
 import "./TestBed.css";
-
-const materials = (materialsFile as { materials: Material[] }).materials;
 
 const WIDTHS = [320, 480, 768, 1200];
 
@@ -58,24 +52,17 @@ export function TestBed() {
 
       <main className="bed__stage">
         <div className="bed__frame" style={{ width }}>
-          <div className="pfm-calc" data-density={density}>
-            <div className="bed__inner">
-              <CalculatorForm
-                materials={materials}
-                defaultUnit="mm"
-                defaultMassUnit="kg"
-                defaultQuantity={1}
-                onCopy={(text) => setCopied(text)}
-                onCalculate={(r) =>
-                  setLastResult(
-                    r === null
-                      ? "null — incomplete or invalid; a host must clear any prefilled figure"
-                      : `${r.shapeId} · ${r.gradeId} · unit ${r.unitKg.toFixed(6)} kg · total ${r.totalKg.toFixed(6)} kg`
-                  )
-                }
-              />
-            </div>
-          </div>
+          <MaterialCalculator
+            density={density}
+            onCopy={(text) => setCopied(text)}
+            onCalculate={(r) =>
+              setLastResult(
+                r === null
+                  ? "null — incomplete or invalid; a host must clear any prefilled figure"
+                  : `${r.shapeId} · ${r.gradeId} · unit ${r.unitKg.toFixed(6)} kg · total ${r.totalKg.toFixed(6)} kg`
+              )
+            }
+          />
         </div>
       </main>
 

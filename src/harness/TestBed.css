@@ -54,10 +54,6 @@
   background: #fff;
 }
 
-.bed__inner {
-  padding: var(--pfm-pad);
-}
-
 .bed__out {
   max-width: 900px;
   margin: 0 auto;

@@ -9,7 +9,7 @@ import { m3ToCm3, mm3ToM3, weightKg } from "../model/calculate";
 import { calcReducer, initialState } from "../model/reducer";
 import type { Material } from "../model/schema";
 import { SHAPES, checkConstraints, volumeMm3, type ShapeId } from "../model/shapes";
-import type { MassUnit, Unit } from "../model/types";
+import type { DimensionFieldDef, MassUnit, Unit } from "../model/types";
 import { DimensionFieldset } from "./DimensionFieldset";
 import "./CalculatorForm.css";
 
@@ -70,8 +70,12 @@ export function CalculatorForm({
 
   const result = useMemo<ResultValues | null>(() => {
     if (!state.shapeId || !grade || violations.length > 0) return null;
-    const complete = SHAPES[state.shapeId].fields.every(
-      (f) => Number.isFinite(state.dimensions[f.key])
+    // `SHAPES[id].fields` narrows to a union of the registry's per-shape
+    // literal field types unless pinned explicitly here, which loses the
+    // `optional` property for every shape that never sets it.
+    const fields: DimensionFieldDef[] = SHAPES[state.shapeId].fields;
+    const complete = fields.every(
+      (f) => f.optional || Number.isFinite(state.dimensions[f.key])
     );
     if (!complete) return null;
 

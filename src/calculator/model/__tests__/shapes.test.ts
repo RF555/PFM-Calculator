@@ -35,6 +35,61 @@ describe("volumes match reference values", () => {
   });
 });
 
+describe("angle supports unequal legs", () => {
+  it("equal-leg reference value is unchanged (leg=50, t=5, L=1000)", () => {
+    const kg = weightKg(volumeMm3("angle", { leg: 50, thickness: 5, length: 1000 }), STEEL);
+    expect(kg).toBeCloseTo(3.7288, 3);
+  });
+
+  it("100x75x10 over 1000mm weighs 12.953 kg — verified independently: "
+    + "L*((a+b-t)*t) = 1000*((100+75-10)*10) = 1,650,000 mm^3, "
+    + "*7850/1e9 = 12.9525 kg", () => {
+    const kg = weightKg(
+      volumeMm3("angle", { leg: 100, legB: 75, thickness: 10, length: 1000 }),
+      STEEL
+    );
+    expect(kg).toBeCloseTo(12.953, 2);
+  });
+
+  it("a blank legB calculates identically to equal-leg (no legB key present)", () => {
+    const withLegB = volumeMm3("angle", { leg: 50, legB: 50, thickness: 5, length: 1000 });
+    const withoutLegB = volumeMm3("angle", { leg: 50, thickness: 5, length: 1000 });
+    expect(withLegB).toBeCloseTo(withoutLegB, 9);
+  });
+
+  it("a non-finite legB (e.g. NaN from a cleared field) falls back to leg", () => {
+    const withNaN = volumeMm3("angle", { leg: 50, legB: NaN, thickness: 5, length: 1000 });
+    const withoutLegB = volumeMm3("angle", { leg: 50, thickness: 5, length: 1000 });
+    expect(withNaN).toBeCloseTo(withoutLegB, 9);
+  });
+
+  it("legB is optional and does not block constraint checking when absent", () => {
+    expect(
+      checkConstraints("angle", { leg: 50, thickness: 5, length: 1000 })
+    ).toHaveLength(0);
+  });
+
+  it("constraint fires when thickness >= the smaller leg (unequal legs)", () => {
+    const violations = checkConstraints("angle", {
+      leg: 100, legB: 75, thickness: 75, length: 1000,
+    });
+    expect(violations.map((v) => v.field)).toContain("thickness");
+  });
+
+  it("constraint message states the smaller leg's limit, not leg A's", () => {
+    const [v] = checkConstraints("angle", {
+      leg: 100, legB: 75, thickness: 80, length: 1000,
+    });
+    expect(v.message).toContain("75");
+  });
+
+  it("unequal-leg geometry within limits passes the constraint", () => {
+    expect(
+      checkConstraints("angle", { leg: 100, legB: 75, thickness: 10, length: 1000 })
+    ).toHaveLength(0);
+  });
+});
+
 describe("hex bar against the industry steel formula", () => {
   // Standard: kg per metre = 0.006798 * F^2, F in mm across flats, steel 7850 kg/m^3.
   // An external reference, so a regression cannot hide behind a matching

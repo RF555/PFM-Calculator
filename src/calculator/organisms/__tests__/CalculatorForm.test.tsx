@@ -132,6 +132,36 @@ describe("CalculatorForm", () => {
     expect(onCalculate.mock.calls.at(-1)![0]).toBeNull();
   });
 
+  it("calculates the angle shape with the optional Leg B left blank", async () => {
+    setup();
+    await pick("Material", "Steel");
+    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Shape", "Angle (L-profile)");
+    await userEvent.type(screen.getByLabelText("Leg A (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Thickness (mm)"), "5");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+    // Leg B (optional) is never touched — the shape must still calculate.
+    // 3.7287, not 3.7288: 475000 mm^3 * 7850 / 1e9 = 3.72875 exactly, but
+    // that value isn't exactly representable in a float64 (it lands a hair
+    // under 3.72875), so toFixed(4) rounds down — the same floating-point
+    // behaviour the pre-existing model-level reference test already
+    // tolerates via toBeCloseTo(3.7288, 3).
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("3.7287 kg");
+  });
+
+  it("calculates unequal-leg angle once Leg B is filled in", async () => {
+    setup();
+    await pick("Material", "Steel");
+    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Shape", "Angle (L-profile)");
+    await userEvent.type(screen.getByLabelText("Leg A (mm)"), "100");
+    await userEvent.type(screen.getByLabelText("Leg B (optional) (mm)"), "75");
+    await userEvent.type(screen.getByLabelText("Thickness (mm)"), "10");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("12.9525 kg");
+  });
+
   it("clears dimensions when the shape changes", async () => {
     setup();
     await pick("Shape", "Round Bar");

@@ -2,11 +2,19 @@ import { formatNumber } from "./format";
 import type {
   ConstraintDef,
   ConstraintViolation,
+  DimensionFieldDef,
   DimensionValues,
   ShapeDef,
 } from "./types";
 
 const sq = (x: number) => x * x;
+
+/**
+ * Effective B leg for an angle: falls back to leg A when `legB` is absent
+ * or not a finite number, so equal-leg angle needs only one field filled in.
+ */
+const effectiveLegB = (d: DimensionValues): number =>
+  Number.isFinite(d.legB) ? d.legB : d.leg;
 
 export const SHAPES = {
   sheet: {
@@ -140,20 +148,22 @@ export const SHAPES = {
   angle: {
     label: "Angle (L-profile)",
     fields: [
-      { key: "leg", label: "Leg Length" },
+      { key: "leg", label: "Leg A" },
+      { key: "legB", label: "Leg B (optional)", optional: true },
       { key: "thickness", label: "Thickness" },
       { key: "length", label: "Length" },
     ],
     constraints: [
       {
         field: "thickness",
-        test: (d) => d.thickness < d.leg,
+        test: (d) => d.thickness < Math.min(d.leg, effectiveLegB(d)),
         message: (d) =>
-          `Thickness must be less than the leg length (under ${formatNumber(d.leg)})`,
+          `Thickness must be less than the smaller leg (under ${formatNumber(Math.min(d.leg, effectiveLegB(d)))})`,
       },
     ],
-    // Equal-leg angle. Unequal legs are deferred (Q2).
-    volume: (d) => d.length * (2 * d.leg * d.thickness - sq(d.thickness)),
+    // Equal-leg when legB is absent: effectiveLegB falls back to leg, which
+    // reduces this to the prior L * (2*leg*t - t^2) formula exactly.
+    volume: (d) => d.length * ((d.leg + effectiveLegB(d) - d.thickness) * d.thickness),
   },
 } as const satisfies Record<string, ShapeDef>;
 
@@ -176,7 +186,11 @@ export function checkConstraints(
   dims: DimensionValues
 ): ConstraintViolation[] {
   const shape = SHAPES[id];
-  const complete = shape.fields.every((f) => Number.isFinite(dims[f.key]));
+  // `shape.fields` narrows to a union of the registry's per-shape literal
+  // field types unless the element type is pinned explicitly here, which
+  // loses the `optional` property for every shape that never sets it.
+  const fields: DimensionFieldDef[] = shape.fields;
+  const complete = fields.every((f) => f.optional || Number.isFinite(dims[f.key]));
   if (!complete) return [];
 
   // `shape.constraints` narrows to `never[]` for the union of registry

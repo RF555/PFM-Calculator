@@ -1,0 +1,43 @@
+.pfm-calc .pfm-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pfm-gap);
+}
+
+.pfm-calc .pfm-form__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pfm-gap);
+  justify-content: flex-end;
+}
+
+/* Equal columns here, unlike the dimension row: combobox labels are long
+   ("PA 66 30% GF (1450 kg/m³)") and benefit from the extra width, whereas
+   dimension entries are short and capped. */
+.pfm-calc .pfm-form__selectors {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--pfm-gap);
+}
+
+@container pfm-calc (min-width: 30rem) {
+  .pfm-calc .pfm-form__selectors { grid-template-columns: repeat(3, 1fr); }
+}
+
+.pfm-calc .pfm-fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+
+.pfm-calc .pfm-form__footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--pfm-gap);
+}
+
+.pfm-calc .pfm-form__reset {
+  min-height: var(--pfm-control-h);
+  padding: 0 16px;
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-bg);
+  cursor: pointer;
+}

@@ -48,10 +48,11 @@ export const calculateVolume = (
     }
 
     case "hexBar": {
-      // (3√3 / 2) × (a/2)² × L
-      const a = convert("flatToFlat");
+      // Regular hexagon by across-flats distance F: side = F/sqrt(3),
+      // so area = (3*sqrt(3)/2) * (F/sqrt(3))^2 = (sqrt(3)/2) * F^2.
+      const f = convert("flatToFlat");
       const l = convert("length");
-      return (3 * Math.sqrt(3) / 2) * Math.pow(a / 2, 2) * l;
+      return (Math.sqrt(3) / 2) * f * f * l;
     }
 
     case "roundTubeOuter": {

@@ -40,7 +40,7 @@ export function initialState(opts: InitialOptions): CalcState {
     shapeId: null,
     unit: opts.defaultUnit,
     massUnit: opts.defaultMassUnit,
-    quantity: Math.max(1, Math.floor(opts.defaultQuantity)),
+    quantity: clampQuantity(opts.defaultQuantity),
     dimensions: {},
     raw: {},
     errors: {},
@@ -61,6 +61,16 @@ function toDisplay(mm: number, unit: Unit): string {
 /** Canonical millimetres from a value entered in the active unit. */
 const toCanonical = (value: number, unit: Unit): number =>
   unit === "mm" ? value : inchToMm(value);
+
+/**
+ * Whole pieces, at least one. Guards the non-finite cases too: a host may
+ * pass any number as defaultQuantity, and Infinity would multiply through
+ * to a meaningless total.
+ */
+function clampQuantity(value: number): number {
+  if (!Number.isFinite(value)) return 1;
+  return Math.max(1, Math.floor(value));
+}
 
 export function calcReducer(state: CalcState, action: CalcAction): CalcState {
   switch (action.type) {
@@ -112,7 +122,7 @@ export function calcReducer(state: CalcState, action: CalcAction): CalcState {
     }
 
     case "SET_QUANTITY":
-      return { ...state, quantity: Math.max(1, Math.floor(action.quantity) || 1) };
+      return { ...state, quantity: clampQuantity(action.quantity) };
 
     case "RESET":
       return initialState({

@@ -81,6 +81,20 @@ describe("calcReducer", () => {
     expect(calcReducer(base, { type: "SET_QUANTITY", quantity: 25 }).quantity).toBe(25);
   });
 
+  it("keeps quantity a whole finite number", () => {
+    expect(calcReducer(base, { type: "SET_QUANTITY", quantity: 2.7 }).quantity).toBe(2);
+    expect(calcReducer(base, { type: "SET_QUANTITY", quantity: NaN }).quantity).toBe(1);
+    expect(calcReducer(base, { type: "SET_QUANTITY", quantity: Infinity }).quantity).toBe(1);
+    expect(calcReducer(base, { type: "SET_QUANTITY", quantity: -Infinity }).quantity).toBe(1);
+  });
+
+  it("clamps a defaultQuantity supplied by the host", () => {
+    const opts = { defaultUnit: "mm", defaultMassUnit: "kg" } as const;
+    expect(initialState({ ...opts, defaultQuantity: Infinity }).quantity).toBe(1);
+    expect(initialState({ ...opts, defaultQuantity: 0 }).quantity).toBe(1);
+    expect(initialState({ ...opts, defaultQuantity: 4.9 }).quantity).toBe(4);
+  });
+
   it("resets to the initial state", () => {
     const s = calcReducer(withDims, { type: "RESET" });
     expect(s.shapeId).toBeNull();

@@ -30,7 +30,6 @@ interface Props {
   defaultQuantity: number;
   /** Receives the result, or null while it is incomplete or invalid. */
   onCalculate?: (result: CalculationResult | null) => void;
-  onCopy?: (text: string) => void;
   onUnitChange?: (unit: Unit) => void;
 }
 
@@ -46,7 +45,7 @@ const MASS_OPTIONS = [
 
 export function CalculatorForm({
   materials, defaultUnit, defaultMassUnit, defaultQuantity,
-  onCalculate, onCopy, onUnitChange,
+  onCalculate, onUnitChange,
 }: Props) {
   // React's useId() is stable across a component's lifetime and unique per
   // mounted instance, so two calculators on one page never collide on the
@@ -106,10 +105,6 @@ export function CalculatorForm({
   const onCalculateRef = useRef(onCalculate);
   useEffect(() => {
     onCalculateRef.current = onCalculate;
-  });
-  const onCopyRef = useRef(onCopy);
-  useEffect(() => {
-    onCopyRef.current = onCopy;
   });
   const onUnitChangeRef = useRef(onUnitChange);
   useEffect(() => {
@@ -207,7 +202,6 @@ export function CalculatorForm({
         result={result}
         quantity={state.quantity}
         massUnit={state.massUnit}
-        onCopy={onCopy && ((text) => onCopyRef.current?.(text))}
       />
     </div>
   );

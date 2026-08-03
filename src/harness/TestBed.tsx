@@ -12,7 +12,6 @@ const WIDTHS = [320, 480, 768, 1200];
 export function TestBed() {
   const [width, setWidth] = useState(560);
   const [density, setDensity] = useState<"compact" | "comfortable">("comfortable");
-  const [copied, setCopied] = useState<string | null>(null);
   const [lastResult, setLastResult] = useState<string | null>(null);
 
   return (
@@ -54,7 +53,6 @@ export function TestBed() {
         <div className="bed__frame" style={{ width }}>
           <MaterialCalculator
             density={density}
-            onCopy={(text) => setCopied(text)}
             onCalculate={(r) =>
               setLastResult(
                 r === null
@@ -69,8 +67,6 @@ export function TestBed() {
       <section className="bed__out">
         <h2>onCalculate — what the host receives</h2>
         <pre>{lastResult ?? "(no complete calculation yet)"}</pre>
-        <h2>onCopy — the host owns notifications</h2>
-        <pre>{copied ?? "(copy not pressed)"}</pre>
       </section>
     </div>
   );

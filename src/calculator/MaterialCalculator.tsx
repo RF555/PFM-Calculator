@@ -13,8 +13,7 @@ export interface MaterialCalculatorProps {
   density?: "compact" | "comfortable";
   /** Receives the result, or null while it is incomplete or invalid. */
   onCalculate?: (result: CalculationResult | null) => void;
-  /** Receives the copy payload; the host owns notifications. */
-  onCopy?: (text: string) => void;
+  /** Fires when the user switches between mm and inch. */
   onUnitChange?: (unit: Unit) => void;
   className?: string;
 }
@@ -32,7 +31,6 @@ export function MaterialCalculator({
   defaultQuantity = 1,
   density = "comfortable",
   onCalculate,
-  onCopy,
   onUnitChange,
   className,
 }: MaterialCalculatorProps) {
@@ -44,7 +42,6 @@ export function MaterialCalculator({
         defaultMassUnit={defaultMassUnit}
         defaultQuantity={defaultQuantity}
         onCalculate={onCalculate}
-        onCopy={onCopy}
         onUnitChange={onUnitChange}
       />
     </CalculatorShell>

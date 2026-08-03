@@ -15,12 +15,11 @@ interface Props {
   result: ResultValues | null;
   quantity: number;
   massUnit: MassUnit;
-  onCopy?: (text: string) => void;
 }
 
 const PLACEHOLDER = "—";
 
-export function ResultPanel({ result, quantity, massUnit, onCopy }: Props) {
+export function ResultPanel({ result, quantity, massUnit }: Props) {
   // Totals derive from full-precision unit mass; multiplying a rounded
   // display value drifts measurably at large quantities.
   const totalKg = result ? result.unitKg * quantity : null;
@@ -43,15 +42,6 @@ export function ResultPanel({ result, quantity, massUnit, onCopy }: Props) {
       : `${spoken(totalKg!, massUnit)}.`
     : "";
 
-  const copyText = result
-    ? [
-        `Volume: ${formatNumber(result.volumeCm3)} cm³`,
-        `Unit weight: ${formatNumber(result.unitKg)} kg (${formatNumber(kgToLbs(result.unitKg))} lbs)`,
-        `Quantity: ${quantity}`,
-        `Total weight: ${formatNumber(totalKg!)} kg (${formatNumber(kgToLbs(totalKg!))} lbs)`,
-      ].join("\n")
-    : "";
-
   return (
     <section className="pfm-results" aria-label="Results">
       <div className="pfm-results__grid">
@@ -71,16 +61,6 @@ export function ResultPanel({ result, quantity, massUnit, onCopy }: Props) {
           {...total}
         />
       </div>
-
-      {result && onCopy && (
-        <button
-          type="button"
-          className="pfm-results__copy"
-          onClick={() => onCopy(copyText)}
-        >
-          Copy
-        </button>
-      )}
 
       <LiveRegion message={announcement} />
     </section>

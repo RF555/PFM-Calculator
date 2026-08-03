@@ -40,11 +40,8 @@ describe("ResultPanel", () => {
     expect(screen.getByTestId("total-primary")).toHaveTextContent("2466.1502 kg");
   });
 
-  it("hands the copy payload to the host rather than notifying itself", async () => {
-    const onCopy = vi.fn();
-    render(<ResultPanel result={RESULT} quantity={2} massUnit="kg" onCopy={onCopy} />);
-    await userEvent.click(screen.getByRole("button", { name: /copy/i }));
-    expect(onCopy).toHaveBeenCalledTimes(1);
-    expect(onCopy.mock.calls[0][0]).toContain("15.4134");
+  it("renders no action buttons — the panel only displays", () => {
+    render(<ResultPanel result={RESULT} quantity={2} massUnit="kg" />);
+    expect(screen.queryAllByRole("button")).toHaveLength(0);
   });
 });

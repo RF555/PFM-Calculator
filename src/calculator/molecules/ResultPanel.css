@@ -24,12 +24,3 @@
   color: var(--pfm-accent);
 }
 
-.pfm-calc .pfm-results__copy {
-  margin-top: var(--pfm-gap);
-  min-height: var(--pfm-control-h);
-  padding: 0 16px;
-  border: 1px solid var(--pfm-border);
-  border-radius: var(--pfm-radius);
-  background: var(--pfm-bg);
-  cursor: pointer;
-}

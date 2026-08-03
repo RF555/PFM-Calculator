@@ -1,0 +1,25 @@
+.pfm-calc .pfm-stat { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.pfm-calc .pfm-stat__label {
+  font-size: var(--pfm-fs-sm);
+  color: var(--pfm-muted);
+}
+
+.pfm-calc .pfm-stat__primary {
+  font-family: var(--pfm-font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--pfm-fs-lg);
+  font-weight: 700;
+}
+
+.pfm-calc .pfm-stat[data-emphasis] .pfm-stat__primary {
+  font-size: var(--pfm-fs-xl);
+  color: var(--pfm-accent);
+}
+
+.pfm-calc .pfm-stat__secondary {
+  font-family: var(--pfm-font-num);
+  font-variant-numeric: tabular-nums;
+  font-size: var(--pfm-fs-sm);
+  color: var(--pfm-muted);
+}

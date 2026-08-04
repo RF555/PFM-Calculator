@@ -4,11 +4,25 @@
   gap: var(--pfm-gap);
 }
 
+/* Two groups on one row: the language switch at the inline start, the unit
+   switchers at the inline end. Both sides sit on the baseline of their
+   controls so the switch aligns with the segmented controls rather than with
+   their labels. When the row is too narrow the groups wrap and the units group
+   keeps its end alignment. */
 .pfm-calc .pfm-form__toolbar {
   display: flex;
   flex-wrap: wrap;
   gap: var(--pfm-gap);
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.pfm-calc .pfm-form__units {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--pfm-gap);
+  align-items: flex-end;
+  margin-inline-start: auto;
 }
 
 /* Equal columns here, unlike the dimension row: combobox labels are long

@@ -143,22 +143,24 @@ export function CalculatorForm({
   return (
     <div className="pfm-form">
       <div className="pfm-form__toolbar">
-        <SegmentedControl
-          label={t("ui.dimensionUnit")}
-          options={unitOptions}
-          value={state.unit}
-          onChange={(v) => {
-            dispatch({ type: "SET_UNIT", unit: v as Unit });
-            onUnitChangeRef.current?.(v as Unit);
-          }}
-        />
-        <SegmentedControl
-          label={t("ui.massUnit")}
-          options={massOptions}
-          value={state.massUnit}
-          onChange={(v) => dispatch({ type: "SET_MASS_UNIT", massUnit: v as MassUnit })}
-        />
         <LanguageSwitch />
+        <div className="pfm-form__units">
+          <SegmentedControl
+            label={t("ui.dimensionUnit")}
+            options={unitOptions}
+            value={state.unit}
+            onChange={(v) => {
+              dispatch({ type: "SET_UNIT", unit: v as Unit });
+              onUnitChangeRef.current?.(v as Unit);
+            }}
+          />
+          <SegmentedControl
+            label={t("ui.massUnit")}
+            options={massOptions}
+            value={state.massUnit}
+            onChange={(v) => dispatch({ type: "SET_MASS_UNIT", massUnit: v as MassUnit })}
+          />
+        </div>
       </div>
 
       <div className="pfm-form__selectors">

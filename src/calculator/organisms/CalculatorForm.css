@@ -24,7 +24,27 @@
   .pfm-calc .pfm-form__selectors { grid-template-columns: repeat(3, 1fr); }
 }
 
-.pfm-calc .pfm-fieldset { border: 0; margin: 0; padding: 0; min-width: 0; }
+/* Contains the floated profile figure so it cannot overhang the rows below. */
+.pfm-calc .pfm-fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+  min-width: 0;
+  display: flow-root;
+}
+
+/*
+ * The profile figure sits beside its measurements. It is floated into the end
+ * of the block so the dimension fields flow around it and keep their own
+ * wrapping behaviour — a flex row instead would strand the figure mid-line
+ * whenever the field count leaves a short last row. Logical properties, so it
+ * mirrors with the rest of the layout in RTL.
+ */
+.pfm-calc .pfm-fieldset__figure {
+  float: inline-end;
+  margin-inline-start: var(--pfm-gap);
+  color: var(--pfm-muted);
+}
 
 .pfm-calc .pfm-form__footer {
   display: flex;

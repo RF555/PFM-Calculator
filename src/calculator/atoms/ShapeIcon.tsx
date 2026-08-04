@@ -121,6 +121,40 @@ function anglePoints(x: number, y: number, leg: number, t: number): string {
   ].join(" ");
 }
 
+/**
+ * A length of round tube in the same oblique projection as the solid bars: a
+ * true circular near face with the bore set into it, the far cap pushed along
+ * the extrusion axis, and the two tangents joining them.
+ *
+ * Both variants are the same pipe and differ only in which diameter the user
+ * supplies, so the dashed marker spans the one being measured — the full outer
+ * width, or the bore alone.
+ */
+function roundTube(measures: "outer" | "inner"): React.ReactNode {
+  const R = 13.5;
+  const BORE = 7.5;
+  const [cx, cy] = [15, 28];
+  // See roundBar: the grid caps this, not taste.
+  const depth = 2.1;
+  const [fx, fy] = [cx + ISO_DX * depth, cy + ISO_DY * depth];
+  const len = Math.hypot(ISO_DX, ISO_DY);
+  const [nx, ny] = [(-ISO_DY / len) * R, (ISO_DX / len) * R];
+  const span = measures === "outer" ? R : BORE;
+  return (
+    <>
+      <path d={`M${fx + nx} ${fy + ny} A${R} ${R} 0 0 0 ${fx - nx} ${fy - ny}`} />
+      <line x1={cx + nx} y1={cy + ny} x2={fx + nx} y2={fy + ny} />
+      <line x1={cx - nx} y1={cy - ny} x2={fx - nx} y2={fy - ny} />
+      <circle cx={cx} cy={cy} r={R} />
+      <circle cx={cx} cy={cy} r={BORE} />
+      <line
+        x1={cx} y1={cy - span} x2={cx} y2={cy + span}
+        strokeWidth={1.2} strokeDasharray="3 2.5"
+      />
+    </>
+  );
+}
+
 const FLAT: Record<ShapeId, React.ReactNode> = {
   sheet: <rect x="6" y="21" width="36" height="6" rx="0.5" />,
   roundBar: <circle cx="24" cy="24" r="15" />,
@@ -131,18 +165,22 @@ const FLAT: Record<ShapeId, React.ReactNode> = {
   // diameter the user supplies, so a dashed line spans the diameter being
   // measured: full width for outer-Ø, the bore only for inner-Ø. It runs
   // vertically because a horizontal one reads as a face between the circles.
+  //
+  // Dashes are long and few rather than fine: these render at ~30px in the
+  // picker, where a 3-unit dash lands under 2 device pixels and greys out into
+  // a solid line. Full stroke weight for the same reason.
   roundTubeOuter: (
     <>
       <circle cx="24" cy="24" r="15" />
       <circle cx="24" cy="24" r="9" />
-      <line x1="24" y1="9" x2="24" y2="39" strokeWidth={1.5} strokeDasharray="3 2.5" />
+      <line x1="24" y1="9" x2="24" y2="39" strokeDasharray="7 5" />
     </>
   ),
   roundTubeInner: (
     <>
       <circle cx="24" cy="24" r="15" />
       <circle cx="24" cy="24" r="9" />
-      <line x1="24" y1="15" x2="24" y2="33" strokeWidth={1.5} strokeDasharray="3 2.5" />
+      <line x1="24" y1="15" x2="24" y2="33" strokeDasharray="7 4" />
     </>
   ),
   rectangularHollow: (
@@ -172,14 +210,32 @@ const ISO: Record<ShapeId, React.ReactNode> = {
       <polyline points={`${iso(27, 28, 1.7)} ${iso(27, 32, 1.7)} 27,32`} />
     </>
   ),
-  roundBar: (
-    <>
-      <ellipse cx="13" cy="24" rx="5.5" ry="12" />
-      <path d="M13 12 L36 12" />
-      <path d="M13 36 L36 36" />
-      <path d="M36 12 A5.5 12 0 0 1 36 36" />
-    </>
-  ),
+  // Same oblique projection as the boxy solids: the near face is drawn true (a
+  // circle, not a squashed ellipse) and the far one is that circle pushed along
+  // the extrusion axis, joined by the two tangents. Drawing it side-on instead
+  // would put this bar in a different projection from the rest of the set.
+  roundBar: (() => {
+    const r = 13.5;
+    const [cx, cy] = [15, 28];
+    // Long enough that the far cap clears the near one, or the crescent that
+    // gives the bar its length disappears inside the front circle. Capped by
+    // the grid: the drawing spans 2r + ISO_DX*depth plus the stroke, so past
+    // ~2.15 the far cap leaves the 48-unit box however the icon is centred.
+    const depth = 1.95;
+    const [fx, fy] = [cx + ISO_DX * depth, cy + ISO_DY * depth];
+    // Tangents leave each circle perpendicular to the extrusion axis.
+    const len = Math.hypot(ISO_DX, ISO_DY);
+    const [nx, ny] = [(-ISO_DY / len) * r, (ISO_DX / len) * r];
+    return (
+      <>
+        {/* Far cap: only the half turned away from the near circle shows. */}
+        <path d={`M${fx + nx} ${fy + ny} A${r} ${r} 0 0 0 ${fx - nx} ${fy - ny}`} />
+        <line x1={cx + nx} y1={cy + ny} x2={fx + nx} y2={fy + ny} />
+        <line x1={cx - nx} y1={cy - ny} x2={fx - nx} y2={fy - ny} />
+        <circle cx={cx} cy={cy} r={r} />
+      </>
+    );
+  })(),
   squareBar: (
     <>
       <rect x="10" y="16" width="20" height="20" />
@@ -212,30 +268,8 @@ const ISO: Record<ShapeId, React.ReactNode> = {
       </>
     );
   })(),
-  // Turned further toward the viewer than the solid bars: the face ellipse is
-  // wider (rx 9 vs 5.5) and the extrusion shorter, so the bore stays legible
-  // instead of collapsing to a sliver. Dashed diameter matches the flat
-  // variants — full for outer-Ø, bore only for inner-Ø.
-  roundTubeOuter: (
-    <>
-      <ellipse cx="13" cy="24" rx="9" ry="13" />
-      <ellipse cx="13" cy="24" rx="5" ry="7.2" />
-      <path d="M13 11 L35 11" />
-      <path d="M13 37 L35 37" />
-      <path d="M35 11 A9 13 0 0 1 35 37" />
-      <line x1="13" y1="11" x2="13" y2="37" strokeWidth={1.5} strokeDasharray="3 2.5" />
-    </>
-  ),
-  roundTubeInner: (
-    <>
-      <ellipse cx="13" cy="24" rx="9" ry="13" />
-      <ellipse cx="13" cy="24" rx="5" ry="7.2" />
-      <path d="M13 11 L35 11" />
-      <path d="M13 37 L35 37" />
-      <path d="M35 11 A9 13 0 0 1 35 37" />
-      <line x1="13" y1="16.8" x2="13" y2="31.2" strokeWidth={1.5} strokeDasharray="3 2.5" />
-    </>
-  ),
+  roundTubeOuter: roundTube("outer"),
+  roundTubeInner: roundTube("inner"),
   // Hollow sections are opaque like the solid bars: outer body drawn as the
   // front face plus its two visible faces, with the bore set into that face.
   // With the body receding up and to the right, the bore's bottom-left corner
@@ -292,7 +326,9 @@ const ISO: Record<ShapeId, React.ReactNode> = {
 const CENTRE: Partial<Record<`${"flat" | "iso"}:${ShapeId}`, [number, number]>> = {
   "flat:angle": [-3, 0],
   "iso:sheet": [-1.15, -1.75],
-  "iso:roundBar": [-0.5, 0],
+  "iso:roundBar": [0.22, 0.87],
+  "iso:roundTubeOuter": [-0.45, 1.25],
+  "iso:roundTubeInner": [-0.45, 1.25],
   "iso:squareBar": [-0.5, 0.5],
   "iso:flatBar": [-1.5, -3],
   "iso:hexBar": [1.5, 1.75],
@@ -311,6 +347,12 @@ interface Props {
 /**
  * Decorative by default: the shape name always sits beside the icon, so
  * announcing it again would make screen readers read every option twice.
+ *
+ * Stroke weight is per variant, since the two render at very different sizes:
+ * the flat cross-sections sit at ~30px in the picker list and need a heavier
+ * line to hold up, while the isometric solid renders at 72px beside the
+ * dimension fields, where that weight would look clumsy and close up its
+ * interior detail.
  */
 export function ShapeIcon({ shapeId, variant = "flat", size = 24, className }: Props) {
   const [dx, dy] = CENTRE[`${variant}:${shapeId}`] ?? [0, 0];
@@ -322,7 +364,7 @@ export function ShapeIcon({ shapeId, variant = "flat", size = 24, className }: P
       viewBox="0 0 48 48"
       fill="none"
       stroke="currentColor"
-      strokeWidth={2}
+      strokeWidth={variant === "iso" ? 1.6 : 2.4}
       strokeLinejoin="round"
       strokeLinecap="round"
       aria-hidden="true"

@@ -20,22 +20,22 @@ export function ShapeCombobox({ idPrefix, value, onChange }: Props) {
       options={SHAPE_IDS.map((id) => ({ value: id, label: t(SHAPES[id].labelKey) }))}
       value={value}
       onChange={(v) => onChange(v as ShapeId)}
-      // Flat cross-sections in the list, where the icon only has to separate
-      // one row from the next; the isometric solid on the trigger, where the
-      // chosen profile gets the room to read as a physical piece of stock.
+      // Flat cross-sections throughout the picker — in the list and on the
+      // trigger once chosen. The isometric solid belongs with the dimension
+      // fields, where it has room to read as a physical piece of stock.
       renderOptionIcon={(v) => (
         <ShapeIcon
           shapeId={v as ShapeId}
           variant="flat"
-          size={22}
+          size={30}
           className="pfm-combobox__icon"
         />
       )}
       renderTriggerIcon={(v) => (
         <ShapeIcon
           shapeId={v as ShapeId}
-          variant="iso"
-          size={28}
+          variant="flat"
+          size={30}
           className="pfm-combobox__icon"
         />
       )}

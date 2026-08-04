@@ -1,3 +1,4 @@
+import { ShapeIcon } from "../atoms/ShapeIcon";
 import { useTranslate } from "../i18n/LanguageContext";
 import { DimensionField } from "../molecules/DimensionField";
 import { DimensionGrid } from "../molecules/DimensionGrid";
@@ -22,6 +23,17 @@ export function DimensionFieldset({
   return (
     <fieldset className="pfm-fieldset">
       <legend className="pfm-visually-hidden">{t("ui.dimensions")}</legend>
+      {/*
+        The chosen profile drawn as a solid, sitting with the measurements it
+        takes. Decorative: the shape name is already on the picker above and
+        every field is labelled, so it adds nothing for a screen reader.
+      */}
+      <ShapeIcon
+        shapeId={shapeId}
+        variant="iso"
+        size={104}
+        className="pfm-fieldset__figure"
+      />
       <DimensionGrid>
         {SHAPES[shapeId].fields.map((f) => (
           <DimensionField

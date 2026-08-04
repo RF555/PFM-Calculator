@@ -1,4 +1,6 @@
 import { formatNumber } from "./format";
+import { translate } from "../i18n/strings";
+import type { Language } from "../i18n/types";
 import type {
   ConstraintDef,
   ConstraintViolation,
@@ -178,6 +180,14 @@ export const SHAPES = {
 export type ShapeId = keyof typeof SHAPES;
 
 export const SHAPE_IDS = Object.keys(SHAPES) as ShapeId[];
+
+/**
+ * Human-readable shape name. Hosts receive a ShapeId via onCalculate and need
+ * a supported way to render it, since the registry stores a key, not text.
+ */
+export function shapeLabel(id: ShapeId, language: Language): string {
+  return translate(language, SHAPES[id].labelKey);
+}
 
 /** Volume in cubic millimetres. Assumes constraints already passed. */
 export function volumeMm3(id: ShapeId, dims: DimensionValues): number {

@@ -1,7 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
-import { MaterialCalculator, defaultMaterials, SHAPES, SHAPE_IDS, type ShapeId } from "../index";
+import { MaterialCalculator, defaultMaterials, SHAPE_IDS, shapeLabel, type ShapeId } from "../index";
 
 describe("public API", () => {
   it("renders with no props", () => {
@@ -41,13 +41,14 @@ describe("public API", () => {
 
   it("exports a ShapeId a host can exhaustively switch on, with a label for every id", () => {
     // Compile-time check: a host can narrow a CalculationResult.shapeId to
-    // ShapeId and use it as a SHAPES key without a cast or a parallel union.
-    const describe = (id: ShapeId): string => SHAPES[id].label;
+    // ShapeId and pass it to shapeLabel without a cast or a parallel union.
+    const describe = (id: ShapeId): string => shapeLabel(id, "en");
 
     expect(SHAPE_IDS.length).toBeGreaterThan(0);
     for (const id of SHAPE_IDS) {
       expect(typeof describe(id)).toBe("string");
-      expect(SHAPES[id].label.length).toBeGreaterThan(0);
+      expect(shapeLabel(id, "en").length).toBeGreaterThan(0);
+      expect(shapeLabel(id, "he").length).toBeGreaterThan(0);
     }
   });
 

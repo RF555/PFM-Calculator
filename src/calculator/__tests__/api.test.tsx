@@ -3,6 +3,19 @@ import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { MaterialCalculator, defaultMaterials, SHAPE_IDS, shapeLabel, type ShapeId } from "../index";
 
+// jsdom has neither ResizeObserver nor scrollIntoView; cmdk (used by the
+// comboboxes) relies on both to keep the active option in view.
+class ResizeObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+(globalThis as unknown as { ResizeObserver: typeof ResizeObserverStub }).ResizeObserver =
+  ResizeObserverStub;
+if (!Element.prototype.scrollIntoView) {
+  Element.prototype.scrollIntoView = () => {};
+}
+
 describe("public API", () => {
   it("renders with no props", () => {
     render(<MaterialCalculator defaultLanguage="en" />);
@@ -14,11 +27,16 @@ describe("public API", () => {
     expect(defaultMaterials[0].grades.length).toBeGreaterThan(0);
   });
 
-  it("accepts a custom materials list", async () => {
+  it("accepts a custom materials list and renders its options", async () => {
     render(<MaterialCalculator defaultLanguage="en" materials={[
-      { id: "x", name: "Unobtainium", grades: [{ id: "x.1", name: "Grade 1", density: 1234 }] },
+      {
+        id: "x",
+        name: { he: "אונובטניום", en: "Unobtainium" },
+        grades: [{ id: "x.1", name: { he: "דרגה 1", en: "Grade 1" }, density: 1234 }],
+      },
     ]} />);
-    expect(screen.getByRole("combobox", { name: "Material" })).toBeInTheDocument();
+    await userEvent.click(screen.getByRole("combobox", { name: "Material" }));
+    expect(screen.getByRole("option", { name: "Unobtainium" })).toBeInTheDocument();
   });
 
   it("honours default unit and quantity props", () => {
@@ -73,5 +91,48 @@ describe("public API", () => {
     render(<MaterialCalculator onLanguageChange={onLanguageChange} />);
     await userEvent.click(screen.getByRole("radio", { name: "English" }));
     expect(onLanguageChange).toHaveBeenCalledWith("en");
+  });
+
+  it("coerces an out-of-range defaultLanguage to the default instead of crashing", () => {
+    const { container } = render(
+      // @ts-expect-error deliberately passing a language outside the closed union
+      <MaterialCalculator defaultLanguage="fr" />
+    );
+    const root = container.querySelector(".pfm-calc");
+    expect(root).toHaveAttribute("dir", "rtl");
+    expect(root).toHaveAttribute("lang", "he");
+    expect(screen.getByRole("combobox", { name: "חומר" })).toBeInTheDocument();
+  });
+
+  it("rejects a v1 plain-string material name instead of rendering a blank option", () => {
+    expect(() =>
+      render(
+        <MaterialCalculator
+          defaultLanguage="en"
+          materials={[
+            // @ts-expect-error deliberately passing the pre-v2 plain-string shape
+            { id: "x", name: "Unobtainium", grades: [{ id: "x.1", name: "Grade 1", density: 1234 }] },
+          ]}
+        />
+      )
+    ).toThrow(/name must be an object/);
+  });
+
+  it("rejects a v2 material name missing the active locale instead of rendering a blank option", () => {
+    expect(() =>
+      render(
+        <MaterialCalculator
+          defaultLanguage="en"
+          materials={[
+            {
+              id: "x",
+              // @ts-expect-error deliberately omitting the "en" locale
+              name: { he: "אונובטניום" },
+              grades: [{ id: "x.1", name: { he: "דרגה 1", en: "Grade 1" }, density: 1234 }],
+            },
+          ]}
+        />
+      )
+    ).toThrow(/missing a non-empty "en" translation/);
   });
 });

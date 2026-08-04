@@ -12,6 +12,12 @@ function renderEn(ui: React.ReactElement) {
   );
 }
 
+function renderHe(ui: React.ReactElement) {
+  return render(
+    <LanguageProvider language="he" setLanguage={() => {}}>{ui}</LanguageProvider>
+  );
+}
+
 describe("ResultPanel", () => {
   it("renders a placeholder before any result", () => {
     renderEn(<ResultPanel result={null} quantity={1} massUnit="kg" />);
@@ -50,5 +56,19 @@ describe("ResultPanel", () => {
   it("renders no action buttons — the panel only displays", () => {
     renderEn(<ResultPanel result={RESULT} quantity={2} massUnit="kg" />);
     expect(screen.queryAllByRole("button")).toHaveLength(0);
+  });
+
+  it("marks result values dir=\"ltr\" so digits don't get mirrored", () => {
+    renderEn(<ResultPanel result={RESULT} quantity={10} massUnit="kg" />);
+    expect(screen.getByTestId("total-primary")).toHaveAttribute("dir", "ltr");
+    expect(screen.getByTestId("total-secondary")).toHaveAttribute("dir", "ltr");
+    expect(screen.getByTestId("unit-primary")).toHaveAttribute("dir", "ltr");
+  });
+
+  it("marks result values dir=\"ltr\" even when the surrounding UI is Hebrew/rtl", () => {
+    renderHe(<ResultPanel result={RESULT} quantity={10} massUnit="kg" />);
+    expect(screen.getByTestId("total-primary")).toHaveAttribute("dir", "ltr");
+    expect(screen.getByTestId("total-secondary")).toHaveAttribute("dir", "ltr");
+    expect(screen.getByTestId("unit-primary")).toHaveAttribute("dir", "ltr");
   });
 });

@@ -1,10 +1,10 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import bundled from "./data/materials.json";
 import { LanguageProvider } from "./i18n/LanguageContext";
-import { DEFAULT_LANGUAGE } from "./i18n/strings";
+import { DEFAULT_LANGUAGE, LANGUAGES } from "./i18n/strings";
 import type { Language } from "./i18n/types";
 import { CalculatorForm, type CalculationResult } from "./organisms/CalculatorForm";
-import type { Material } from "./model/schema";
+import { validateMaterials, type Material } from "./model/schema";
 import type { MassUnit, Unit } from "./model/types";
 import { CalculatorShell } from "./templates/CalculatorShell";
 
@@ -29,6 +29,15 @@ export interface MaterialCalculatorProps {
 export const defaultMaterials = (bundled as unknown as { materials: Material[] }).materials;
 
 /**
+ * Hosts are not necessarily TypeScript, so a prop typed as `Language` can
+ * still arrive as any string at runtime. Anything outside the closed union
+ * falls back to the default rather than reaching state and crashing render.
+ */
+function coerceLanguage(language: Language): Language {
+  return LANGUAGES.includes(language) ? language : DEFAULT_LANGUAGE;
+}
+
+/**
  * Public entry point. Content only — the host owns any modal, drawer, or
  * popover wrapper and all of its behaviour.
  */
@@ -44,7 +53,14 @@ export function MaterialCalculator({
   onLanguageChange,
   className,
 }: MaterialCalculatorProps) {
-  const [language, setLanguage] = useState<Language>(defaultLanguage);
+  const [language, setLanguage] = useState<Language>(() => coerceLanguage(defaultLanguage));
+
+  // The bundled default is already known-good; only host-supplied data pays
+  // for validation, and only once per identity rather than on every render.
+  const validatedMaterials = useMemo(() => {
+    if (materials === defaultMaterials) return materials;
+    return validateMaterials({ version: 2, materials }).materials;
+  }, [materials]);
 
   // Hosts commonly pass inline arrow callbacks, which get a new identity on
   // every render; stashing the latest in a ref keeps setLanguage's identity
@@ -63,7 +79,7 @@ export function MaterialCalculator({
     <LanguageProvider language={language} setLanguage={changeLanguage}>
       <CalculatorShell language={language} density={density} className={className}>
         <CalculatorForm
-          materials={materials}
+          materials={validatedMaterials}
           defaultUnit={defaultUnit}
           defaultMassUnit={defaultMassUnit}
           defaultQuantity={defaultQuantity}

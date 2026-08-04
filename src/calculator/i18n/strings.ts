@@ -165,14 +165,16 @@ const PLACEHOLDER = /\{(\w+)\}/g;
  *
  * A key missing from the active language falls back to English, and a key
  * missing from both returns the key itself — a missing translation degrades
- * to something diagnosable rather than a blank or a crash.
+ * to something diagnosable rather than a blank or a crash. The same applies
+ * if `language` itself isn't a known dictionary (untrusted host input can
+ * pass anything through the JS boundary at runtime, closed union or not).
  */
 export function translate(
   language: Language,
   key: string,
   params?: TranslationParams
 ): string {
-  let template = STRINGS[language][key];
+  let template = STRINGS[language]?.[key];
 
   if (template === undefined) {
     template = STRINGS.en[key];

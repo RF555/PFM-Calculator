@@ -49,4 +49,11 @@ describe("translate", () => {
     expect(translate("en", "constraint.wallHalfSide", {})).toContain("{max}");
     warn.mockRestore();
   });
+
+  it("falls back to English instead of throwing when the language itself is unknown", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    // @ts-expect-error deliberately passing a language outside the closed union
+    expect(translate("fr", "ui.material")).toBe("Material");
+    warn.mockRestore();
+  });
 });

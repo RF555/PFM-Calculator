@@ -31,7 +31,8 @@ export function DimensionFieldset({
       <ShapeIcon
         shapeId={shapeId}
         variant="iso"
-        size={104}
+        size={176}
+        hints
         className="pfm-fieldset__figure"
       />
       <DimensionGrid>

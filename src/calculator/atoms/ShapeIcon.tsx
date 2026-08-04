@@ -29,6 +29,117 @@ const iso = (x: number, y: number, n = 1): string =>
   `${x + ISO_DX * n},${y + ISO_DY * n}`;
 
 /**
+ * A dimension callout: a dot on the feature being measured, a thin leader out
+ * to a margin, and a letter.
+ *
+ * Labels stay in Latin engineering notation (OD, ID, t, L, W, H, A/F) in every
+ * locale — that is how the abbreviations are read on drawings and mill certs,
+ * and translating them would both widen the text and lose the convention.
+ *
+ * Both ends of the leader are inset: clear of the dot at the anchor, and clear
+ * of the letter at the label, so the line never strikes through the text it
+ * points at. The label inset scales with the text, since a two-character "OD"
+ * needs more room than a single "t".
+ */
+/**
+ * Callout text is sized on the element rather than in CSS: the SVG default is
+ * 16px, which at a 62-unit viewBox is more than twice the artwork's height, so
+ * a stylesheet that fails to load or does not match leaves the letters
+ * enormous. Direction is pinned LTR — these are Latin notation and must not
+ * reorder when the widget mirrors for Hebrew.
+ */
+const HINT_TEXT = {
+  fontSize: 7,
+  fontWeight: 600,
+  fill: "currentColor",
+  stroke: "none",
+  direction: "ltr",
+  fontFamily: "var(--pfm-font)",
+} as const;
+
+/**
+ * Leaders and dimension lines run much finer than the profile they annotate,
+ * so the artwork stays the subject and the callouts read as an overlay. Set on
+ * the element rather than in CSS: these inherit the icon's own stroke-width
+ * otherwise, which is far too heavy for annotation.
+ */
+const HINT_LINE = { strokeWidth: 0.55, opacity: 0.8 } as const;
+const HINT_WITNESS = {
+  strokeWidth: 0.45,
+  opacity: 0.45,
+  // Dashed like the diameter markers: these only project the measured edge out
+  // to the dimension line and are not part of the profile's own outline.
+  strokeDasharray: "1.6 1.4",
+} as const;
+
+function hint(
+  label: string,
+  from: [number, number],
+  to: [number, number]
+): React.ReactNode {
+  const [dx, dy] = [to[0] - from[0], to[1] - from[1]];
+  const len = Math.hypot(dx, dy) || 1;
+  const [ux, uy] = [dx / len, dy / len];
+  const DOT = 1.7;
+  const pad = 3.2 + label.length * 1.7;
+  return (
+    <g key={`${label}-${to[0]}-${to[1]}`} data-hint="">
+      <circle cx={from[0]} cy={from[1]} r={0.9} data-hint-dot="" fill="currentColor" stroke="none" opacity={0.8} />
+      <line
+        x1={from[0] + ux * DOT} y1={from[1] + uy * DOT}
+        x2={to[0] - ux * pad} y2={to[1] - uy * pad}
+        {...HINT_LINE}
+      />
+      <text x={to[0]} y={to[1] + 2.5} textAnchor="middle" {...HINT_TEXT}>
+        {label}
+      </text>
+    </g>
+  );
+}
+
+/**
+ * A length callout: a dimension line running parallel to the edge it measures,
+ * offset clear of it, with witness lines joining the two. Used where a single
+ * leader would only mark a point — a bare letter beside a bar says nothing
+ * about which span is the length.
+ */
+function span(
+  label: string,
+  a: [number, number],
+  b: [number, number],
+  offset: number,
+  labelSide = 5.5
+): React.ReactNode {
+  const [dx, dy] = [b[0] - a[0], b[1] - a[1]];
+  const len = Math.hypot(dx, dy) || 1;
+  // Normal to the measured edge, pointing away from the artwork.
+  const [nx, ny] = [(-dy / len) * offset, (dx / len) * offset];
+  const [a2, b2] = [
+    [a[0] + nx, a[1] + ny] as [number, number],
+    [b[0] + nx, b[1] + ny] as [number, number],
+  ];
+  const mid: [number, number] = [(a2[0] + b2[0]) / 2, (a2[1] + b2[1]) / 2];
+  const [ux, uy] = [nx / offset, ny / offset];
+  return (
+    <g key={`${label}-span`} data-hint="">
+      <line x1={a[0]} y1={a[1]} x2={a2[0]} y2={a2[1]} data-hint-witness="" {...HINT_WITNESS} />
+      <line x1={b[0]} y1={b[1]} x2={b2[0]} y2={b2[1]} data-hint-witness="" {...HINT_WITNESS} />
+      <line x1={a2[0]} y1={a2[1]} x2={b2[0]} y2={b2[1]} {...HINT_LINE} />
+      <circle cx={a2[0]} cy={a2[1]} r={0.9} data-hint-dot="" fill="currentColor" stroke="none" opacity={0.8} />
+      <circle cx={b2[0]} cy={b2[1]} r={0.9} data-hint-dot="" fill="currentColor" stroke="none" opacity={0.8} />
+      <text
+        x={mid[0] + ux * labelSide}
+        y={mid[1] + uy * labelSide + 2.5}
+        textAnchor="middle"
+        {...HINT_TEXT}
+      >
+        {label}
+      </text>
+    </g>
+  );
+}
+
+/**
  * The interior edge seen through a hollow section's near opening: it starts at
  * the bore's bottom-left corner and recedes along the extrusion axis, parallel
  * to the body's own receding edges. Its length is solved rather than fixed —
@@ -130,6 +241,21 @@ function anglePoints(x: number, y: number, leg: number, t: number): string {
  * supplies, so the dashed marker spans the one being measured — the full outer
  * width, or the bore alone.
  */
+/**
+ * Endpoints of the round profiles' lower tangent — the edge whose run *is* the
+ * bar's length. Derived from the same constants the drawing uses so the length
+ * callout cannot drift away from the silhouette it measures.
+ */
+const ROUND_NEAR: [number, number] = [
+  15 + (-ISO_DY / Math.hypot(ISO_DX, ISO_DY)) * 13.5,
+  28 + (ISO_DX / Math.hypot(ISO_DX, ISO_DY)) * 13.5,
+];
+/** roundBar and the tubes extrude to slightly different depths. */
+const roundFar = (depth: number): [number, number] => [
+  ROUND_NEAR[0] + ISO_DX * depth,
+  ROUND_NEAR[1] + ISO_DY * depth,
+];
+
 function roundTube(measures: "outer" | "inner"): React.ReactNode {
   const R = 13.5;
   const BORE = 7.5;
@@ -233,6 +359,12 @@ const ISO: Record<ShapeId, React.ReactNode> = {
         <line x1={cx + nx} y1={cy + ny} x2={fx + nx} y2={fy + ny} />
         <line x1={cx - nx} y1={cy - ny} x2={fx - nx} y2={fy - ny} />
         <circle cx={cx} cy={cy} r={r} />
+        {/* Dashed diameter, matching the tubes: marks the measured span so a
+            callout letter reads as a diameter, not a point on the rim. */}
+        <line
+          x1={cx} y1={cy - r} x2={cx} y2={cy + r}
+          strokeWidth={1.2} strokeDasharray="3 2.5"
+        />
       </>
     );
   })(),
@@ -316,6 +448,154 @@ const ISO: Record<ShapeId, React.ReactNode> = {
 };
 
 /**
+ * Dimension callouts per shape, one per field the picker will ask for. Drawn
+ * only in the `iso` variant, which renders large enough beside the dimension
+ * inputs to carry text; the picker's flat icons stay unlabelled.
+ *
+ * The letters mirror `SHAPES[id].fields` exactly — if a shape gains or loses a
+ * field, its hints are wrong until updated.
+ */
+const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
+  /*
+   * Round profiles share roundTube()'s geometry: near face at (15,28), outer
+   * R 13.5, bore 7.5, extruded 2.1 along the axis.
+   *
+   * Diameter letters anchor on the dashed span that depicts them, and leave
+   * up-left so the leader exits between the circles rather than crossing the
+   * rim — a leader through the metal reads as sectioning the tube. Length is a
+   * span rather than a leader, running parallel to the lower tangent.
+   */
+  roundBar: (
+    <>
+      {hint("D", [15, 28 - 13.5], [-2, 4])}
+      {span("L", ROUND_NEAR, roundFar(1.95), 7)}
+    </>
+  ),
+  roundTubeOuter: (
+    <>
+      {hint("OD", [15, 28 - 13.5], [-2, 4])}
+      {hint("t", [15 - (7.5 + 13.5) / 2, 28], [-7, 28])}
+      {span("L", ROUND_NEAR, roundFar(2.1), 7)}
+    </>
+  ),
+  roundTubeInner: (
+    <>
+      {hint("ID", [15, 28 - 7.5], [-2, 4])}
+      {hint("t", [15 - (7.5 + 13.5) / 2, 28], [-7, 28])}
+      {span("L", ROUND_NEAR, roundFar(2.1), 7)}
+    </>
+  ),
+
+  /*
+   * Boxy solids. The front face carries the cross-section dimensions and the
+   * extrusion carries the length, so each span runs along the edge it names:
+   * a vertical span for height/thickness, horizontal for width/side, and the
+   * receding edge for length. Spans rather than leaders throughout — these are
+   * all distances between two edges, which a single arrow cannot express.
+   */
+
+  // Front face 20x20 at (10,16), extruded 1 unit. Square section: one side
+  // dimension covers both axes, so only A and L are asked for.
+  squareBar: (
+    <>
+      {span("A", [10, 36], [30, 36], 7)}
+      {/* Length along the bottom-right receding edge, offset down and out so
+          the span sits below the solid rather than across it. */}
+      {span("L", [30, 36], [30 + ISO_DX, 36 + ISO_DY], 7)}
+    </>
+  ),
+
+  // Front face 24 wide x 11 thick at (9,24). W across the face, t down its
+  // left edge, L along the extrusion.
+  flatBar: (
+    <>
+      {span("W", [9, 35], [33, 35], 7)}
+      {span("t", [9, 24], [9, 35], 6)}
+      {span("L", [33, 35], [33 + ISO_DX, 35 + ISO_DY], 7)}
+    </>
+  ),
+
+  // The plate's front face is its edge — 19 wide x 4 thick at (8,28) — so W
+  // spans that edge and t its thickness, while L runs back along the extrusion.
+  sheet: (
+    <>
+      {span("W", [8, 32], [27, 32], 7)}
+      {span("t", [8, 28], [8, 32], 6)}
+      {span("L", [27, 32], [27 + ISO_DX * 1.7, 32 + ISO_DY * 1.7], 7)}
+    </>
+  ),
+
+  /*
+   * Hollow sections. Outer body dimensions span the front face's edges; wall
+   * thickness spans the gap between outer and bore on the left, which is the
+   * one place that gap is seen square-on. Length runs along the bottom-right
+   * receding edge like every other solid.
+   */
+
+  // Outer (10,17)-(29,36), bore (14,21)-(25,32): a square section needs one
+  // side dimension, so only A, t and L are asked for.
+  squareHollow: (
+    <>
+      {span("A", [10, 36], [29, 36], 7)}
+      {/* A leader, not a span: the wall gap is only ~4 units, narrower than the
+          label itself, so a dimension line there is swallowed by the artwork.
+          The dot sits mid-wall on the left edge. */}
+      {hint("t", [12, 26.5], [1, 29])}
+      {span("L", [29, 36], [29 + ISO_DX * 1.5, 36 + ISO_DY * 1.5], 7)}
+    </>
+  ),
+
+  /*
+   * Face is a flat-topped hexagon centred (16,24): flats at x=5 and x=27, top
+   * and bottom vertices at y=11.3 and y=36.7. A/F is the across-flats distance
+   * — the 22-unit horizontal span between the two flats, which is how hex bar
+   * is measured and what the volume formula takes. Extruded on the shallower
+   * HEX axis, so the length span follows that instead of ISO_DX/DY.
+   */
+  hexBar: (
+    <>
+      {/* A/F spans the left flat to the right flat, projected up above the top
+          vertex; L follows the shallower HEX axis below, so the two labels sit
+          on opposite sides of the drawing. */}
+      {span("A/F", [27, 17.65], [5, 17.65], 7.5)}
+      {span("L", [16, 36.7], [16 + HEX_DX, 36.7 + HEX_DY], 8)}
+    </>
+  ),
+
+  /*
+   * L-profile spanning (11,16)-(32,37) with 6-unit walls. L1 is the upright leg
+   * down the left edge, L2 the toe along the bottom, and t the wall thickness —
+   * pointed at with a leader rather than spanned, since 6 units is narrower
+   * than the label. L2 stays a full callout even though the field is optional:
+   * blank means "same as L1", which the form's own label explains.
+   */
+  angle: (
+    <>
+      {span("L1", [11, 16], [11, 37], 7)}
+      {span("L2", [11, 37], [32, 37], 7)}
+      {/* Anchored mid-wall on the upright, led straight up: A already occupies
+          the left margin, so a leader out that way would stack the labels. */}
+      {hint("t", [14, 20], [14, 6])}
+      {span("L", [32, 37], [32 + ISO_DX, 37 + ISO_DY], 7)}
+    </>
+  ),
+
+  // Outer (6,20)-(32,35), bore (10,24)-(28,31). W across the face, H down its
+  // left edge, t the wall gap at the top-left corner.
+  rectangularHollow: (
+    <>
+      {span("W", [6, 35], [32, 35], 7)}
+      {span("H", [6, 20], [6, 35], 6)}
+      {/* Leader rather than a span, as on squareHollow: H already claims the
+          left edge, so the dot sits mid-wall along the top instead, with the
+          leader angled up-left to keep clear of the body's back edge. */}
+      {hint("t", [19, 22], [3, 13])}
+      {span("L", [32, 35], [32 + ISO_DX * 1.5, 35 + ISO_DY * 1.5], 7)}
+    </>
+  ),
+};
+
+/**
  * Per-icon nudges that centre each drawing's inked bounds (geometry plus half
  * the stroke) on the 48x48 grid. Shapes are authored at their true
  * proportions, which does not generally leave them centred — an L-profile's
@@ -342,6 +622,11 @@ interface Props {
   variant?: "flat" | "iso";
   size?: number;
   className?: string;
+  /**
+   * Label the dimensions the picker will ask for. `iso` only — the flat icons
+   * render far too small in the list to carry text.
+   */
+  hints?: boolean;
 }
 
 /**
@@ -354,14 +639,26 @@ interface Props {
  * dimension fields, where that weight would look clumsy and close up its
  * interior detail.
  */
-export function ShapeIcon({ shapeId, variant = "flat", size = 24, className }: Props) {
+export function ShapeIcon({
+  shapeId, variant = "flat", size = 24, className, hints,
+}: Props) {
   const [dx, dy] = CENTRE[`${variant}:${shapeId}`] ?? [0, 0];
+  const callouts = variant === "iso" && hints ? HINTS[shapeId] : null;
+  // Callouts sit outside the artwork, so the annotated icon widens its viewBox
+  // to make room. The rendered box grows by the same ratio, otherwise the
+  // extra margin would scale the drawing itself down.
+  const PAD = 12;
+  const box = callouts ? `${-PAD} ${-PAD} ${48 + PAD * 2} ${48 + PAD * 2}` : "0 0 48 48";
+  // `size` is the box the caller has budgeted, so the annotated icon fills the
+  // same box rather than growing past it. The artwork is correspondingly
+  // smaller — that margin is where the callouts live.
+  const px = size;
   return (
     <svg
       className={className}
-      width={size}
-      height={size}
-      viewBox="0 0 48 48"
+      width={px}
+      height={px}
+      viewBox={box}
       fill="none"
       stroke="currentColor"
       strokeWidth={variant === "iso" ? 1.6 : 2.4}
@@ -370,8 +667,14 @@ export function ShapeIcon({ shapeId, variant = "flat", size = 24, className }: P
       aria-hidden="true"
       focusable="false"
     >
+      {/*
+        Callouts share the artwork's transform. Their anchors are expressed in
+        the drawing's own coordinates, so rendering them outside this group
+        would offset every leader by the centring nudge.
+      */}
       <g transform={dx || dy ? `translate(${dx} ${dy})` : undefined}>
         {variant === "iso" ? ISO[shapeId] : FLAT[shapeId]}
+        {callouts}
       </g>
     </svg>
   );

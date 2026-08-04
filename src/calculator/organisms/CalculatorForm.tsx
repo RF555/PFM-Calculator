@@ -1,6 +1,8 @@
 import { useEffect, useId, useMemo, useReducer, useRef, useState } from "react";
+import { LanguageSwitch } from "../atoms/LanguageSwitch";
 import { SegmentedControl } from "../atoms/SegmentedControl";
 import { QuantityField } from "../atoms/QuantityField";
+import { useTranslate } from "../i18n/LanguageContext";
 import { GradeCombobox } from "../molecules/GradeCombobox";
 import { MaterialCombobox } from "../molecules/MaterialCombobox";
 import { ResultPanel, type ResultValues } from "../molecules/ResultPanel";
@@ -33,16 +35,6 @@ interface Props {
   onUnitChange?: (unit: Unit) => void;
 }
 
-const UNIT_OPTIONS = [
-  { value: "mm", label: "mm" },
-  { value: "inch", label: "inch" },
-];
-
-const MASS_OPTIONS = [
-  { value: "kg", label: "kg" },
-  { value: "lbs", label: "lbs" },
-];
-
 export function CalculatorForm({
   materials, defaultUnit, defaultMassUnit, defaultQuantity,
   onCalculate, onUnitChange,
@@ -51,6 +43,24 @@ export function CalculatorForm({
   // mounted instance, so two calculators on one page never collide on the
   // ids their fields need for <label for> and aria-controls association.
   const idPrefix = useId();
+  const t = useTranslate();
+
+  const unitOptions = useMemo(
+    () => [
+      { value: "mm", label: t("unit.mm") },
+      { value: "inch", label: t("unit.inch") },
+    ],
+    [t]
+  );
+
+  const massOptions = useMemo(
+    () => [
+      { value: "kg", label: t("unit.kg") },
+      { value: "lbs", label: t("unit.lbs") },
+    ],
+    [t]
+  );
+
   const [state, dispatch] = useReducer(
     calcReducer,
     { defaultUnit, defaultMassUnit, defaultQuantity },
@@ -120,21 +130,22 @@ export function CalculatorForm({
   }, [report]);
 
   // Parse errors and constraint violations share one map; both only surface
-  // once the field has been touched.
+  // once the field has been touched. The model stores translation keys, which
+  // are resolved to display text here.
   const visibleErrors: Record<string, string> = {};
-  for (const [key, message] of Object.entries(state.errors)) {
-    if (touched[key]) visibleErrors[key] = message;
+  for (const [key, errorKey] of Object.entries(state.errors)) {
+    if (touched[key]) visibleErrors[key] = t(errorKey);
   }
   for (const v of violations) {
-    if (touched[v.field]) visibleErrors[v.field] = v.message;
+    if (touched[v.field]) visibleErrors[v.field] = t(v.message.key, v.message.params);
   }
 
   return (
     <div className="pfm-form">
       <div className="pfm-form__toolbar">
         <SegmentedControl
-          label="Dimension unit"
-          options={UNIT_OPTIONS}
+          label={t("ui.dimensionUnit")}
+          options={unitOptions}
           value={state.unit}
           onChange={(v) => {
             dispatch({ type: "SET_UNIT", unit: v as Unit });
@@ -142,11 +153,12 @@ export function CalculatorForm({
           }}
         />
         <SegmentedControl
-          label="Mass unit"
-          options={MASS_OPTIONS}
+          label={t("ui.massUnit")}
+          options={massOptions}
           value={state.massUnit}
           onChange={(v) => dispatch({ type: "SET_MASS_UNIT", massUnit: v as MassUnit })}
         />
+        <LanguageSwitch />
       </div>
 
       <div className="pfm-form__selectors">
@@ -198,7 +210,7 @@ export function CalculatorForm({
             dispatch({ type: "RESET" });
           }}
         >
-          Reset
+          {t("ui.reset")}
         </button>
       </div>
 

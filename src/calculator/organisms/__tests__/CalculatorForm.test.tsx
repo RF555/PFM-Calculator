@@ -2,6 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useState } from "react";
 import { describe, expect, it, vi } from "vitest";
+import { LanguageProvider } from "../../i18n/LanguageContext";
 import { CalculatorForm } from "../CalculatorForm";
 
 // jsdom has neither ResizeObserver nor scrollIntoView; cmdk (used by the
@@ -18,12 +19,18 @@ if (!Element.prototype.scrollIntoView) {
 }
 
 const MATERIALS = [
-  { id: "steel", name: "Steel",
-    grades: [{ id: "steel.carbon", name: "Carbon Steel", density: 7850 }] },
+  { id: "steel", name: { he: "פלדה", en: "Steel" },
+    grades: [{ id: "steel.carbon", name: { he: "פלדת פחמן", en: "Carbon Steel" }, density: 7850 }] },
 ];
 
-function setup(props = {}) {
+function renderEn(ui: React.ReactElement) {
   return render(
+    <LanguageProvider language="en" setLanguage={() => {}}>{ui}</LanguageProvider>
+  );
+}
+
+function setup(props = {}) {
+  return renderEn(
     <div className="pfm-calc">
       <CalculatorForm
         materials={MATERIALS}
@@ -196,5 +203,24 @@ describe("CalculatorForm", () => {
     }
     render(<Host />);
     expect(screen.getByTestId("q")).toBeInTheDocument();
+  });
+
+  it("shows constraint messages in Hebrew", async () => {
+    render(
+      <LanguageProvider language="he" setLanguage={() => {}}>
+        <CalculatorForm materials={MATERIALS} defaultUnit="mm"
+          defaultMassUnit="kg" defaultQuantity={1} />
+      </LanguageProvider>
+    );
+    await pick("צורה", "פרופיל מרובע חלול");
+    await userEvent.type(screen.getByLabelText("צלע (מ\"מ)"), "50");
+    const wall = screen.getByLabelText("עובי דופן (מ\"מ)");
+    await userEvent.type(wall, "30");
+    // checkConstraints only evaluates once every field is filled (see
+    // model/shapes.ts), so Length must be filled too, or no violation
+    // is ever computed for the wall-thickness field to display.
+    await userEvent.type(screen.getByLabelText("אורך (מ\"מ)"), "1000");
+    await userEvent.tab();
+    expect(await screen.findByText(/הדופן חייבת להיות קטנה/)).toBeInTheDocument();
   });
 });

@@ -1,12 +1,14 @@
+import type { Localized } from "../i18n/types";
+
 export interface Grade {
   id: string;
-  name: string;
+  name: Localized<string>;
   density: number;
 }
 
 export interface Material {
   id: string;
-  name: string;
+  name: Localized<string>;
   grades: Grade[];
 }
 
@@ -17,6 +19,27 @@ export interface MaterialsFile {
 
 const MIN_DENSITY = 1;
 const MAX_DENSITY = 25_000;
+
+/**
+ * Every name carries both locales. A plain string — the pre-v2 shape — is
+ * rejected rather than coerced, so stale data fails at the boundary instead
+ * of rendering "[object Object]" in a dropdown.
+ */
+function validateName(name: unknown, what: string): Localized<string> {
+  if (!name || typeof name !== "object" || Array.isArray(name)) {
+    throw new Error(
+      `${what} name must be an object with "he" and "en" (got ${JSON.stringify(name)})`
+    );
+  }
+  const localized = name as Partial<Localized<string>>;
+  for (const locale of ["he", "en"] as const) {
+    const value = localized[locale];
+    if (typeof value !== "string" || value.trim() === "") {
+      throw new Error(`${what} name is missing a non-empty "${locale}" translation`);
+    }
+  }
+  return localized as Localized<string>;
+}
 
 /**
  * Validates a materials file. The file is hand-maintained, so an editing
@@ -33,7 +56,8 @@ export function validateMaterials(data: unknown): MaterialsFile {
   const seenGradeIds = new Set<string>();
 
   for (const m of file.materials) {
-    if (!m.id || !m.name) throw new Error(`material missing id or name: ${JSON.stringify(m)}`);
+    if (!m.id) throw new Error(`material missing id: ${JSON.stringify(m)}`);
+    validateName(m.name, `material "${m.id}"`);
     if (seenMaterialIds.has(m.id)) throw new Error(`duplicate material id: ${m.id}`);
     seenMaterialIds.add(m.id);
 
@@ -42,7 +66,8 @@ export function validateMaterials(data: unknown): MaterialsFile {
     }
 
     for (const g of m.grades) {
-      if (!g.id || !g.name) throw new Error(`grade missing id or name in "${m.id}"`);
+      if (!g.id) throw new Error(`grade missing id in "${m.id}"`);
+      validateName(g.name, `grade "${g.id}"`);
       if (seenGradeIds.has(g.id)) throw new Error(`duplicate grade id: ${g.id}`);
       seenGradeIds.add(g.id);
 

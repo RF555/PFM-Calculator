@@ -1,5 +1,5 @@
 import { Command } from "cmdk";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { FieldLabel } from "../atoms/FieldLabel";
 import { useTranslate } from "../i18n/LanguageContext";
 import "./Combobox.css";
@@ -18,6 +18,10 @@ interface ComboboxProps {
   onChange: (value: string) => void;
   disabled?: boolean;
   disabledHint?: string;
+  /** Optional artwork per option row. Omitted by the text-only comboboxes. */
+  renderOptionIcon?: (value: string) => ReactNode;
+  /** Optional artwork for the selected value on the trigger. */
+  renderTriggerIcon?: (value: string) => ReactNode;
 }
 
 /**
@@ -27,6 +31,7 @@ interface ComboboxProps {
  */
 export function Combobox({
   id, label, placeholder, options, value, onChange, disabled, disabledHint,
+  renderOptionIcon, renderTriggerIcon,
 }: ComboboxProps) {
   const t = useTranslate();
   const [open, setOpen] = useState(false);
@@ -63,7 +68,8 @@ export function Combobox({
         disabled={disabled}
         onClick={() => setOpen((v) => !v)}
       >
-        {triggerText}
+        {!disabled && selected && renderTriggerIcon?.(selected.value)}
+        <span className="pfm-combobox__trigger-text">{triggerText}</span>
       </button>
 
       {open && (
@@ -96,7 +102,8 @@ export function Combobox({
                     triggerRef.current?.focus();
                   }}
                 >
-                  {o.label}
+                  {renderOptionIcon?.(o.value)}
+                  <span className="pfm-combobox__option-text">{o.label}</span>
                 </Command.Item>
               ))}
             </Command.List>

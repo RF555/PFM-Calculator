@@ -15,6 +15,17 @@
   text-align: start;
   cursor: pointer;
   overflow: hidden;
+  /* Row layout so an optional leading icon sits beside the label. */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Truncation lives on the text, so a leading icon is never clipped. */
+.pfm-calc .pfm-combobox__trigger-text,
+.pfm-calc .pfm-combobox__option-text {
+  min-width: 0;
+  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -51,9 +62,25 @@
   min-height: var(--pfm-control-h);
   display: flex;
   align-items: center;
+  gap: 10px;
   padding: 0 10px;
   border-radius: calc(var(--pfm-radius) - 2px);
   cursor: pointer;
+}
+
+/*
+ * Shape artwork. Muted in the list so the names stay dominant, full contrast
+ * on the trigger where the icon carries the current selection. Fixed width
+ * keeps every label in the list starting on the same vertical line.
+ */
+.pfm-calc .pfm-combobox__icon {
+  flex: none;
+  color: var(--pfm-muted);
+}
+
+.pfm-calc .pfm-combobox__option[data-selected="true"] .pfm-combobox__icon,
+.pfm-calc .pfm-combobox__trigger .pfm-combobox__icon {
+  color: var(--pfm-fg);
 }
 
 .pfm-calc .pfm-combobox__option[data-selected="true"] {

@@ -51,42 +51,65 @@ describe("SegmentedControl", () => {
     expect(onChange).toHaveBeenCalledWith("inch");
   });
 
+  // A 3-option fixture starting on the MIDDLE option, so forward (index+1)
+  // and backward (index-1) land on different neighbours — with only 2
+  // options, move(1) and move(-1) wrap to the same element and the RTL
+  // assertion can't tell a working fix from a broken one.
+  //
+  // jsdom does not resolve `getComputedStyle().direction` from a `dir`
+  // attribute (own or ancestor) — only from an inline `style.direction` set
+  // directly on the queried element. SegmentedControl reads direction from
+  // its own root (the ref'd `.pfm-segmented` div), so the style has to be
+  // set on that exact node, not a wrapping container. Each test verifies the
+  // computed style actually resolved to "rtl" before asserting on key
+  // behaviour, so a silent regression in this setup can't masquerade as a
+  // passing test.
+  const RTL_OPTIONS = [
+    { value: "mm", label: "mm" },
+    { value: "inch", label: "inch" },
+    { value: "cm", label: "cm" },
+  ];
+
+  function renderRtl(value: string, onChange: (value: string) => void) {
+    const { container } = render(
+      <SegmentedControl label="Unit" options={RTL_OPTIONS} value={value} onChange={onChange} />
+    );
+    const root = container.querySelector(".pfm-segmented") as HTMLElement;
+    root.style.direction = "rtl";
+    expect(getComputedStyle(root).direction).toBe("rtl");
+    return root;
+  }
+
   it("ArrowLeft selects the next option in an RTL container", async () => {
     const onChange = vi.fn();
-    render(
-      <div dir="rtl">
-        <SegmentedControl label="Unit" options={OPTIONS} value="mm" onChange={onChange} />
-      </div>
-    );
-    const selected = screen.getByRole("radio", { name: "mm" });
-    selected.focus();
+    renderRtl("inch", onChange);
+    screen.getByRole("radio", { name: "inch" }).focus();
     await userEvent.keyboard("{ArrowLeft}");
-    expect(onChange).toHaveBeenCalledWith("inch");
+    expect(onChange).toHaveBeenCalledWith("cm");
   });
 
   it("ArrowRight selects the previous option in an RTL container", async () => {
     const onChange = vi.fn();
-    render(
-      <div dir="rtl">
-        <SegmentedControl label="Unit" options={OPTIONS} value="inch" onChange={onChange} />
-      </div>
-    );
-    const selected = screen.getByRole("radio", { name: "inch" });
-    selected.focus();
+    renderRtl("inch", onChange);
+    screen.getByRole("radio", { name: "inch" }).focus();
     await userEvent.keyboard("{ArrowRight}");
     expect(onChange).toHaveBeenCalledWith("mm");
   });
 
   it("ArrowDown selects the next option regardless of direction", async () => {
     const onChange = vi.fn();
-    render(
-      <div dir="rtl">
-        <SegmentedControl label="Unit" options={OPTIONS} value="mm" onChange={onChange} />
-      </div>
-    );
-    screen.getByRole("radio", { name: "mm" }).focus();
+    renderRtl("inch", onChange);
+    screen.getByRole("radio", { name: "inch" }).focus();
     await userEvent.keyboard("{ArrowDown}");
-    expect(onChange).toHaveBeenCalledWith("inch");
+    expect(onChange).toHaveBeenCalledWith("cm");
+  });
+
+  it("ArrowUp selects the previous option regardless of direction", async () => {
+    const onChange = vi.fn();
+    renderRtl("inch", onChange);
+    screen.getByRole("radio", { name: "inch" }).focus();
+    await userEvent.keyboard("{ArrowUp}");
+    expect(onChange).toHaveBeenCalledWith("mm");
   });
 
   // jsdom does not run layout or resolve the stylesheet cascade, so a rendered

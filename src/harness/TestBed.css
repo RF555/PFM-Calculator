@@ -37,7 +37,7 @@
 }
 
 .bed__bar strong {
-  margin-left: 12px;
+  margin-inline-start: 12px;
 }
 
 .bed__stage {

@@ -12,7 +12,7 @@
   border: 1px solid var(--pfm-border);
   border-radius: var(--pfm-radius);
   background: var(--pfm-bg);
-  text-align: left;
+  text-align: start;
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -25,8 +25,7 @@
 .pfm-calc .pfm-combobox__popover {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  inset-inline: 0;
   z-index: 50;
   margin-top: 4px;
   border: 1px solid var(--pfm-border);

@@ -1,17 +1,24 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { LanguageProvider } from "../../i18n/LanguageContext";
 import { QuantityField } from "../QuantityField";
+
+function renderEn(ui: React.ReactElement) {
+  return render(
+    <LanguageProvider language="en" setLanguage={() => {}}>{ui}</LanguageProvider>
+  );
+}
 
 describe("QuantityField", () => {
   it("renders the current quantity", () => {
-    render(<QuantityField idPrefix="pfm" value={3} onChange={() => {}} />);
+    renderEn(<QuantityField idPrefix="pfm" value={3} onChange={() => {}} />);
     expect(screen.getByLabelText("Quantity")).toHaveValue("3");
   });
 
   it("increments and decrements", async () => {
     const onChange = vi.fn();
-    render(<QuantityField idPrefix="pfm" value={3} onChange={onChange} />);
+    renderEn(<QuantityField idPrefix="pfm" value={3} onChange={onChange} />);
     await userEvent.click(screen.getByRole("button", { name: "Increase quantity" }));
     expect(onChange).toHaveBeenCalledWith(4);
     await userEvent.click(screen.getByRole("button", { name: "Decrease quantity" }));
@@ -19,13 +26,13 @@ describe("QuantityField", () => {
   });
 
   it("disables decrement at the minimum", () => {
-    render(<QuantityField idPrefix="pfm" value={1} onChange={() => {}} />);
+    renderEn(<QuantityField idPrefix="pfm" value={1} onChange={() => {}} />);
     expect(screen.getByRole("button", { name: "Decrease quantity" })).toBeDisabled();
   });
 
   it("ignores non-numeric typing", async () => {
     const onChange = vi.fn();
-    render(<QuantityField idPrefix="pfm" value={1} onChange={onChange} />);
+    renderEn(<QuantityField idPrefix="pfm" value={1} onChange={onChange} />);
     await userEvent.type(screen.getByLabelText("Quantity"), "x");
     expect(onChange).not.toHaveBeenCalled();
   });

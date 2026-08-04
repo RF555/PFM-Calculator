@@ -1,3 +1,4 @@
+import { useLanguage, useTranslate } from "../i18n/LanguageContext";
 import type { Material } from "../model/schema";
 import { Combobox } from "./Combobox";
 
@@ -9,21 +10,28 @@ interface Props {
 }
 
 export function GradeCombobox({ idPrefix, material, value, onChange }: Props) {
+  const { language } = useLanguage();
+  const t = useTranslate();
+
   return (
     <Combobox
       id={`${idPrefix}-grade`}
-      label="Grade"
-      placeholder="Select grade"
+      label={t("ui.grade")}
+      placeholder={t("ui.gradePlaceholder")}
       options={
         material?.grades.map((g) => ({
           value: g.id,
-          label: `${g.name} (${g.density} kg/m³)`,
+          label: t("ui.gradeOption", {
+            name: g.name[language],
+            density: g.density,
+            unit: t("unit.kgm3"),
+          }),
         })) ?? []
       }
       value={value}
       onChange={onChange}
       disabled={!material}
-      disabledHint="Select a material first"
+      disabledHint={t("ui.gradeDisabledHint")}
     />
   );
 }

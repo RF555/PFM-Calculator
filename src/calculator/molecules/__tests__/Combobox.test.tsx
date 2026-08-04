@@ -1,7 +1,14 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
+import { LanguageProvider } from "../../i18n/LanguageContext";
 import { Combobox } from "../Combobox";
+
+function renderEn(ui: React.ReactElement) {
+  return render(
+    <LanguageProvider language="en" setLanguage={() => {}}>{ui}</LanguageProvider>
+  );
+}
 
 // jsdom has neither ResizeObserver nor scrollIntoView; cmdk uses both to
 // keep the active option in view. Minimal no-op stubs are enough here.
@@ -24,20 +31,20 @@ const OPTIONS = [
 
 describe("Combobox", () => {
   it("shows the placeholder when nothing is selected", () => {
-    render(<Combobox id="m" label="Material" placeholder="Select material"
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
       options={OPTIONS} value={null} onChange={() => {}} />);
     expect(screen.getByRole("combobox", { name: "Material" }))
       .toHaveTextContent("Select material");
   });
 
   it("shows the selected option label", () => {
-    render(<Combobox id="m" label="Material" placeholder="Select material"
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
       options={OPTIONS} value="steel" onChange={() => {}} />);
     expect(screen.getByRole("combobox", { name: "Material" })).toHaveTextContent("Steel");
   });
 
   it("opens on click and lists every option", async () => {
-    render(<Combobox id="m" label="Material" placeholder="Select material"
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
       options={OPTIONS} value={null} onChange={() => {}} />);
     await userEvent.click(screen.getByRole("combobox", { name: "Material" }));
     expect(screen.getByRole("option", { name: "Steel" })).toBeInTheDocument();
@@ -46,7 +53,7 @@ describe("Combobox", () => {
   });
 
   it("filters as the user types", async () => {
-    render(<Combobox id="m" label="Material" placeholder="Select material"
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
       options={OPTIONS} value={null} onChange={() => {}} />);
     await userEvent.click(screen.getByRole("combobox", { name: "Material" }));
     await userEvent.type(screen.getByPlaceholderText("Search…"), "tita");
@@ -56,7 +63,7 @@ describe("Combobox", () => {
 
   it("reports the chosen value", async () => {
     const onChange = vi.fn();
-    render(<Combobox id="m" label="Material" placeholder="Select material"
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
       options={OPTIONS} value={null} onChange={onChange} />);
     await userEvent.click(screen.getByRole("combobox", { name: "Material" }));
     await userEvent.click(screen.getByRole("option", { name: "Aluminum" }));
@@ -64,7 +71,7 @@ describe("Combobox", () => {
   });
 
   it("shows an empty state when nothing matches", async () => {
-    render(<Combobox id="m" label="Material" placeholder="Select material"
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
       options={OPTIONS} value={null} onChange={() => {}} />);
     await userEvent.click(screen.getByRole("combobox", { name: "Material" }));
     await userEvent.type(screen.getByPlaceholderText("Search…"), "zzzz");
@@ -72,7 +79,7 @@ describe("Combobox", () => {
   });
 
   it("explains why it is disabled rather than being silently dead", () => {
-    render(<Combobox id="g" label="Grade" placeholder="Select grade"
+    renderEn(<Combobox id="g" label="Grade" placeholder="Select grade"
       options={[]} value={null} onChange={() => {}}
       disabled disabledHint="Select a material first" />);
     const trigger = screen.getByRole("combobox", { name: "Grade" });
@@ -81,11 +88,24 @@ describe("Combobox", () => {
   });
 
   it("closes on Escape", async () => {
-    render(<Combobox id="m" label="Material" placeholder="Select material"
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
       options={OPTIONS} value={null} onChange={() => {}} />);
     await userEvent.click(screen.getByRole("combobox", { name: "Material" }));
     expect(screen.getByPlaceholderText("Search…")).toBeInTheDocument();
     await userEvent.keyboard("{Escape}");
     expect(screen.queryByPlaceholderText("Search…")).not.toBeInTheDocument();
+  });
+
+  it("localizes its search placeholder and empty state", async () => {
+    render(
+      <LanguageProvider language="he" setLanguage={() => {}}>
+        <Combobox id="m" label="חומר" placeholder="בחר חומר"
+          options={OPTIONS} value={null} onChange={() => {}} />
+      </LanguageProvider>
+    );
+    await userEvent.click(screen.getByRole("combobox", { name: "חומר" }));
+    expect(screen.getByPlaceholderText("חיפוש…")).toBeInTheDocument();
+    await userEvent.type(screen.getByPlaceholderText("חיפוש…"), "zzz");
+    expect(screen.getByText("אין תוצאות")).toBeInTheDocument();
   });
 });

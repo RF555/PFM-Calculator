@@ -1,3 +1,4 @@
+import { useTranslate } from "../i18n/LanguageContext";
 import { NumberField } from "../atoms/NumberField";
 import type { Unit } from "../model/types";
 
@@ -15,10 +16,12 @@ interface Props {
 export function DimensionField({
   idPrefix, fieldKey, label, value, unit, onChange, onBlur, error,
 }: Props) {
+  const t = useTranslate();
+
   return (
     <NumberField
       id={`${idPrefix}-dim-${fieldKey}`}
-      label={`${label} (${unit})`}
+      label={t("ui.fieldWithUnit", { label, unit: t(`unit.${unit}`) })}
       value={value}
       onChange={onChange}
       onBlur={onBlur}

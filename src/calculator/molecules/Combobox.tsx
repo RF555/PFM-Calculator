@@ -1,6 +1,7 @@
 import { Command } from "cmdk";
 import { useEffect, useRef, useState } from "react";
 import { FieldLabel } from "../atoms/FieldLabel";
+import { useTranslate } from "../i18n/LanguageContext";
 import "./Combobox.css";
 
 export interface ComboboxOption {
@@ -27,6 +28,7 @@ interface ComboboxProps {
 export function Combobox({
   id, label, placeholder, options, value, onChange, disabled, disabledHint,
 }: ComboboxProps) {
+  const t = useTranslate();
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
@@ -78,11 +80,11 @@ export function Combobox({
           >
             <Command.Input
               className="pfm-combobox__search"
-              placeholder="Search…"
+              placeholder={t("ui.search")}
               autoFocus
             />
             <Command.List id={`${id}-list`} className="pfm-combobox__list">
-              <Command.Empty className="pfm-combobox__empty">No matches</Command.Empty>
+              <Command.Empty className="pfm-combobox__empty">{t("ui.noMatches")}</Command.Empty>
               {options.map((o) => (
                 <Command.Item
                   key={o.value}

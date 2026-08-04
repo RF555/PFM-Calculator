@@ -1,3 +1,4 @@
+import { useTranslate } from "../i18n/LanguageContext";
 import { DimensionField } from "../molecules/DimensionField";
 import { DimensionGrid } from "../molecules/DimensionGrid";
 import { SHAPES, type ShapeId } from "../model/shapes";
@@ -16,16 +17,18 @@ interface Props {
 export function DimensionFieldset({
   idPrefix, shapeId, unit, raw, errors, onChange, onBlur,
 }: Props) {
+  const t = useTranslate();
+
   return (
     <fieldset className="pfm-fieldset">
-      <legend className="pfm-visually-hidden">Dimensions</legend>
+      <legend className="pfm-visually-hidden">{t("ui.dimensions")}</legend>
       <DimensionGrid>
         {SHAPES[shapeId].fields.map((f) => (
           <DimensionField
             key={f.key}
             idPrefix={idPrefix}
             fieldKey={f.key}
-            label={f.label}
+            label={t(f.labelKey)}
             unit={unit}
             value={raw[f.key] ?? ""}
             error={errors[f.key]}

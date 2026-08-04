@@ -51,6 +51,44 @@ describe("SegmentedControl", () => {
     expect(onChange).toHaveBeenCalledWith("inch");
   });
 
+  it("ArrowLeft selects the next option in an RTL container", async () => {
+    const onChange = vi.fn();
+    render(
+      <div dir="rtl">
+        <SegmentedControl label="Unit" options={OPTIONS} value="mm" onChange={onChange} />
+      </div>
+    );
+    const selected = screen.getByRole("radio", { name: "mm" });
+    selected.focus();
+    await userEvent.keyboard("{ArrowLeft}");
+    expect(onChange).toHaveBeenCalledWith("inch");
+  });
+
+  it("ArrowRight selects the previous option in an RTL container", async () => {
+    const onChange = vi.fn();
+    render(
+      <div dir="rtl">
+        <SegmentedControl label="Unit" options={OPTIONS} value="inch" onChange={onChange} />
+      </div>
+    );
+    const selected = screen.getByRole("radio", { name: "inch" });
+    selected.focus();
+    await userEvent.keyboard("{ArrowRight}");
+    expect(onChange).toHaveBeenCalledWith("mm");
+  });
+
+  it("ArrowDown selects the next option regardless of direction", async () => {
+    const onChange = vi.fn();
+    render(
+      <div dir="rtl">
+        <SegmentedControl label="Unit" options={OPTIONS} value="mm" onChange={onChange} />
+      </div>
+    );
+    screen.getByRole("radio", { name: "mm" }).focus();
+    await userEvent.keyboard("{ArrowDown}");
+    expect(onChange).toHaveBeenCalledWith("inch");
+  });
+
   // jsdom does not run layout or resolve the stylesheet cascade, so a rendered
   // option's computed height can't be asserted from a DOM test. Instead this
   // reads the CSS source directly and checks that the option — the actual tap

@@ -31,14 +31,32 @@ export function SegmentedControl({
     buttons?.[next]?.focus();
   }
 
+  /**
+   * Horizontal arrows follow the writing direction: in RTL the next option
+   * sits to the left. Read from the DOM rather than context so the control
+   * stays correct wherever it is mounted. Vertical arrows are unaffected.
+   */
+  function isRtl(): boolean {
+    const node = ref.current;
+    if (!node) return false;
+    return getComputedStyle(node).direction === "rtl";
+  }
+
   function onKeyDown(e: React.KeyboardEvent) {
+    const forward = isRtl() ? -1 : 1;
     switch (e.key) {
       case "ArrowRight":
+        e.preventDefault();
+        move(forward);
+        break;
+      case "ArrowLeft":
+        e.preventDefault();
+        move(-forward);
+        break;
       case "ArrowDown":
         e.preventDefault();
         move(1);
         break;
-      case "ArrowLeft":
       case "ArrowUp":
         e.preventDefault();
         move(-1);

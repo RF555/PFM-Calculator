@@ -1,10 +1,10 @@
 export type ParseResult =
   | { ok: true; value: number }
-  | { ok: false; error: string };
+  | { ok: false; errorKey: string };
 
-const EMPTY: ParseResult = { ok: false, error: "" };
-const NOT_A_NUMBER: ParseResult = { ok: false, error: "Enter a number" };
-const NOT_POSITIVE: ParseResult = { ok: false, error: "Must be greater than zero" };
+const EMPTY: ParseResult = { ok: false, errorKey: "" };
+const NOT_A_NUMBER: ParseResult = { ok: false, errorKey: "error.notANumber" };
+const NOT_POSITIVE: ParseResult = { ok: false, errorKey: "error.notPositive" };
 
 // Separator is either whitespace or a single hyphen — not a run of both.
 // A looser class such as [\s-]+ absorbs a stray minus, so "1 -1/2" would

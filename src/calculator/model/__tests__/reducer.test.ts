@@ -37,9 +37,9 @@ describe("calcReducer", () => {
     expect(withDims.dimensions.diameter).toBe(50);
   });
 
-  it("records a parse error without storing a value", () => {
+  it("records a parse error key without storing a value", () => {
     const s = calcReducer(withShape, { type: "SET_DIMENSION", key: "diameter", raw: "abc" });
-    expect(s.errors.diameter).toBe("Enter a number");
+    expect(s.errors.diameter).toBe("error.notANumber");
     expect(s.dimensions.diameter).toBeUndefined();
   });
 

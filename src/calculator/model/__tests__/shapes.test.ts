@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { SHAPES, checkConstraints, volumeMm3 } from "../shapes";
+import { SHAPES, SHAPE_IDS, checkConstraints, volumeMm3 } from "../shapes";
+import type { ShapeId } from "../shapes";
+import type { DimensionValues } from "../types";
 import { weightKg } from "../calculate";
+import { STRINGS } from "../../i18n/strings";
 
 const STEEL = 7850;
 const ALL = Object.keys(SHAPES) as Array<keyof typeof SHAPES>;
@@ -10,11 +13,28 @@ describe("registry completeness", () => {
     expect(ALL).toHaveLength(10);
   });
 
-  it.each(ALL)("%s declares a label, fields and a volume function", (id) => {
+  it.each(ALL)("%s declares a labelKey, fields and a volume function", (id) => {
     const s = SHAPES[id];
-    expect(s.label.length).toBeGreaterThan(0);
+    expect(s.labelKey.length).toBeGreaterThan(0);
     expect(s.fields.length).toBeGreaterThan(0);
     expect(typeof s.volume).toBe("function");
+  });
+
+  it("every shape label key exists in both dictionaries", () => {
+    for (const id of SHAPE_IDS) {
+      const key = SHAPES[id].labelKey;
+      expect(STRINGS.en[key], `en missing ${key}`).toBeTruthy();
+      expect(STRINGS.he[key], `he missing ${key}`).toBeTruthy();
+    }
+  });
+
+  it("every dimension field label key exists in both dictionaries", () => {
+    for (const id of SHAPE_IDS) {
+      for (const field of SHAPES[id].fields) {
+        expect(STRINGS.en[field.labelKey], `en missing ${field.labelKey}`).toBeTruthy();
+        expect(STRINGS.he[field.labelKey], `he missing ${field.labelKey}`).toBeTruthy();
+      }
+    }
   });
 });
 
@@ -80,7 +100,7 @@ describe("angle supports unequal legs", () => {
     const [v] = checkConstraints("angle", {
       leg: 100, legB: 75, thickness: 80, length: 1000,
     });
-    expect(v.message).toContain("75");
+    expect(v.message.params).toEqual({ max: "75.00" });
   });
 
   it("unequal-leg geometry within limits passes the constraint", () => {
@@ -128,10 +148,31 @@ describe("constraints reject impossible geometry", () => {
     ).toHaveLength(0);
   });
 
-  it("constraint messages state the actual limit", () => {
-    const [v] = checkConstraints("squareHollow", {
+  it("returns a translatable message for a violated constraint", () => {
+    const violations = checkConstraints("squareHollow", {
       side: 50, wallThickness: 30, length: 1000,
     });
-    expect(v.message).toContain("25");
+    expect(violations).toHaveLength(1);
+    expect(violations[0].field).toBe("wallThickness");
+    expect(violations[0].message.key).toBe("constraint.wallHalfSide");
+    expect(violations[0].message.params).toEqual({ max: "25.00" });
+  });
+
+  it("every constraint message key exists in both dictionaries", () => {
+    // Values chosen to violate every constraint in the registry.
+    const cases: Array<[ShapeId, DimensionValues]> = [
+      ["roundTubeOuter", { outerDiameter: 50, wallThickness: 30, length: 100 }],
+      ["rectangularHollow", { width: 50, height: 40, wallThickness: 30, length: 100 }],
+      ["squareHollow", { side: 50, wallThickness: 30, length: 100 }],
+      ["angle", { leg: 50, thickness: 60, length: 100 }],
+    ];
+    for (const [id, dims] of cases) {
+      const violations = checkConstraints(id, dims);
+      expect(violations.length, `${id} produced no violation`).toBeGreaterThan(0);
+      for (const v of violations) {
+        expect(STRINGS.en[v.message.key], `en missing ${v.message.key}`).toBeTruthy();
+        expect(STRINGS.he[v.message.key], `he missing ${v.message.key}`).toBeTruthy();
+      }
+    }
   });
 });

@@ -14,6 +14,7 @@ export interface CalcState {
   dimensions: DimensionValues;
   /** Exactly what the user typed, per field. */
   raw: Record<string, string>;
+  /** Translation keys for per-field errors, resolved by the view. */
   errors: Record<string, string>;
 }
 
@@ -108,13 +109,13 @@ export function calcReducer(state: CalcState, action: CalcAction): CalcState {
       if (result.ok) {
         dimensions[action.key] = toCanonical(result.value, state.unit);
         delete errors[action.key];
-      } else if ("error" in result) {
-        // `"error" in result` (rather than the `else` alone) keeps this branch
-        // narrowed to the error variant under this project's tsconfig, which
-        // has strictNullChecks off and loses discriminated-union narrowing
-        // on a plain `else`.
+      } else if ("errorKey" in result) {
+        // `"errorKey" in result` (rather than the `else` alone) keeps this
+        // branch narrowed to the error variant under this project's tsconfig,
+        // which has strictNullChecks off and loses discriminated-union
+        // narrowing on a plain `else`.
         delete dimensions[action.key];
-        if (result.error) errors[action.key] = result.error;
+        if (result.errorKey) errors[action.key] = result.errorKey;
         else delete errors[action.key];
       }
 

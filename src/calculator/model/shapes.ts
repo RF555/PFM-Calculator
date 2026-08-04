@@ -18,52 +18,52 @@ const effectiveLegB = (d: DimensionValues): number =>
 
 export const SHAPES = {
   sheet: {
-    label: "Sheet / Plate",
+    labelKey: "shape.sheet",
     fields: [
-      { key: "length", label: "Length" },
-      { key: "width", label: "Width" },
-      { key: "thickness", label: "Thickness" },
+      { key: "length", labelKey: "field.length" },
+      { key: "width", labelKey: "field.width" },
+      { key: "thickness", labelKey: "field.thickness" },
     ],
     constraints: [],
     volume: (d) => d.length * d.width * d.thickness,
   },
 
   roundBar: {
-    label: "Round Bar",
+    labelKey: "shape.roundBar",
     fields: [
-      { key: "diameter", label: "Diameter" },
-      { key: "length", label: "Length" },
+      { key: "diameter", labelKey: "field.diameter" },
+      { key: "length", labelKey: "field.length" },
     ],
     constraints: [],
     volume: (d) => Math.PI * sq(d.diameter / 2) * d.length,
   },
 
   squareBar: {
-    label: "Square Bar",
+    labelKey: "shape.squareBar",
     fields: [
-      { key: "side", label: "Side" },
-      { key: "length", label: "Length" },
+      { key: "side", labelKey: "field.side" },
+      { key: "length", labelKey: "field.length" },
     ],
     constraints: [],
     volume: (d) => sq(d.side) * d.length,
   },
 
   flatBar: {
-    label: "Flat Bar",
+    labelKey: "shape.flatBar",
     fields: [
-      { key: "width", label: "Width" },
-      { key: "thickness", label: "Thickness" },
-      { key: "length", label: "Length" },
+      { key: "width", labelKey: "field.width" },
+      { key: "thickness", labelKey: "field.thickness" },
+      { key: "length", labelKey: "field.length" },
     ],
     constraints: [],
     volume: (d) => d.width * d.thickness * d.length,
   },
 
   hexBar: {
-    label: "Hexagonal Bar",
+    labelKey: "shape.hexBar",
     fields: [
-      { key: "flatToFlat", label: "Flat-to-Flat" },
-      { key: "length", label: "Length" },
+      { key: "flatToFlat", labelKey: "field.flatToFlat" },
+      { key: "length", labelKey: "field.length" },
     ],
     constraints: [],
     // Area by across-flats F: side = F/sqrt(3), so area = (sqrt(3)/2)*F^2.
@@ -71,18 +71,20 @@ export const SHAPES = {
   },
 
   roundTubeOuter: {
-    label: "Round Tube (Outer Ø + Wall)",
+    labelKey: "shape.roundTubeOuter",
     fields: [
-      { key: "outerDiameter", label: "Outer Diameter" },
-      { key: "wallThickness", label: "Wall Thickness" },
-      { key: "length", label: "Length" },
+      { key: "outerDiameter", labelKey: "field.outerDiameter" },
+      { key: "wallThickness", labelKey: "field.wallThickness" },
+      { key: "length", labelKey: "field.length" },
     ],
     constraints: [
       {
         field: "wallThickness",
         test: (d) => d.wallThickness < d.outerDiameter / 2,
-        message: (d) =>
-          `Wall must be less than half the outer diameter (under ${formatNumber(d.outerDiameter / 2)})`,
+        message: (d) => ({
+          key: "constraint.wallHalfOuterDiameter",
+          params: { max: formatNumber(d.outerDiameter / 2) },
+        }),
       },
     ],
     volume: (d) =>
@@ -91,11 +93,11 @@ export const SHAPES = {
   },
 
   roundTubeInner: {
-    label: "Round Tube (Inner Ø + Wall)",
+    labelKey: "shape.roundTubeInner",
     fields: [
-      { key: "innerDiameter", label: "Inner Diameter" },
-      { key: "wallThickness", label: "Wall Thickness" },
-      { key: "length", label: "Length" },
+      { key: "innerDiameter", labelKey: "field.innerDiameter" },
+      { key: "wallThickness", labelKey: "field.wallThickness" },
+      { key: "length", labelKey: "field.length" },
     ],
     // Wall grows outward from a fixed bore, so there is no upper bound.
     constraints: [],
@@ -105,19 +107,21 @@ export const SHAPES = {
   },
 
   rectangularHollow: {
-    label: "Rectangular Hollow Section",
+    labelKey: "shape.rectangularHollow",
     fields: [
-      { key: "width", label: "Width" },
-      { key: "height", label: "Height" },
-      { key: "wallThickness", label: "Wall Thickness" },
-      { key: "length", label: "Length" },
+      { key: "width", labelKey: "field.width" },
+      { key: "height", labelKey: "field.height" },
+      { key: "wallThickness", labelKey: "field.wallThickness" },
+      { key: "length", labelKey: "field.length" },
     ],
     constraints: [
       {
         field: "wallThickness",
         test: (d) => d.wallThickness < Math.min(d.width, d.height) / 2,
-        message: (d) =>
-          `Wall must be less than half the smaller side (under ${formatNumber(Math.min(d.width, d.height) / 2)})`,
+        message: (d) => ({
+          key: "constraint.wallHalfSmallerSide",
+          params: { max: formatNumber(Math.min(d.width, d.height) / 2) },
+        }),
       },
     ],
     volume: (d) =>
@@ -127,18 +131,20 @@ export const SHAPES = {
   },
 
   squareHollow: {
-    label: "Square Hollow Section",
+    labelKey: "shape.squareHollow",
     fields: [
-      { key: "side", label: "Side" },
-      { key: "wallThickness", label: "Wall Thickness" },
-      { key: "length", label: "Length" },
+      { key: "side", labelKey: "field.side" },
+      { key: "wallThickness", labelKey: "field.wallThickness" },
+      { key: "length", labelKey: "field.length" },
     ],
     constraints: [
       {
         field: "wallThickness",
         test: (d) => d.wallThickness < d.side / 2,
-        message: (d) =>
-          `Wall must be less than half the side (under ${formatNumber(d.side / 2)})`,
+        message: (d) => ({
+          key: "constraint.wallHalfSide",
+          params: { max: formatNumber(d.side / 2) },
+        }),
       },
     ],
     volume: (d) =>
@@ -146,19 +152,21 @@ export const SHAPES = {
   },
 
   angle: {
-    label: "Angle (L-profile)",
+    labelKey: "shape.angle",
     fields: [
-      { key: "leg", label: "Leg A" },
-      { key: "legB", label: "Leg B (optional)", optional: true },
-      { key: "thickness", label: "Thickness" },
-      { key: "length", label: "Length" },
+      { key: "leg", labelKey: "field.legA" },
+      { key: "legB", labelKey: "field.legB", optional: true },
+      { key: "thickness", labelKey: "field.thickness" },
+      { key: "length", labelKey: "field.length" },
     ],
     constraints: [
       {
         field: "thickness",
         test: (d) => d.thickness < Math.min(d.leg, effectiveLegB(d)),
-        message: (d) =>
-          `Thickness must be less than the smaller leg (under ${formatNumber(Math.min(d.leg, effectiveLegB(d)))})`,
+        message: (d) => ({
+          key: "constraint.thicknessSmallerLeg",
+          params: { max: formatNumber(Math.min(d.leg, effectiveLegB(d))) },
+        }),
       },
     ],
     // Equal-leg when legB is absent: effectiveLegB falls back to leg, which

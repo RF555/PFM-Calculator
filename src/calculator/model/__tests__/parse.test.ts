@@ -20,15 +20,15 @@ describe("parseDimension", () => {
   });
 
   it.each([
-    ["abc", "Enter a number"],
-    ["50mm", "Enter a number"],
-    ["1/0", "Enter a number"],
-    ["-10", "Must be greater than zero"],
-    ["0", "Must be greater than zero"],
-  ])("rejects %s", (raw, error) => {
+    ["abc", "error.notANumber"],
+    ["50mm", "error.notANumber"],
+    ["1/0", "error.notANumber"],
+    ["-10", "error.notPositive"],
+    ["0", "error.notPositive"],
+  ])("rejects %s", (raw, errorKey) => {
     const r = parseDimension(raw);
     expect(r.ok).toBe(false);
-    if (!r.ok) expect(r.error).toBe(error);
+    if (!r.ok) expect(r.errorKey).toBe(errorKey);
   });
 
   // A stray minus must not be absorbed by the mixed-fraction separator.
@@ -42,6 +42,28 @@ describe("parseDimension", () => {
   );
 
   it("treats empty input as not-yet-entered, not an error", () => {
-    expect(parseDimension("")).toEqual({ ok: false, error: "" });
+    expect(parseDimension("")).toEqual({ ok: false, errorKey: "" });
+  });
+});
+
+describe("parseDimension error keys", () => {
+  it("rejects non-numeric input with a key", () => {
+    const result = parseDimension("abc");
+    expect(result.ok).toBe(false);
+    expect("errorKey" in result && result.errorKey).toBe("error.notANumber");
+  });
+
+  it("rejects zero and negatives with a key", () => {
+    for (const input of ["0", "-5"]) {
+      const result = parseDimension(input);
+      expect(result.ok).toBe(false);
+      expect("errorKey" in result && result.errorKey).toBe("error.notPositive");
+    }
+  });
+
+  it("reports empty input with no error key", () => {
+    const result = parseDimension("");
+    expect(result.ok).toBe(false);
+    expect("errorKey" in result && result.errorKey).toBe("");
   });
 });

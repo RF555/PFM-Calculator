@@ -58,9 +58,12 @@ export function ResultPanel({ result, quantity, massUnit }: Props) {
           primary={result ? `${formatNumber(result.volumeCm3)} ${t("unit.cm3")}` : PLACEHOLDER}
         />
         {quantity > 1 && (
-          <div data-testid="unit-stat">
-            <ResultStatWithTestIds prefix="unit" label={t("ui.unitWeight")} {...unit} />
-          </div>
+          <ResultStatWithTestIds
+            prefix="unit"
+            testId="unit-stat"
+            label={t("ui.unitWeight")}
+            {...unit}
+          />
         )}
         <ResultStatWithTestIds
           prefix="total"
@@ -76,16 +79,17 @@ export function ResultPanel({ result, quantity, massUnit }: Props) {
 }
 
 function ResultStatWithTestIds({
-  prefix, label, primary, secondary, emphasis,
+  prefix, testId, label, primary, secondary, emphasis,
 }: {
   prefix: string;
+  testId?: string;
   label: string;
   primary: string;
   secondary?: string;
   emphasis?: boolean;
 }) {
   return (
-    <div className="pfm-stat-wrap">
+    <div className="pfm-stat-wrap" data-testid={testId}>
       <span className="pfm-stat__label">{label}</span>
       <span
         className={emphasis ? "pfm-stat__primary pfm-stat__primary--lg" : "pfm-stat__primary"}

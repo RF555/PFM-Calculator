@@ -48,9 +48,9 @@ describe("ResultPanel", () => {
   it("computes the total from full precision, not the rounded display", () => {
     renderEn(<ResultPanel result={{ unitKg: 0.2466150233, volumeCm3: 31.4 }}
       quantity={10000} massUnit="kg" />);
-    // 0.2466150233 * 10000 = 2466.150233 -> "2466.1502"
+    // 0.2466150233 * 10000 = 2466.150233 -> "2,466.1502"
     // Multiplying the displayed 0.2466 would give 2466.00
-    expect(screen.getByTestId("total-primary")).toHaveTextContent("2466.1502 kg");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("2,466.1502 kg");
   });
 
   it("renders no action buttons — the panel only displays", () => {

@@ -10,6 +10,8 @@
   font-variant-numeric: tabular-nums;
   font-size: var(--pfm-fs-lg);
   font-weight: 700;
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .pfm-calc .pfm-stat[data-emphasis] .pfm-stat__primary {

@@ -31,6 +31,10 @@ export function NumberField({
         type="text"
         inputMode="decimal"
         autoComplete="off"
+        /* Content is numeric whatever the interface language. Left to inherit
+           rtl, a mixed fraction reorders visually — "1 1/2" paints as "1/21" —
+           because the space splits it into two bidi runs. */
+        dir="ltr"
         value={value}
         placeholder={hint}
         aria-invalid={error ? true : undefined}

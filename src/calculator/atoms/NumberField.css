@@ -25,6 +25,17 @@
   max-width: var(--pfm-field-w);
 }
 
+/*
+ * The input carries dir="ltr" so mixed fractions ("1 1/2") keep their typed
+ * order. That also makes its own `start` the left edge, which would strand the
+ * digits away from a Hebrew label, so alignment is keyed off the form's
+ * direction rather than the field's. Scoped to dimension fields — the quantity
+ * input sits between its step buttons and stays centred.
+ */
+.pfm-calc[dir="rtl"] .pfm-number-field .pfm-input {
+  text-align: right;
+}
+
 .pfm-calc .pfm-input[aria-invalid="true"] {
   border-color: var(--pfm-danger);
 }

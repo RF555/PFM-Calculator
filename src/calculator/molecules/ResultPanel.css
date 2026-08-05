@@ -7,20 +7,47 @@
   min-height: 96px;
 }
 
+/*
+ * Wrapping is driven by the figures themselves, not a fixed breakpoint: each
+ * stat asks for exactly the width its widest line needs, so a row of short
+ * values stays three-across in a container that a row of long ones wraps.
+ * Flex rather than grid because grid's auto-fit needs a constant minimum,
+ * which would reserve seven-digit space even when showing "2.50 kg".
+ */
 .pfm-calc .pfm-results__grid {
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-wrap: wrap;
   gap: var(--pfm-gap);
 }
 
-@container pfm-calc (min-width: 30rem) {
-  .pfm-calc .pfm-results__grid { grid-template-columns: repeat(3, auto); }
+.pfm-calc .pfm-stat-wrap,
+.pfm-calc .pfm-results__grid > .pfm-stat {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pfm-gap-tight);
+  /* Grow into spare room, never shrink below the text, wrap when it won't fit. */
+  flex: 1 1 auto;
+  min-width: min-content;
+  /*
+   * Values carry dir="ltr" to keep digits unmirrored, which would otherwise
+   * make them align left inside an RTL panel while their label aligns right.
+   * Aligning them as flex items ignores each span's own direction, so a value
+   * always sits on the same edge as the label above it.
+   */
+  align-items: flex-start;
 }
-
-.pfm-calc .pfm-stat-wrap { display: flex; flex-direction: column; gap: var(--pfm-gap-tight); min-width: 0; }
 
 .pfm-calc .pfm-stat__primary--lg {
   font-size: var(--pfm-fs-xl);
   color: var(--pfm-accent);
 }
 
+/*
+ * Long figures wrap between the number and its unit instead of splitting the
+ * digit run, and never spill past the panel edge.
+ */
+.pfm-calc .pfm-stat__primary,
+.pfm-calc .pfm-stat__secondary {
+  min-width: 0;
+  overflow-wrap: break-word;
+}

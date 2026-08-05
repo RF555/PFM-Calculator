@@ -54,7 +54,7 @@ describe("CalculatorForm", () => {
     expect(screen.queryByRole("button", { name: /calculate/i })).not.toBeInTheDocument();
 
     await pick("Material", "Steel");
-    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Grade", "Carbon Steel");
     await pick("Shape", "Round Bar");
     await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
@@ -72,7 +72,7 @@ describe("CalculatorForm", () => {
   it("suppresses the result when geometry is impossible", async () => {
     setup();
     await pick("Material", "Steel");
-    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Grade", "Carbon Steel");
     await pick("Shape", "Square Hollow Section");
     await userEvent.type(screen.getByLabelText("Side (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "30");
@@ -96,7 +96,7 @@ describe("CalculatorForm", () => {
   it("multiplies by quantity", async () => {
     setup();
     await pick("Material", "Steel");
-    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Grade", "Carbon Steel");
     await pick("Shape", "Round Bar");
     await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
@@ -110,7 +110,7 @@ describe("CalculatorForm", () => {
     const onCalculate = vi.fn();
     setup({ onCalculate });
     await pick("Material", "Steel");
-    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Grade", "Carbon Steel");
     await pick("Shape", "Round Bar");
     await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
@@ -124,7 +124,7 @@ describe("CalculatorForm", () => {
     const onCalculate = vi.fn();
     setup({ onCalculate });
     await pick("Material", "Steel");
-    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Grade", "Carbon Steel");
     await pick("Shape", "Square Hollow Section");
     await userEvent.type(screen.getByLabelText("Side (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "5");
@@ -142,7 +142,7 @@ describe("CalculatorForm", () => {
   it("calculates the angle shape with the optional Leg B left blank", async () => {
     setup();
     await pick("Material", "Steel");
-    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Grade", "Carbon Steel");
     await pick("Shape", "Angle (L-profile)");
     await userEvent.type(screen.getByLabelText("Leg A (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Thickness (mm)"), "5");
@@ -159,7 +159,7 @@ describe("CalculatorForm", () => {
   it("calculates unequal-leg angle once Leg B is filled in", async () => {
     setup();
     await pick("Material", "Steel");
-    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Grade", "Carbon Steel");
     await pick("Shape", "Angle (L-profile)");
     await userEvent.type(screen.getByLabelText("Leg A (mm)"), "100");
     await userEvent.type(screen.getByLabelText("Leg B (optional) (mm)"), "75");

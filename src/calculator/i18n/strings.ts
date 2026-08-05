@@ -25,8 +25,6 @@ const en: Dictionary = {
   "ui.unitWeight": "Unit weight",
   "ui.weight": "Weight",
   "ui.total": "Total (× {quantity})",
-  // Grade option text: "304 (8000 kg/m³)"
-  "ui.gradeOption": "{name} ({density} {unit})",
   // Dimension field label: "Diameter (mm)"
   "ui.fieldWithUnit": "{label} ({unit})",
 
@@ -102,7 +100,6 @@ const he: Dictionary = {
   "ui.unitWeight": "משקל ליחידה",
   "ui.weight": "משקל",
   "ui.total": "סה\"כ (× {quantity})",
-  "ui.gradeOption": "{name} ({density} {unit})",
   "ui.fieldWithUnit": "{label} ({unit})",
 
   "unit.mm": "מ\"מ",

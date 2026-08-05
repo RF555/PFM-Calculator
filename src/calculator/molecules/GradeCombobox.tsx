@@ -21,11 +21,7 @@ export function GradeCombobox({ idPrefix, material, value, onChange }: Props) {
       options={
         material?.grades.map((g) => ({
           value: g.id,
-          label: t("ui.gradeOption", {
-            name: g.name[language],
-            density: g.density,
-            unit: t("unit.kgm3"),
-          }),
+          label: g.name[language],
         })) ?? []
       }
       value={value}

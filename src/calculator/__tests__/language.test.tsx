@@ -53,7 +53,7 @@ describe("language switching", () => {
   it("preserves all state across a language switch", async () => {
     render(<MaterialCalculator defaultLanguage="en" />);
     await pick("Material", "Steel");
-    await pick("Grade", "Carbon Steel (7850 kg/m³)");
+    await pick("Grade", "Carbon Steel (Structural / A36) (7850 kg/m³)");
     await pick("Shape", "Round Bar");
     await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");

@@ -9,28 +9,348 @@
       },
       "grades": [
         {
-          "id": "steel.carbon-steel",
+          "id": "steel.1-2083",
           "name": {
-            "he": "פלדת פחמן",
-            "en": "Carbon Steel"
+            "he": "1.2083",
+            "en": "1.2083"
+          },
+          "density": 7700
+        },
+        {
+          "id": "steel.1-2085",
+          "name": {
+            "he": "1.2085",
+            "en": "1.2085"
+          },
+          "density": 7700
+        },
+        {
+          "id": "steel.1-2210",
+          "name": {
+            "he": "1.2210",
+            "en": "1.2210"
+          },
+          "density": 7830
+        },
+        {
+          "id": "steel.1-2311",
+          "name": {
+            "he": "1.2311",
+            "en": "1.2311"
           },
           "density": 7850
         },
         {
-          "id": "steel.alloy-steel",
+          "id": "steel.1-2312",
           "name": {
-            "he": "פלדת סגסוגת",
-            "en": "Alloy Steel"
+            "he": "1.2312",
+            "en": "1.2312"
           },
           "density": 7850
         },
         {
-          "id": "steel.tool-steel",
+          "id": "steel.1-2316",
           "name": {
-            "he": "פלדת כלים",
-            "en": "Tool Steel"
+            "he": "1.2316",
+            "en": "1.2316"
+          },
+          "density": 7700
+        },
+        {
+          "id": "steel.1-2344",
+          "name": {
+            "he": "1.2344",
+            "en": "1.2344"
+          },
+          "density": 7800
+        },
+        {
+          "id": "steel.1-2378",
+          "name": {
+            "he": "1.2378",
+            "en": "1.2378"
+          },
+          "density": 7700
+        },
+        {
+          "id": "steel.1-2379",
+          "name": {
+            "he": "1.2379",
+            "en": "1.2379"
+          },
+          "density": 7700
+        },
+        {
+          "id": "steel.1-2436",
+          "name": {
+            "he": "1.2436",
+            "en": "1.2436"
+          },
+          "density": 7700
+        },
+        {
+          "id": "steel.1-2510",
+          "name": {
+            "he": "1.2510",
+            "en": "1.2510"
           },
           "density": 7850
+        },
+        {
+          "id": "steel.1-2714",
+          "name": {
+            "he": "1.2714",
+            "en": "1.2714"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.1-2767",
+          "name": {
+            "he": "1.2767",
+            "en": "1.2767"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.12l14",
+          "name": {
+            "he": "12L14",
+            "en": "12L14"
+          },
+          "density": 7870
+        },
+        {
+          "id": "steel.1010",
+          "name": {
+            "he": "1010",
+            "en": "1010"
+          },
+          "density": 7870
+        },
+        {
+          "id": "steel.1018",
+          "name": {
+            "he": "1018",
+            "en": "1018"
+          },
+          "density": 7870
+        },
+        {
+          "id": "steel.1020",
+          "name": {
+            "he": "1020",
+            "en": "1020"
+          },
+          "density": 7870
+        },
+        {
+          "id": "steel.1045",
+          "name": {
+            "he": "1045",
+            "en": "1045"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.1113",
+          "name": {
+            "he": "1113",
+            "en": "1113"
+          },
+          "density": 7870
+        },
+        {
+          "id": "steel.1117",
+          "name": {
+            "he": "1117",
+            "en": "1117"
+          },
+          "density": 7860
+        },
+        {
+          "id": "steel.3115",
+          "name": {
+            "he": "3115",
+            "en": "3115"
+          },
+          "density": 7860
+        },
+        {
+          "id": "steel.4130",
+          "name": {
+            "he": "4130",
+            "en": "4130"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.4140",
+          "name": {
+            "he": "4140",
+            "en": "4140"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.4340",
+          "name": {
+            "he": "4340",
+            "en": "4340"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.5115",
+          "name": {
+            "he": "5115",
+            "en": "5115"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.8620",
+          "name": {
+            "he": "8620",
+            "en": "8620"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.alloy-steel-4130-chrome-moly",
+          "name": {
+            "he": "פלדת סגסוגת (4130 כרום-מוליבדן)",
+            "en": "Alloy Steel (4130 Chrome-Moly)"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.alloy-steel-4140-chrome-moly",
+          "name": {
+            "he": "פלדת סגסוגת (4140 כרום-מוליבדן)",
+            "en": "Alloy Steel (4140 Chrome-Moly)"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.alloy-steel-4340-ni-cr-mo",
+          "name": {
+            "he": "פלדת סגסוגת (4340 ניקל-כרום-מוליבדן)",
+            "en": "Alloy Steel (4340 Ni-Cr-Mo)"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.alloy-steel-9310-gear-steel",
+          "name": {
+            "he": "פלדת סגסוגת (9310 לגלגלי שיניים)",
+            "en": "Alloy Steel (9310 Gear Steel)"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.carbon-steel-structural-a36",
+          "name": {
+            "he": "פלדת פחמן (מבנית / A36)",
+            "en": "Carbon Steel (Structural / A36)"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.ductile-cast-iron",
+          "name": {
+            "he": "יציקת ברזל נתיכה",
+            "en": "Ductile Cast Iron"
+          },
+          "density": 7200
+        },
+        {
+          "id": "steel.grey-cast-iron",
+          "name": {
+            "he": "יציקת ברזל אפורה",
+            "en": "Grey Cast Iron"
+          },
+          "density": 7150
+        },
+        {
+          "id": "steel.low-carbon-steel-1018",
+          "name": {
+            "he": "פלדת פחמן נמוכה (1018)",
+            "en": "Low Carbon Steel (1018)"
+          },
+          "density": 7870
+        },
+        {
+          "id": "steel.maraging-steel-18ni-300",
+          "name": {
+            "he": "פלדת מרייג'ינג (18Ni-300)",
+            "en": "Maraging Steel (18Ni-300)"
+          },
+          "density": 8000
+        },
+        {
+          "id": "steel.medium-carbon-steel-1045",
+          "name": {
+            "he": "פלדת פחמן בינונית (1045)",
+            "en": "Medium Carbon Steel (1045)"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.st-37",
+          "name": {
+            "he": "St 37",
+            "en": "St 37"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.st-52",
+          "name": {
+            "he": "St 52",
+            "en": "St 52"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.tool-steel-d2-cold-work",
+          "name": {
+            "he": "פלדת כלים (D2 לעיבוד קר)",
+            "en": "Tool Steel (D2 Cold Work)"
+          },
+          "density": 7680
+        },
+        {
+          "id": "steel.tool-steel-general-h13",
+          "name": {
+            "he": "פלדת כלים (כללית / H13)",
+            "en": "Tool Steel (General / H13)"
+          },
+          "density": 7850
+        },
+        {
+          "id": "steel.tool-steel-m2-high-speed",
+          "name": {
+            "he": "פלדת כלים (M2 מהירה)",
+            "en": "Tool Steel (M2 High Speed)"
+          },
+          "density": 8160
+        },
+        {
+          "id": "steel.white-cast-iron",
+          "name": {
+            "he": "יציקת ברזל לבנה",
+            "en": "White Cast Iron"
+          },
+          "density": 7700
+        },
+        {
+          "id": "steel.wrought-iron",
+          "name": {
+            "he": "ברזל מחושל",
+            "en": "Wrought Iron"
+          },
+          "density": 7750
         }
       ]
     },
@@ -41,6 +361,78 @@
         "en": "Stainless"
       },
       "grades": [
+        {
+          "id": "stainless.3cr12",
+          "name": {
+            "he": "3CR12",
+            "en": "3CR12"
+          },
+          "density": 7740
+        },
+        {
+          "id": "stainless.13-8-mo",
+          "name": {
+            "he": "13-8 MO",
+            "en": "13-8 MO"
+          },
+          "density": 7780
+        },
+        {
+          "id": "stainless.15-5-ph",
+          "name": {
+            "he": "15-5 PH",
+            "en": "15-5 PH"
+          },
+          "density": 7800
+        },
+        {
+          "id": "stainless.17-4-ph",
+          "name": {
+            "he": "17-4 PH",
+            "en": "17-4 PH"
+          },
+          "density": 7800
+        },
+        {
+          "id": "stainless.17-7-ph",
+          "name": {
+            "he": "17-7 PH",
+            "en": "17-7 PH"
+          },
+          "density": 7800
+        },
+        {
+          "id": "stainless.254smo",
+          "name": {
+            "he": "254SMO",
+            "en": "254SMO"
+          },
+          "density": 8000
+        },
+        {
+          "id": "stainless.301",
+          "name": {
+            "he": "301",
+            "en": "301"
+          },
+          "density": 8000
+        },
+        {
+          "id": "stainless.302",
+          "name": {
+            "he": "302",
+            "en": "302"
+          },
+          "density": 8000
+        },
+        {
+          "id": "stainless.303",
+          "name": {
+            "he": "303",
+            "en": "303"
+          },
+          "density": 8000
+        },
         {
           "id": "stainless.304",
           "name": {
@@ -54,6 +446,22 @@
           "name": {
             "he": "304L",
             "en": "304L"
+          },
+          "density": 8000
+        },
+        {
+          "id": "stainless.309",
+          "name": {
+            "he": "309",
+            "en": "309"
+          },
+          "density": 8000
+        },
+        {
+          "id": "stainless.310",
+          "name": {
+            "he": "310",
+            "en": "310"
           },
           "density": 8000
         },
@@ -74,10 +482,10 @@
           "density": 7980
         },
         {
-          "id": "stainless.310",
+          "id": "stainless.317l",
           "name": {
-            "he": "310",
-            "en": "310"
+            "he": "317L",
+            "en": "317L"
           },
           "density": 8000
         },
@@ -86,6 +494,22 @@
           "name": {
             "he": "321",
             "en": "321"
+          },
+          "density": 8000
+        },
+        {
+          "id": "stainless.330",
+          "name": {
+            "he": "330",
+            "en": "330"
+          },
+          "density": 7980
+        },
+        {
+          "id": "stainless.347",
+          "name": {
+            "he": "347",
+            "en": "347"
           },
           "density": 8000
         },
@@ -106,6 +530,14 @@
           "density": 7750
         },
         {
+          "id": "stainless.416",
+          "name": {
+            "he": "416",
+            "en": "416"
+          },
+          "density": 7750
+        },
+        {
           "id": "stainless.420",
           "name": {
             "he": "420",
@@ -122,18 +554,58 @@
           "density": 7700
         },
         {
-          "id": "stainless.17-4-ph",
+          "id": "stainless.430f",
           "name": {
-            "he": "17-4 PH",
-            "en": "17-4 PH"
+            "he": "430F",
+            "en": "430F"
           },
-          "density": 7800
+          "density": 7700
         },
         {
-          "id": "stainless.15-5-ph",
+          "id": "stainless.431",
           "name": {
-            "he": "15-5 PH",
-            "en": "15-5 PH"
+            "he": "431",
+            "en": "431"
+          },
+          "density": 7750
+        },
+        {
+          "id": "stainless.440c",
+          "name": {
+            "he": "440C",
+            "en": "440C"
+          },
+          "density": 7650
+        },
+        {
+          "id": "stainless.446",
+          "name": {
+            "he": "446",
+            "en": "446"
+          },
+          "density": 7700
+        },
+        {
+          "id": "stainless.455-custom-455",
+          "name": {
+            "he": "455 (Custom 455)",
+            "en": "455 (Custom 455)"
+          },
+          "density": 7750
+        },
+        {
+          "id": "stainless.904l",
+          "name": {
+            "he": "904L",
+            "en": "904L"
+          },
+          "density": 7950
+        },
+        {
+          "id": "stainless.2205-duplex",
+          "name": {
+            "he": "2205 דופלקס",
+            "en": "2205 Duplex"
           },
           "density": 7800
         }
@@ -161,6 +633,14 @@
             "en": "1100"
           },
           "density": 2710
+        },
+        {
+          "id": "aluminum.2011",
+          "name": {
+            "he": "2011",
+            "en": "2011"
+          },
+          "density": 2820
         },
         {
           "id": "aluminum.2014",
@@ -227,12 +707,28 @@
           "density": 2730
         },
         {
+          "id": "aluminum.5005",
+          "name": {
+            "he": "5005",
+            "en": "5005"
+          },
+          "density": 2700
+        },
+        {
           "id": "aluminum.5052",
           "name": {
             "he": "5052",
             "en": "5052"
           },
           "density": 2680
+        },
+        {
+          "id": "aluminum.5056",
+          "name": {
+            "he": "5056",
+            "en": "5056"
+          },
+          "density": 2640
         },
         {
           "id": "aluminum.5083",
@@ -283,6 +779,14 @@
           "density": 2700
         },
         {
+          "id": "aluminum.6082",
+          "name": {
+            "he": "6082",
+            "en": "6082"
+          },
+          "density": 2700
+        },
+        {
           "id": "aluminum.7050",
           "name": {
             "he": "7050",
@@ -315,6 +819,14 @@
           "density": 2800
         },
         {
+          "id": "aluminum.7178",
+          "name": {
+            "he": "7178",
+            "en": "7178"
+          },
+          "density": 2830
+        },
+        {
           "id": "aluminum.8000",
           "name": {
             "he": "8000",
@@ -331,20 +843,36 @@
           "density": 2750
         },
         {
-          "id": "aluminum.certal",
-          "name": {
-            "he": "Certal",
-            "en": "Certal"
-          },
-          "density": 2700
-        },
-        {
           "id": "aluminum.c210",
           "name": {
             "he": "C210",
             "en": "C210"
           },
           "density": 2750
+        },
+        {
+          "id": "aluminum.cast-aluminum-380",
+          "name": {
+            "he": "אלומיניום יצוק 380",
+            "en": "Cast Aluminum 380"
+          },
+          "density": 2710
+        },
+        {
+          "id": "aluminum.cast-aluminum-a356",
+          "name": {
+            "he": "אלומיניום יצוק A356",
+            "en": "Cast Aluminum A356"
+          },
+          "density": 2680
+        },
+        {
+          "id": "aluminum.certal",
+          "name": {
+            "he": "Certal",
+            "en": "Certal"
+          },
+          "density": 2700
         }
       ]
     },
@@ -356,12 +884,52 @@
       },
       "grades": [
         {
-          "id": "copper.standard",
+          "id": "copper.c10200-of-oxygen-free-copper",
           "name": {
-            "he": "תקני",
-            "en": "Standard"
+            "he": "C10200 OF (נחושת נטולת חמצן)",
+            "en": "C10200 OF (Oxygen-Free Copper)"
+          },
+          "density": 8940
+        },
+        {
+          "id": "copper.c11000-etp-pure-copper",
+          "name": {
+            "he": "C11000 ETP (נחושת טהורה)",
+            "en": "C11000 ETP (Pure Copper)"
           },
           "density": 8960
+        },
+        {
+          "id": "copper.c12000-dtp-deoxidized-copper",
+          "name": {
+            "he": "C12000 DTP (נחושת מחוזרת)",
+            "en": "C12000 DTP (Deoxidized Copper)"
+          },
+          "density": 8960
+        },
+        {
+          "id": "copper.c14500-tellurium-copper",
+          "name": {
+            "he": "C14500 נחושת טלורית",
+            "en": "C14500 Tellurium Copper"
+          },
+          "density": 8950
+        },
+        {
+          "id": "copper.c17200-beryllium-copper",
+          "name": {
+            "he": "C17200 נחושת ברילית",
+            "en": "C17200 Beryllium Copper"
+          },
+          "density": 8250
+        },
+        {
+          "id": "copper.c81500-chromium-copper",
+          "name": {
+            "he": "C81500 נחושת כרומית",
+            "en": "C81500 Chromium Copper"
+          },
+          "density": 8820
         }
       ]
     },
@@ -373,12 +941,92 @@
       },
       "grades": [
         {
-          "id": "brass.standard",
+          "id": "brass.c22000-commercial-bronze-90-percent-brass",
           "name": {
-            "he": "תקני",
-            "en": "Standard"
+            "he": "C22000 ברונזה מסחרית (90% פליז)",
+            "en": "C22000 Commercial Bronze (90% Brass)"
+          },
+          "density": 8800
+        },
+        {
+          "id": "brass.c23000-red-brass-85-percent-brass",
+          "name": {
+            "he": "C23000 פליז אדום (85% פליז)",
+            "en": "C23000 Red Brass (85% Brass)"
+          },
+          "density": 8750
+        },
+        {
+          "id": "brass.c26000-cartridge-brass-70-30",
+          "name": {
+            "he": "C26000 פליז תרמילים (70/30)",
+            "en": "C26000 Cartridge Brass (70/30)"
+          },
+          "density": 8530
+        },
+        {
+          "id": "brass.c26800-yellow-brass",
+          "name": {
+            "he": "C26800 פליז צהוב",
+            "en": "C26800 Yellow Brass"
+          },
+          "density": 8470
+        },
+        {
+          "id": "brass.c27000-yellow-brass",
+          "name": {
+            "he": "C27000 פליז צהוב",
+            "en": "C27000 Yellow Brass"
+          },
+          "density": 8470
+        },
+        {
+          "id": "brass.c27400-yellow-brass",
+          "name": {
+            "he": "C27400 פליז צהוב",
+            "en": "C27400 Yellow Brass"
+          },
+          "density": 8470
+        },
+        {
+          "id": "brass.c36000-free-cutting-brass",
+          "name": {
+            "he": "C36000 פליז לחיתוך חופשי",
+            "en": "C36000 Free-Cutting Brass"
           },
           "density": 8500
+        },
+        {
+          "id": "brass.c37700-forging-brass",
+          "name": {
+            "he": "C37700 פליז לחישול",
+            "en": "C37700 Forging Brass"
+          },
+          "density": 8440
+        },
+        {
+          "id": "brass.c38500-architectural-brass",
+          "name": {
+            "he": "C38500 פליז אדריכלי",
+            "en": "C38500 Architectural Brass"
+          },
+          "density": 8470
+        },
+        {
+          "id": "brass.c46400-naval-brass",
+          "name": {
+            "he": "C46400 פליז ימי",
+            "en": "C46400 Naval Brass"
+          },
+          "density": 8410
+        },
+        {
+          "id": "brass.c86300-manganese-brass",
+          "name": {
+            "he": "C86300 פליז מנגן",
+            "en": "C86300 Manganese Brass"
+          },
+          "density": 7700
         }
       ]
     },
@@ -390,12 +1038,92 @@
       },
       "grades": [
         {
-          "id": "bronze.standard",
+          "id": "bronze.c51000-phosphor-bronze",
           "name": {
-            "he": "תקני",
-            "en": "Standard"
+            "he": "C51000 ברונזה זרחנית",
+            "en": "C51000 Phosphor Bronze"
           },
           "density": 8800
+        },
+        {
+          "id": "bronze.c54400-phosphor-bronze-free-cutting",
+          "name": {
+            "he": "C54400 ברונזה זרחנית (לחיתוך חופשי)",
+            "en": "C54400 Phosphor Bronze (Free-Cutting)"
+          },
+          "density": 8890
+        },
+        {
+          "id": "bronze.c60800-aluminum-bronze-5-percent-al",
+          "name": {
+            "he": "C60800 ברונזת אלומיניום (5% Al)",
+            "en": "C60800 Aluminum Bronze (5% Al)"
+          },
+          "density": 8170
+        },
+        {
+          "id": "bronze.c63000-aluminum-bronze-ni-al",
+          "name": {
+            "he": "C63000 ברונזת אלומיניום (ניקל-אלומיניום)",
+            "en": "C63000 Aluminum Bronze (Ni-Al)"
+          },
+          "density": 7580
+        },
+        {
+          "id": "bronze.c65500-silicon-bronze",
+          "name": {
+            "he": "C65500 ברונזת סיליקון",
+            "en": "C65500 Silicon Bronze"
+          },
+          "density": 8520
+        },
+        {
+          "id": "bronze.c83600-gunmetal-lg2",
+          "name": {
+            "he": "C83600 ברונזת תותחים (LG2)",
+            "en": "C83600 Gunmetal (LG2)"
+          },
+          "density": 8800
+        },
+        {
+          "id": "bronze.c90700-gear-bronze",
+          "name": {
+            "he": "C90700 ברונזה לגלגלי שיניים",
+            "en": "C90700 Gear Bronze"
+          },
+          "density": 8770
+        },
+        {
+          "id": "bronze.c93200-bearing-bronze-sae-660",
+          "name": {
+            "he": "C93200 ברונזת מסבים (SAE 660)",
+            "en": "C93200 Bearing Bronze (SAE 660)"
+          },
+          "density": 8910
+        },
+        {
+          "id": "bronze.c93700-bearing-bronze",
+          "name": {
+            "he": "C93700 ברונזת מסבים",
+            "en": "C93700 Bearing Bronze"
+          },
+          "density": 8930
+        },
+        {
+          "id": "bronze.c95400-aluminum-bronze",
+          "name": {
+            "he": "C95400 ברונזת אלומיניום",
+            "en": "C95400 Aluminum Bronze"
+          },
+          "density": 7650
+        },
+        {
+          "id": "bronze.c95500-aluminum-bronze-high-strength",
+          "name": {
+            "he": "C95500 ברונזת אלומיניום (חוזק גבוה)",
+            "en": "C95500 Aluminum Bronze (High Strength)"
+          },
+          "density": 7530
         }
       ]
     },
@@ -473,6 +1201,307 @@
       ]
     },
     {
+      "id": "nickel-alloys",
+      "name": {
+        "he": "סגסוגות ניקל",
+        "en": "Nickel Alloys"
+      },
+      "grades": [
+        {
+          "id": "nickel-alloys.alloy-20",
+          "name": {
+            "he": "Alloy 20",
+            "en": "Alloy 20"
+          },
+          "density": 8050
+        },
+        {
+          "id": "nickel-alloys.hastelloy-b-2-b-3",
+          "name": {
+            "he": "Hastelloy B-2 / B-3",
+            "en": "Hastelloy B-2 / B-3"
+          },
+          "density": 9200
+        },
+        {
+          "id": "nickel-alloys.hastelloy-c-4",
+          "name": {
+            "he": "Hastelloy C-4",
+            "en": "Hastelloy C-4"
+          },
+          "density": 8640
+        },
+        {
+          "id": "nickel-alloys.hastelloy-c-22",
+          "name": {
+            "he": "Hastelloy C-22",
+            "en": "Hastelloy C-22"
+          },
+          "density": 8690
+        },
+        {
+          "id": "nickel-alloys.hastelloy-c-276",
+          "name": {
+            "he": "Hastelloy C-276",
+            "en": "Hastelloy C-276"
+          },
+          "density": 8890
+        },
+        {
+          "id": "nickel-alloys.hastelloy-x",
+          "name": {
+            "he": "Hastelloy X",
+            "en": "Hastelloy X"
+          },
+          "density": 8220
+        },
+        {
+          "id": "nickel-alloys.incoloy-800-800h-800ht",
+          "name": {
+            "he": "Incoloy 800 / 800H / 800HT",
+            "en": "Incoloy 800 / 800H / 800HT"
+          },
+          "density": 8000
+        },
+        {
+          "id": "nickel-alloys.incoloy-825",
+          "name": {
+            "he": "Incoloy 825",
+            "en": "Incoloy 825"
+          },
+          "density": 8140
+        },
+        {
+          "id": "nickel-alloys.inconel-600",
+          "name": {
+            "he": "Inconel 600",
+            "en": "Inconel 600"
+          },
+          "density": 8470
+        },
+        {
+          "id": "nickel-alloys.inconel-601",
+          "name": {
+            "he": "Inconel 601",
+            "en": "Inconel 601"
+          },
+          "density": 8100
+        },
+        {
+          "id": "nickel-alloys.inconel-617",
+          "name": {
+            "he": "Inconel 617",
+            "en": "Inconel 617"
+          },
+          "density": 8300
+        },
+        {
+          "id": "nickel-alloys.inconel-625",
+          "name": {
+            "he": "Inconel 625",
+            "en": "Inconel 625"
+          },
+          "density": 8440
+        },
+        {
+          "id": "nickel-alloys.inconel-690",
+          "name": {
+            "he": "Inconel 690",
+            "en": "Inconel 690"
+          },
+          "density": 8300
+        },
+        {
+          "id": "nickel-alloys.inconel-718",
+          "name": {
+            "he": "Inconel 718",
+            "en": "Inconel 718"
+          },
+          "density": 8190
+        },
+        {
+          "id": "nickel-alloys.inconel-x-750",
+          "name": {
+            "he": "Inconel X-750",
+            "en": "Inconel X-750"
+          },
+          "density": 8280
+        },
+        {
+          "id": "nickel-alloys.monel-400",
+          "name": {
+            "he": "Monel 400",
+            "en": "Monel 400"
+          },
+          "density": 8800
+        },
+        {
+          "id": "nickel-alloys.monel-k-500",
+          "name": {
+            "he": "Monel K-500",
+            "en": "Monel K-500"
+          },
+          "density": 8440
+        },
+        {
+          "id": "nickel-alloys.monel-r-405",
+          "name": {
+            "he": "Monel R-405",
+            "en": "Monel R-405"
+          },
+          "density": 8800
+        },
+        {
+          "id": "nickel-alloys.nickel-200",
+          "name": {
+            "he": "Nickel 200",
+            "en": "Nickel 200"
+          },
+          "density": 8890
+        },
+        {
+          "id": "nickel-alloys.nickel-201",
+          "name": {
+            "he": "Nickel 201",
+            "en": "Nickel 201"
+          },
+          "density": 8890
+        }
+      ]
+    },
+    {
+      "id": "magnesium",
+      "name": {
+        "he": "מגנזיום",
+        "en": "Magnesium"
+      },
+      "grades": [
+        {
+          "id": "magnesium.magnesium-az31b",
+          "name": {
+            "he": "מגנזיום AZ31B",
+            "en": "Magnesium AZ31B"
+          },
+          "density": 1770
+        }
+      ]
+    },
+    {
+      "id": "lead",
+      "name": {
+        "he": "עופרת",
+        "en": "Lead"
+      },
+      "grades": [
+        {
+          "id": "lead.antimonial-lead-hard-lead",
+          "name": {
+            "he": "עופרת אנטימונית (עופרת קשה)",
+            "en": "Antimonial Lead (Hard Lead)"
+          },
+          "density": 10900
+        },
+        {
+          "id": "lead.chemical-lead",
+          "name": {
+            "he": "עופרת כימית",
+            "en": "Chemical Lead"
+          },
+          "density": 11340
+        }
+      ]
+    },
+    {
+      "id": "tungsten",
+      "name": {
+        "he": "טונגסטן",
+        "en": "Tungsten"
+      },
+      "grades": [
+        {
+          "id": "tungsten.pure-tungsten",
+          "name": {
+            "he": "טונגסטן טהור",
+            "en": "Pure Tungsten"
+          },
+          "density": 19300
+        }
+      ]
+    },
+    {
+      "id": "specialty-refractory-metals",
+      "name": {
+        "he": "מתכות מיוחדות ועקשוריות",
+        "en": "Specialty & Refractory Metals"
+      },
+      "grades": [
+        {
+          "id": "specialty-refractory-metals.gold",
+          "name": {
+            "he": "זהב",
+            "en": "Gold"
+          },
+          "density": 19320
+        },
+        {
+          "id": "specialty-refractory-metals.molybdenum",
+          "name": {
+            "he": "מוליבדן",
+            "en": "Molybdenum"
+          },
+          "density": 10280
+        },
+        {
+          "id": "specialty-refractory-metals.platinum",
+          "name": {
+            "he": "פלטינה",
+            "en": "Platinum"
+          },
+          "density": 21450
+        },
+        {
+          "id": "specialty-refractory-metals.silver",
+          "name": {
+            "he": "כסף",
+            "en": "Silver"
+          },
+          "density": 10490
+        },
+        {
+          "id": "specialty-refractory-metals.tantalum",
+          "name": {
+            "he": "טנטלום",
+            "en": "Tantalum"
+          },
+          "density": 16650
+        },
+        {
+          "id": "specialty-refractory-metals.tin",
+          "name": {
+            "he": "בדיל",
+            "en": "Tin"
+          },
+          "density": 7290
+        },
+        {
+          "id": "specialty-refractory-metals.zinc",
+          "name": {
+            "he": "אבץ",
+            "en": "Zinc"
+          },
+          "density": 7140
+        },
+        {
+          "id": "specialty-refractory-metals.zirconium",
+          "name": {
+            "he": "זירקוניום",
+            "en": "Zirconium"
+          },
+          "density": 6520
+        }
+      ]
+    },
+    {
       "id": "plastic",
       "name": {
         "he": "פלסטיק",
@@ -488,18 +1517,18 @@
           "density": 1050
         },
         {
-          "id": "plastic.pvc",
+          "id": "plastic.c-pvc",
           "name": {
-            "he": "PVC",
-            "en": "PVC"
+            "he": "C-PVC",
+            "en": "C-PVC"
           },
-          "density": 1380
+          "density": 1500
         },
         {
-          "id": "plastic.epoxy-glass",
+          "id": "plastic.epoxy-glass-g10-fr4",
           "name": {
-            "he": "זכוכית אפוקסי",
-            "en": "Epoxy Glass"
+            "he": "זכוכית אפוקסי (G10 / FR4)",
+            "en": "Epoxy Glass (G10 / FR4)"
           },
           "density": 1850
         },
@@ -520,14 +1549,6 @@
           "density": 1040
         },
         {
-          "id": "plastic.pa-12",
-          "name": {
-            "he": "PA 12",
-            "en": "PA 12"
-          },
-          "density": 1010
-        },
-        {
           "id": "plastic.pa-6",
           "name": {
             "he": "PA 6",
@@ -544,6 +1565,14 @@
           "density": 1250
         },
         {
+          "id": "plastic.pa-12",
+          "name": {
+            "he": "PA 12",
+            "en": "PA 12"
+          },
+          "density": 1010
+        },
+        {
           "id": "plastic.pa-66",
           "name": {
             "he": "PA 66",
@@ -552,7 +1581,7 @@
           "density": 1150
         },
         {
-          "id": "plastic.pa-66-30-gf",
+          "id": "plastic.pa-66-30-percent-gf",
           "name": {
             "he": "PA 66 30% GF",
             "en": "PA 66 30% GF"
@@ -568,7 +1597,7 @@
           "density": 1260
         },
         {
-          "id": "plastic.pbt-30-gf",
+          "id": "plastic.pbt-30-percent-gf",
           "name": {
             "he": "PBT 30% GF",
             "en": "PBT 30% GF"
@@ -584,7 +1613,7 @@
           "density": 1200
         },
         {
-          "id": "plastic.pc-10-gf",
+          "id": "plastic.pc-10-percent-gf",
           "name": {
             "he": "PC 10% GF",
             "en": "PC 10% GF"
@@ -592,7 +1621,7 @@
           "density": 1290
         },
         {
-          "id": "plastic.pc-20-gf",
+          "id": "plastic.pc-20-percent-gf",
           "name": {
             "he": "PC 20% GF",
             "en": "PC 20% GF"
@@ -600,7 +1629,7 @@
           "density": 1380
         },
         {
-          "id": "plastic.pc-30-gf",
+          "id": "plastic.pc-30-percent-gf",
           "name": {
             "he": "PC 30% GF",
             "en": "PC 30% GF"
@@ -616,20 +1645,20 @@
           "density": 940
         },
         {
-          "id": "plastic.pe-1000",
+          "id": "plastic.pe-500-hmw-pe",
           "name": {
-            "he": "PE 1000",
-            "en": "PE 1000"
-          },
-          "density": 930
-        },
-        {
-          "id": "plastic.pe-500",
-          "name": {
-            "he": "PE 500",
-            "en": "PE 500"
+            "he": "PE 500 (HMW-PE)",
+            "en": "PE 500 (HMW-PE)"
           },
           "density": 950
+        },
+        {
+          "id": "plastic.pe-1000-uhmw-pe",
+          "name": {
+            "he": "PE 1000 (UHMW-PE)",
+            "en": "PE 1000 (UHMW-PE)"
+          },
+          "density": 930
         },
         {
           "id": "plastic.peek",
@@ -640,7 +1669,7 @@
           "density": 1320
         },
         {
-          "id": "plastic.peek-30-cf",
+          "id": "plastic.peek-30-percent-cf",
           "name": {
             "he": "PEEK 30% CF",
             "en": "PEEK 30% CF"
@@ -648,7 +1677,7 @@
           "density": 1440
         },
         {
-          "id": "plastic.peek-30-gf",
+          "id": "plastic.peek-30-percent-gf",
           "name": {
             "he": "PEEK 30% GF",
             "en": "PEEK 30% GF"
@@ -672,15 +1701,15 @@
           "density": 1330
         },
         {
-          "id": "plastic.pei",
+          "id": "plastic.pei-ultem",
           "name": {
-            "he": "PEI",
-            "en": "PEI"
+            "he": "PEI (Ultem)",
+            "en": "PEI (Ultem)"
           },
           "density": 1270
         },
         {
-          "id": "plastic.pei-10-gf",
+          "id": "plastic.pei-10-percent-gf",
           "name": {
             "he": "PEI 10% GF",
             "en": "PEI 10% GF"
@@ -688,7 +1717,7 @@
           "density": 1360
         },
         {
-          "id": "plastic.pei-20-gf",
+          "id": "plastic.pei-20-percent-gf",
           "name": {
             "he": "PEI 20% GF",
             "en": "PEI 20% GF"
@@ -696,7 +1725,7 @@
           "density": 1420
         },
         {
-          "id": "plastic.pei-30-gf",
+          "id": "plastic.pei-30-percent-gf",
           "name": {
             "he": "PEI 30% GF",
             "en": "PEI 30% GF"
@@ -736,28 +1765,52 @@
           "density": 1350
         },
         {
-          "id": "plastic.pmma",
+          "id": "plastic.phenolic-paper-partinex",
           "name": {
-            "he": "PMMA",
-            "en": "PMMA"
+            "he": "נייר פנולי (פרטינקס)",
+            "en": "Phenolic Paper (Partinex)"
+          },
+          "density": 1400
+        },
+        {
+          "id": "plastic.pmma-acrylic",
+          "name": {
+            "he": "PMMA (אקרילי)",
+            "en": "PMMA (Acrylic)"
           },
           "density": 1180
         },
         {
-          "id": "plastic.pom-c",
+          "id": "plastic.pom-c-acetal-copolymer",
           "name": {
-            "he": "POM C",
-            "en": "POM C"
+            "he": "POM C (אצטל קופולימר)",
+            "en": "POM C (Acetal Copolymer)"
           },
           "density": 1410
         },
         {
-          "id": "plastic.pom-h",
+          "id": "plastic.pom-c-25-percent-gf",
           "name": {
-            "he": "POM H",
-            "en": "POM H"
+            "he": "POM C 25% GF",
+            "en": "POM C 25% GF"
+          },
+          "density": 1580
+        },
+        {
+          "id": "plastic.pom-h-delrin",
+          "name": {
+            "he": "POM H (דלרין)",
+            "en": "POM H (Delrin)"
           },
           "density": 1420
+        },
+        {
+          "id": "plastic.pom-h-ad-af",
+          "name": {
+            "he": "POM-H AD AF",
+            "en": "POM-H AD AF"
+          },
+          "density": 1500
         },
         {
           "id": "plastic.pp",
@@ -768,6 +1821,14 @@
           "density": 905
         },
         {
+          "id": "plastic.pp-30-percent-gf",
+          "name": {
+            "he": "PP 30% GF",
+            "en": "PP 30% GF"
+          },
+          "density": 1120
+        },
+        {
           "id": "plastic.ppe",
           "name": {
             "he": "PPE",
@@ -776,12 +1837,100 @@
           "density": 1060
         },
         {
-          "id": "plastic.ptfe",
+          "id": "plastic.ppe-30-percent-gf",
           "name": {
-            "he": "PTFE",
-            "en": "PTFE"
+            "he": "PPE 30% GF",
+            "en": "PPE 30% GF"
+          },
+          "density": 1270
+        },
+        {
+          "id": "plastic.pps",
+          "name": {
+            "he": "PPS",
+            "en": "PPS"
+          },
+          "density": 1350
+        },
+        {
+          "id": "plastic.pps-40-percent-gf",
+          "name": {
+            "he": "PPS 40% GF",
+            "en": "PPS 40% GF"
+          },
+          "density": 1650
+        },
+        {
+          "id": "plastic.ppsu",
+          "name": {
+            "he": "PPSU",
+            "en": "PPSU"
+          },
+          "density": 1290
+        },
+        {
+          "id": "plastic.ps-general-purpose",
+          "name": {
+            "he": "PS (שימוש כללי)",
+            "en": "PS (General Purpose)"
+          },
+          "density": 1050
+        },
+        {
+          "id": "plastic.psu",
+          "name": {
+            "he": "PSU",
+            "en": "PSU"
+          },
+          "density": 1240
+        },
+        {
+          "id": "plastic.ptfe-teflon",
+          "name": {
+            "he": "PTFE (טפלון)",
+            "en": "PTFE (Teflon)"
           },
           "density": 2200
+        },
+        {
+          "id": "plastic.ptfe-60-percent-bronze",
+          "name": {
+            "he": "PTFE 60% ברונזה",
+            "en": "PTFE 60% Bronze"
+          },
+          "density": 3900
+        },
+        {
+          "id": "plastic.ptfe-carbon",
+          "name": {
+            "he": "PTFE פחמן",
+            "en": "PTFE Carbon"
+          },
+          "density": 2100
+        },
+        {
+          "id": "plastic.ptfe-gf-25-percent",
+          "name": {
+            "he": "PTFE GF 25%",
+            "en": "PTFE GF 25%"
+          },
+          "density": 2250
+        },
+        {
+          "id": "plastic.ptfe-graphite",
+          "name": {
+            "he": "PTFE גרפיט",
+            "en": "PTFE Graphite"
+          },
+          "density": 2150
+        },
+        {
+          "id": "plastic.pvc",
+          "name": {
+            "he": "PVC",
+            "en": "PVC"
+          },
+          "density": 1380
         },
         {
           "id": "plastic.pvdf",

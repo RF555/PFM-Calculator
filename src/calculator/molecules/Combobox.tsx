@@ -37,6 +37,7 @@ export function Combobox({
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const searchRef = useRef<HTMLInputElement>(null);
 
   const selected = options.find((o) => o.value === value);
   const triggerText = disabled
@@ -48,8 +49,20 @@ export function Combobox({
     function onPointerDown(e: PointerEvent) {
       if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
     }
+    // Bound to the document rather than the popover: the search box is not
+    // focused on open, so focus may still be on the trigger when Escape lands.
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key !== "Escape") return;
+      e.preventDefault();
+      setOpen(false);
+      triggerRef.current?.focus();
+    }
     document.addEventListener("pointerdown", onPointerDown);
-    return () => document.removeEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
   }, [open]);
 
   return (
@@ -67,6 +80,18 @@ export function Combobox({
         data-placeholder={!selected || undefined}
         disabled={disabled}
         onClick={() => setOpen((v) => !v)}
+        /*
+         * The search box no longer takes focus on open, so a keyboard user
+         * needs a way in: ArrowDown opens the list and moves to it, matching
+         * the usual combobox convention.
+         */
+        onKeyDown={(e) => {
+          if (e.key !== "ArrowDown") return;
+          e.preventDefault();
+          setOpen(true);
+          // Wait for the popover to mount before the input can take focus.
+          requestAnimationFrame(() => searchRef.current?.focus());
+        }}
       >
         {!disabled && selected && renderTriggerIcon?.(selected.value)}
         <span className="pfm-combobox__trigger-text">{triggerText}</span>
@@ -74,20 +99,11 @@ export function Combobox({
 
       {open && (
         <div className="pfm-combobox__popover">
-          <Command
-            label={label}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                e.preventDefault();
-                setOpen(false);
-                triggerRef.current?.focus();
-              }
-            }}
-          >
+          <Command label={label}>
             <Command.Input
+              ref={searchRef}
               className="pfm-combobox__search"
               placeholder={t("ui.search")}
-              autoFocus
             />
             <Command.List id={`${id}-list`} className="pfm-combobox__list">
               <Command.Empty className="pfm-combobox__empty">{t("ui.noMatches")}</Command.Empty>

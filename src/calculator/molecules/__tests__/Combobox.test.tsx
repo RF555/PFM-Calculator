@@ -96,6 +96,33 @@ describe("Combobox", () => {
     expect(screen.queryByPlaceholderText("Search…")).not.toBeInTheDocument();
   });
 
+  it("leaves the search box unfocused on open, keeping focus on the trigger", async () => {
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
+      options={OPTIONS} value={null} onChange={() => {}} />);
+    const trigger = screen.getByRole("combobox", { name: "Material" });
+    await userEvent.click(trigger);
+    expect(screen.getByPlaceholderText("Search…")).not.toHaveFocus();
+    expect(trigger).toHaveFocus();
+  });
+
+  it("moves into the search box on ArrowDown, so the keyboard path still works", async () => {
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
+      options={OPTIONS} value={null} onChange={() => {}} />);
+    screen.getByRole("combobox", { name: "Material" }).focus();
+    await userEvent.keyboard("{ArrowDown}");
+    expect(await screen.findByPlaceholderText("Search…")).toHaveFocus();
+  });
+
+  it("closes on Escape while focus is still on the trigger", async () => {
+    renderEn(<Combobox id="m" label="Material" placeholder="Select material"
+      options={OPTIONS} value={null} onChange={() => {}} />);
+    const trigger = screen.getByRole("combobox", { name: "Material" });
+    await userEvent.click(trigger);
+    expect(trigger).toHaveFocus();
+    await userEvent.keyboard("{Escape}");
+    expect(screen.queryByPlaceholderText("Search…")).not.toBeInTheDocument();
+  });
+
   it("localizes its search placeholder and empty state", async () => {
     render(
       <LanguageProvider language="he" setLanguage={() => {}}>

@@ -1,4 +1,5 @@
 import type { Localized } from "../i18n/types";
+import { MAX_DENSITY, MIN_DENSITY } from "./density";
 
 export interface Grade {
   id: string;
@@ -16,9 +17,6 @@ export interface MaterialsFile {
   version: number;
   materials: Material[];
 }
-
-const MIN_DENSITY = 1;
-const MAX_DENSITY = 25_000;
 
 /**
  * Every name carries both locales. A plain string — the pre-v2 shape — is

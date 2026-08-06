@@ -17,11 +17,13 @@ interface Props {
   result: ResultValues | null;
   quantity: number;
   massUnit: MassUnit;
+  /** Set only when a density override is active, to announce the substitution. */
+  densityNotice?: { value: number; catalog: number };
 }
 
 const PLACEHOLDER = "—";
 
-export function ResultPanel({ result, quantity, massUnit }: Props) {
+export function ResultPanel({ result, quantity, massUnit, densityNotice }: Props) {
   const t = useTranslate();
 
   // Totals derive from full-precision unit mass; multiplying a rounded
@@ -40,7 +42,7 @@ export function ResultPanel({ result, quantity, massUnit }: Props) {
   const total = pair(totalKg);
   const unit = pair(result?.unitKg ?? null);
 
-  const announcement = result
+  const weightAnnouncement = result
     ? quantity > 1
       ? t("a11y.unitWeightSpoken", {
           weight: spoken(t, result.unitKg, massUnit),
@@ -49,6 +51,16 @@ export function ResultPanel({ result, quantity, massUnit }: Props) {
         })
       : t("a11y.totalSpoken", { total: spoken(t, totalKg!, massUnit) })
     : "";
+
+  // The density prefixes the figure: a screen-reader user needs the cause
+  // before the number it explains.
+  const announcement =
+    result && densityNotice
+      ? `${t("a11y.densityOverridden", {
+          value: densityNotice.value,
+          catalog: densityNotice.catalog,
+        })} ${weightAnnouncement}`
+      : weightAnnouncement;
 
   return (
     <section className="pfm-results" aria-label={t("ui.results")}>

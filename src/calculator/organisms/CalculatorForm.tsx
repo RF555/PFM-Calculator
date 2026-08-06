@@ -243,6 +243,11 @@ export function CalculatorForm({
         result={result}
         quantity={state.quantity}
         massUnit={state.massUnit}
+        densityNotice={
+          state.densityOverride !== null && grade
+            ? { value: state.densityOverride, catalog: grade.density }
+            : undefined
+        }
       />
     </div>
   );

@@ -60,14 +60,30 @@
   color: var(--pfm-muted);
 }
 
+/*
+ * Density, quantity and Reset share one row. Density takes the slack — it is
+ * the only one of the three whose content varies in width — while quantity
+ * keeps its intrinsic size and Reset stays pinned to the inline end. Below
+ * the width where all three fit, they wrap rather than squeezing the density
+ * input past readability.
+ */
 .pfm-calc .pfm-form__footer {
   display: flex;
+  flex-wrap: wrap;
   align-items: flex-end;
-  justify-content: space-between;
   gap: var(--pfm-gap);
 }
 
+/* Grows into spare space but yields it before Reset is pushed onto its own
+   line. min-width:0 lets the field shrink below its content width; without
+   it the flex item refuses to shrink and the row overflows when narrow. */
+.pfm-calc .pfm-form__footer .pfm-material-density {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
 .pfm-calc .pfm-form__reset {
+  margin-inline-start: auto;
   min-height: var(--pfm-control-h);
   padding: 0 16px;
   border: 1px solid var(--pfm-border);

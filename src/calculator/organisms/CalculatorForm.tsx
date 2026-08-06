@@ -196,20 +196,6 @@ export function CalculatorForm({
         />
       </div>
 
-      <DensityField
-        idPrefix={idPrefix}
-        gradeId={state.gradeId}
-        catalogDensity={grade?.density ?? null}
-        override={state.densityOverride}
-        raw={state.densityRaw}
-        error={state.densityError ? t(state.densityError, {
-          min: MIN_DENSITY,
-          max: MAX_DENSITY,
-        }) : undefined}
-        onChange={(raw) => dispatch({ type: "SET_DENSITY", raw })}
-        onClear={() => dispatch({ type: "CLEAR_DENSITY" })}
-      />
-
       {state.shapeId && (
         <DimensionFieldset
           idPrefix={idPrefix}
@@ -223,6 +209,18 @@ export function CalculatorForm({
       )}
 
       <div className="pfm-form__footer">
+        <DensityField
+          idPrefix={idPrefix}
+          gradeId={state.gradeId}
+          catalogDensity={grade?.density ?? null}
+          override={state.densityOverride}
+          raw={state.densityRaw}
+          error={state.densityError ? t(state.densityError, {
+            min: MIN_DENSITY,
+            max: MAX_DENSITY,
+          }) : undefined}
+          onChange={(raw) => dispatch({ type: "SET_DENSITY", raw })}
+        />
         <QuantityField
           idPrefix={idPrefix}
           value={state.quantity}

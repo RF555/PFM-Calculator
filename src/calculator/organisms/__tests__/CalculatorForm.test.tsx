@@ -240,6 +240,16 @@ describe("CalculatorForm", () => {
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
   }
 
+  it("places the density field alongside quantity", async () => {
+    setup();
+    await pick("Material", "Steel");
+    await pick("Grade", "Carbon Steel");
+
+    const footer = screen.getByLabelText("Quantity").closest(".pfm-form__footer");
+    expect(footer).not.toBeNull();
+    expect(footer!.querySelector(".pfm-material-density")).not.toBeNull();
+  });
+
   it("recalculates from an overridden density", async () => {
     setup();
     await fillRoundBar();
@@ -248,7 +258,6 @@ describe("CalculatorForm", () => {
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
     await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
-    await userEvent.click(screen.getByRole("button", { name: /done/i }));
 
     // Same 1963495.4 mm^3 at 2700 kg/m3 instead of 7850.
     expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
@@ -271,13 +280,14 @@ describe("CalculatorForm", () => {
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
     await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
-    await userEvent.click(screen.getByRole("button", { name: /done/i }));
     expect(screen.getByText("edited")).toBeInTheDocument();
 
     await pick("Grade", "Stainless 304");
 
+    // The field stays revealed once opened, so the new grade's catalog value
+    // shows in the input rather than as read-only text.
     expect(screen.queryByText("edited")).not.toBeInTheDocument();
-    expect(screen.getByText("7930 kg/m³")).toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /density/i })).toHaveValue("7930");
     expect(screen.getByTestId("total-primary")).toHaveTextContent("15.5705 kg");
   });
 
@@ -311,7 +321,6 @@ describe("CalculatorForm", () => {
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
     await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
-    await userEvent.click(screen.getByRole("button", { name: /done/i }));
 
     expect(onCalculate.mock.calls.at(-1)![0].densityKgM3).toBe(2700);
   });
@@ -322,7 +331,6 @@ describe("CalculatorForm", () => {
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
     await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
-    await userEvent.click(screen.getByRole("button", { name: /done/i }));
 
     await userEvent.click(screen.getByRole("button", { name: "Reset" }));
     expect(screen.queryByText("edited")).not.toBeInTheDocument();

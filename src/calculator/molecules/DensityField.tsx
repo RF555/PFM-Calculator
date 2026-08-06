@@ -21,8 +21,6 @@ export interface DensityFieldProps {
   onChange: (raw: string) => void;
 }
 
-const PLACEHOLDER = "—";
-
 /**
  * Shows the density driving the calculation, and lets the user replace it.
  *
@@ -54,6 +52,12 @@ export function DensityField({
   const id = `${idPrefix}-density`;
   const effective = override ?? catalogDensity;
   const disabled = catalogDensity === null;
+  // Unit lives in the label, as it does for every dimension field, so the
+  // value beside it stays a bare number.
+  const label = t("ui.fieldWithUnit", {
+    label: t("ui.density"),
+    unit: t("unit.kgm3"),
+  });
 
   useEffect(() => {
     if (editing) inputRef.current?.querySelector("input")?.focus();
@@ -99,7 +103,7 @@ export function DensityField({
       <div className="pfm-material-density pfm-material-density--editing" ref={inputRef}>
         <NumberField
           id={id}
-          label={`${t("ui.density")} (${t("unit.kgm3")})`}
+          label={label}
           value={text}
           error={error}
           onChange={handleChange}
@@ -119,11 +123,19 @@ export function DensityField({
           receive focus from a label click, and pointing it at the Edit
           button below would let the label's text override the button's own
           accessible name ("Edit"). */}
-      <FieldLabel htmlFor={`${id}-value`}>{t("ui.density")}</FieldLabel>
+      <FieldLabel htmlFor={`${id}-value`}>{label}</FieldLabel>
       <div className="pfm-material-density__row">
-        <span id={`${id}-value`} className="pfm-material-density__value" dir="ltr">
-          {effective === null ? PLACEHOLDER : `${effective} ${t("unit.kgm3")}`}
-        </span>
+        {disabled ? (
+          // With no grade there is no figure to show, so the reason stands in
+          // for it — more use than an em dash that says only "nothing here".
+          <span id={`${id}-value`} className="pfm-material-density__badge">
+            {t("ui.densityDisabledHint")}
+          </span>
+        ) : (
+          <span id={`${id}-value`} className="pfm-material-density__value" dir="ltr">
+            {effective}
+          </span>
+        )}
 
         {override !== null && (
           <span className="pfm-material-density__badge">{t("ui.densityEdited")}</span>
@@ -137,12 +149,6 @@ export function DensityField({
         >
           {t("ui.densityEdit")}
         </button>
-
-        {disabled && (
-          <span className="pfm-material-density__hint">
-            {t("ui.densityDisabledHint")}
-          </span>
-        )}
       </div>
     </div>
   );

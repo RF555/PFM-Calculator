@@ -15,4 +15,16 @@
 
 .pfm-calc .pfm-quantity__step:disabled { opacity: 0.45; cursor: not-allowed; }
 
-.pfm-calc .pfm-quantity__input { width: 5ch; text-align: center; }
+/*
+ * A piece count is a couple of digits wide. The doubled class raises
+ * specificity above `.pfm-calc .pfm-input`, which sets width:100% with a
+ * 20ch cap — equal specificity, so without this the wider rule wins purely
+ * on load order and the field stretches to ~20ch. flex:0 0 auto keeps the
+ * surrounding row from stretching it back out.
+ */
+.pfm-calc .pfm-quantity__input.pfm-quantity__input {
+  width: 5ch;
+  max-width: none;
+  flex: 0 0 auto;
+  text-align: center;
+}

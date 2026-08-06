@@ -70,7 +70,3 @@
   cursor: not-allowed;
 }
 
-.pfm-calc .pfm-material-density__hint {
-  font-size: var(--pfm-fs-sm);
-  color: var(--pfm-muted);
-}

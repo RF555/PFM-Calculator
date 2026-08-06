@@ -73,7 +73,10 @@ function Harness({
 describe("DensityField", () => {
   it("shows the catalog density read-only, with no input", () => {
     renderField();
-    expect(screen.getByText("7850 kg/m³")).toBeInTheDocument();
+    // The unit lives in the label, as it does for every dimension field, so
+    // the value beside it is a bare number.
+    expect(screen.getByText("Density (kg/m³)")).toBeInTheDocument();
+    expect(screen.getByText("7850")).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
   });
 
@@ -150,7 +153,7 @@ describe("DensityField", () => {
 
   it("renders the value left-to-right so it does not reorder in Hebrew", () => {
     renderField({ override: 7800, raw: "7800" });
-    expect(screen.getByText("7800 kg/m³")).toHaveAttribute("dir", "ltr");
+    expect(screen.getByText("7800")).toHaveAttribute("dir", "ltr");
   });
 
   // Regression: switching grades while the field is open used to leave the

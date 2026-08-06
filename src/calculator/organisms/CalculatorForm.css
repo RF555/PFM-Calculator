@@ -82,6 +82,20 @@
   min-width: 0;
 }
 
+/*
+ * While the density field is an input it reserves a strip beneath itself for
+ * an error message (FieldError keeps that space even when empty, so the row
+ * does not jump when one appears). Bottom-aligning the row would then float
+ * the density input a strip's height above its neighbours, so the siblings
+ * reserve the same space and every control lands on one baseline. Derived
+ * from the tokens that size the strip rather than a measured pixel value, so
+ * it survives a change to either.
+ */
+.pfm-calc .pfm-form__footer:has(.pfm-material-density--editing) .pfm-quantity,
+.pfm-calc .pfm-form__footer:has(.pfm-material-density--editing) .pfm-form__reset {
+  margin-block-end: calc(var(--pfm-fs-sm) * 1.25 + var(--pfm-gap-tight));
+}
+
 .pfm-calc .pfm-form__reset {
   margin-inline-start: auto;
   min-height: var(--pfm-control-h);

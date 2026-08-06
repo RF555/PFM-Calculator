@@ -23,6 +23,11 @@ const MATERIALS = [
     grades: [
       { id: "steel.carbon", name: { he: "פלדת פחמן", en: "Carbon Steel" }, density: 7850 },
       { id: "steel.stainless", name: { he: "נירוסטה", en: "Stainless 304" }, density: 7930 },
+      // Shares steel.carbon's catalog density on purpose: regression coverage
+      // for a re-seed bug that keyed off density value instead of grade
+      // identity, so switching between two same-density grades looked like
+      // no change at all and left a stale in-progress edit on screen.
+      { id: "steel.carbon2", name: { he: "פלדת פחמן 2", en: "Carbon Steel 2" }, density: 7850 },
     ] },
 ];
 
@@ -274,6 +279,27 @@ describe("CalculatorForm", () => {
     expect(screen.queryByText("edited")).not.toBeInTheDocument();
     expect(screen.getByText("7930 kg/m³")).toBeInTheDocument();
     expect(screen.getByTestId("total-primary")).toHaveTextContent("15.5705 kg");
+  });
+
+  // Regression: the density re-seed effect used to key off catalogDensity
+  // instead of grade identity. Carbon Steel and Carbon Steel 2 share a
+  // catalog density (7850), so the old comparison saw "no change" and left
+  // the previous grade's in-progress edit on screen even though the reducer
+  // had already cleared the override underneath it.
+  it("drops a stale in-progress edit when switching to a different grade with the same catalog density", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+
+    await pick("Grade", "Carbon Steel 2");
+
+    // The stale "2700" must not still be showing; the field re-seeds to the
+    // new grade's catalog value (also 7850) and the result agrees with it.
+    expect(screen.queryByDisplayValue("2700")).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /density/i })).toHaveValue("7850");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("15.4134 kg");
   });
 
   it("reports the density that produced the result", async () => {

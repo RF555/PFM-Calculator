@@ -198,6 +198,7 @@ export function CalculatorForm({
 
       <DensityField
         idPrefix={idPrefix}
+        gradeId={state.gradeId}
         catalogDensity={grade?.density ?? null}
         override={state.densityOverride}
         raw={state.densityRaw}

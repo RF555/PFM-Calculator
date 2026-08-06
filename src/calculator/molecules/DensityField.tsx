@@ -6,6 +6,10 @@ import "./DensityField.css";
 
 export interface DensityFieldProps {
   idPrefix: string;
+  /** Identity of the selected grade, or null when none is selected. Drives
+   *  the re-seed effect: the reducer clears any override on every grade
+   *  change, even between two grades that share a catalog density. */
+  gradeId: string | null;
   /** Catalog density of the selected grade, or null when none is selected. */
   catalogDensity: number | null;
   /** Active override, or null when the catalog value is in force. */
@@ -29,7 +33,7 @@ const PLACEHOLDER = "—";
  * itself lives in the reducer.
  */
 export function DensityField({
-  idPrefix, catalogDensity, override, raw, error, onChange, onClear,
+  idPrefix, gradeId, catalogDensity, override, raw, error, onChange, onClear,
 }: DensityFieldProps) {
   const t = useTranslate();
   const [editing, setEditing] = useState(false);
@@ -50,10 +54,10 @@ export function DensityField({
   // CLEAR_DENSITY resets to catalog unconditionally, which is right for the
   // "Reset" control but wrong for "Cancel" on top of an existing override.
   const committedRaw = useRef("");
-  // Last catalogDensity seen, so the re-seed effect below can tell "grade
-  // changed under an open editor" apart from "component just mounted" or
-  // "re-rendered for an unrelated reason".
-  const lastCatalogDensity = useRef(catalogDensity);
+  // Last gradeId seen, so the re-seed effect below can tell "grade changed
+  // under an open editor" apart from "re-rendered for an unrelated reason"
+  // (mount is instead guarded by `editing` being false at that point).
+  const lastGradeId = useRef(gradeId);
 
   const id = `${idPrefix}-density`;
   const effective = override ?? catalogDensity;
@@ -78,12 +82,12 @@ export function DensityField({
   // the new grade has no catalog density at all, the effect below closes
   // the editor instead, since there is nothing left to edit.
   useEffect(() => {
-    const changed = lastCatalogDensity.current !== catalogDensity;
-    lastCatalogDensity.current = catalogDensity;
+    const changed = lastGradeId.current !== gradeId;
+    lastGradeId.current = gradeId;
     if (!changed || !editing || disabled) return;
     committedRaw.current = "";
     setText(catalogDensity !== null ? String(catalogDensity) : "");
-  }, [catalogDensity, editing, disabled]);
+  }, [gradeId, catalogDensity, editing, disabled]);
 
   // A grade change clears the override underneath an open editor; without
   // this the field would keep showing a stale input over a new catalog value.

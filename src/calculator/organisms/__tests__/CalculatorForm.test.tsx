@@ -20,7 +20,10 @@ if (!Element.prototype.scrollIntoView) {
 
 const MATERIALS = [
   { id: "steel", name: { he: "פלדה", en: "Steel" },
-    grades: [{ id: "steel.carbon", name: { he: "פלדת פחמן", en: "Carbon Steel" }, density: 7850 }] },
+    grades: [
+      { id: "steel.carbon", name: { he: "פלדת פחמן", en: "Carbon Steel" }, density: 7850 },
+      { id: "steel.stainless", name: { he: "נירוסטה", en: "Stainless 304" }, density: 7930 },
+    ] },
 ];
 
 function renderEn(ui: React.ReactElement) {
@@ -222,5 +225,80 @@ describe("CalculatorForm", () => {
     await userEvent.type(screen.getByLabelText("אורך (מ\"מ)"), "1000");
     await userEvent.tab();
     expect(await screen.findByText(/הדופן חייבת להיות קטנה/)).toBeInTheDocument();
+  });
+
+  async function fillRoundBar() {
+    await pick("Material", "Steel");
+    await pick("Grade", "Carbon Steel");
+    await pick("Shape", "Round Bar");
+    await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+  }
+
+  it("recalculates from an overridden density", async () => {
+    setup();
+    await fillRoundBar();
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("15.4134 kg");
+
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.click(screen.getByRole("button", { name: /done/i }));
+
+    // Same 1963495.4 mm^3 at 2700 kg/m3 instead of 7850.
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
+  });
+
+  it("blanks the result while the density is invalid", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "99999");
+
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
+    expect(screen.getByText(/Must be between 1 and 25000/)).toBeInTheDocument();
+  });
+
+  it("drops the override and uses the new catalog value when the grade changes", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.click(screen.getByRole("button", { name: /done/i }));
+    expect(screen.getByText("edited")).toBeInTheDocument();
+
+    await pick("Grade", "Stainless 304");
+
+    expect(screen.queryByText("edited")).not.toBeInTheDocument();
+    expect(screen.getByText("7930 kg/m³")).toBeInTheDocument();
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("15.5705 kg");
+  });
+
+  it("reports the density that produced the result", async () => {
+    const onCalculate = vi.fn();
+    setup({ onCalculate });
+    await fillRoundBar();
+    expect(onCalculate.mock.calls.at(-1)![0].densityKgM3).toBe(7850);
+
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.click(screen.getByRole("button", { name: /done/i }));
+
+    expect(onCalculate.mock.calls.at(-1)![0].densityKgM3).toBe(2700);
+  });
+
+  it("clears the override on reset", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.click(screen.getByRole("button", { name: /done/i }));
+
+    await userEvent.click(screen.getByRole("button", { name: "Reset" }));
+    expect(screen.queryByText("edited")).not.toBeInTheDocument();
   });
 });

@@ -101,4 +101,67 @@ describe("calcReducer", () => {
     expect(s.dimensions).toEqual({});
     expect(s.errors).toEqual({});
   });
+
+  it("starts with no density override", () => {
+    expect(base.densityOverride).toBeNull();
+    expect(base.densityRaw).toBe("");
+    expect(base.densityError).toBe("");
+  });
+
+  it("stores a valid density override with its raw text", () => {
+    const s = calcReducer(base, { type: "SET_DENSITY", raw: "7800" });
+    expect(s.densityOverride).toBe(7800);
+    expect(s.densityRaw).toBe("7800");
+    expect(s.densityError).toBe("");
+  });
+
+  // The raw text survives so the field does not blank out mid-keystroke; the
+  // parsed value is dropped so no stale figure can drive a calculation.
+  it("keeps the raw text but drops the value when the density is invalid", () => {
+    const valid = calcReducer(base, { type: "SET_DENSITY", raw: "7800" });
+    const s = calcReducer(valid, { type: "SET_DENSITY", raw: "99999" });
+    expect(s.densityRaw).toBe("99999");
+    expect(s.densityOverride).toBeNull();
+    expect(s.densityError).toBe("error.densityRange");
+  });
+
+  it("clears the override", () => {
+    const s = calcReducer(
+      calcReducer(base, { type: "SET_DENSITY", raw: "7800" }),
+      { type: "CLEAR_DENSITY" }
+    );
+    expect(s.densityOverride).toBeNull();
+    expect(s.densityRaw).toBe("");
+    expect(s.densityError).toBe("");
+  });
+
+  // An override belongs to one grade selection. Carrying it across would let a
+  // user quote 316 stainless at aluminium's density without noticing.
+  it("clears the override when the grade changes", () => {
+    const s = calcReducer(
+      calcReducer(base, { type: "SET_DENSITY", raw: "7800" }),
+      { type: "SELECT_GRADE", gradeId: "steel.a36" }
+    );
+    expect(s.densityOverride).toBeNull();
+    expect(s.densityRaw).toBe("");
+  });
+
+  it("clears the override when the material changes", () => {
+    const s = calcReducer(
+      calcReducer(base, { type: "SET_DENSITY", raw: "7800" }),
+      { type: "SELECT_MATERIAL", materialId: "aluminum" }
+    );
+    expect(s.densityOverride).toBeNull();
+    expect(s.densityRaw).toBe("");
+  });
+
+  it("clears the override on reset", () => {
+    const s = calcReducer(
+      calcReducer(withDims, { type: "SET_DENSITY", raw: "7800" }),
+      { type: "RESET" }
+    );
+    expect(s.densityOverride).toBeNull();
+    expect(s.densityRaw).toBe("");
+    expect(s.densityError).toBe("");
+  });
 });

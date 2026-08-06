@@ -125,6 +125,35 @@ describe("calcReducer", () => {
     expect(s.densityError).toBe("error.densityRange");
   });
 
+  // Regression: an emptied field used to be indistinguishable from "no
+  // override", so the result silently fell back to the catalog density and
+  // showed a weight derived from a figure the user had just deleted.
+  it("marks an emptied field as cleared rather than as no override", () => {
+    const s = calcReducer(
+      calcReducer(base, { type: "SET_DENSITY", raw: "2700" }),
+      { type: "SET_DENSITY", raw: "" }
+    );
+    expect(s.densityOverride).toBeNull();
+    expect(s.densityCleared).toBe(true);
+    // No error: clearing a field to retype is not a mistake to scold.
+    expect(s.densityError).toBe("");
+  });
+
+  it("stops treating the field as cleared once a value parses again", () => {
+    const s = calcReducer(
+      calcReducer(base, { type: "SET_DENSITY", raw: "" }),
+      { type: "SET_DENSITY", raw: "2700" }
+    );
+    expect(s.densityCleared).toBe(false);
+    expect(s.densityOverride).toBe(2700);
+  });
+
+  it("does not mark an invalid entry as cleared", () => {
+    const s = calcReducer(base, { type: "SET_DENSITY", raw: "99999" });
+    expect(s.densityCleared).toBe(false);
+    expect(s.densityError).toBe("error.densityRange");
+  });
+
   it("clears the override", () => {
     const s = calcReducer(
       calcReducer(base, { type: "SET_DENSITY", raw: "7800" }),

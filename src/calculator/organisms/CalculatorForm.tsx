@@ -87,7 +87,11 @@ export function CalculatorForm({
   );
 
   const result = useMemo<ResultValues | null>(() => {
-    if (!state.shapeId || density === null || state.densityError) return null;
+    if (!state.shapeId || density === null) return null;
+    // A cleared field is suppressed alongside an invalid one: falling back to
+    // the catalog density would show a weight computed from a number the user
+    // has just deleted, with nothing on screen to explain it.
+    if (state.densityError || state.densityCleared) return null;
     if (violations.length > 0) return null;
     // `SHAPES[id].fields` narrows to a union of the registry's per-shape
     // literal field types unless pinned explicitly here, which loses the
@@ -100,7 +104,10 @@ export function CalculatorForm({
 
     const mm3 = volumeMm3(state.shapeId, state.dimensions);
     return { unitKg: weightKg(mm3, density), volumeCm3: m3ToCm3(mm3ToM3(mm3)) };
-  }, [state.shapeId, state.dimensions, state.densityError, density, violations]);
+  }, [
+    state.shapeId, state.dimensions, state.densityError, state.densityCleared,
+    density, violations,
+  ]);
 
   // Reported from an effect rather than the memo above: notifying the host is
   // a side effect, and a memo may re-run at React's discretion. null is sent

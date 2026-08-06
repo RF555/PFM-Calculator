@@ -23,6 +23,12 @@ export interface CalcState {
   densityRaw: string;
   /** Translation key for a density parse/range error, resolved by the view. */
   densityError: string;
+  /**
+   * The user emptied the density field rather than never having touched it.
+   * Distinct from `densityOverride === null`, which also covers "the catalog
+   * value is in force" — here the result must be suppressed instead.
+   */
+  densityCleared: boolean;
 }
 
 export type CalcAction =
@@ -57,6 +63,7 @@ export function initialState(opts: InitialOptions): CalcState {
     densityOverride: null,
     densityRaw: "",
     densityError: "",
+    densityCleared: false,
   };
 }
 
@@ -80,6 +87,7 @@ const NO_DENSITY_OVERRIDE = {
   densityOverride: null,
   densityRaw: "",
   densityError: "",
+  densityCleared: false,
 } as const;
 
 /**
@@ -158,6 +166,21 @@ export function calcReducer(state: CalcState, action: CalcAction): CalcState {
           ...state,
           densityRaw: action.raw,
           densityOverride: result.value,
+          densityCleared: false,
+          densityError: "",
+        };
+      }
+      // An emptied field is not "no override" — the user deleted a figure and
+      // has not replaced it yet. Falling back to the catalog density here
+      // would recompute the weight from a number no longer on screen, with no
+      // error to explain the change. Flagged so the view can suppress the
+      // result until something parses, exactly as an invalid entry does.
+      if (action.raw.trim() === "") {
+        return {
+          ...state,
+          densityRaw: action.raw,
+          densityOverride: null,
+          densityCleared: true,
           densityError: "",
         };
       }
@@ -168,6 +191,7 @@ export function calcReducer(state: CalcState, action: CalcAction): CalcState {
         ...state,
         densityRaw: action.raw,
         densityOverride: null,
+        densityCleared: false,
         densityError: "errorKey" in result ? result.errorKey : "",
       };
     }

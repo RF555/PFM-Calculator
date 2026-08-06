@@ -274,6 +274,37 @@ describe("CalculatorForm", () => {
     expect(screen.getByText(/Must be between 1 and 25000/)).toBeInTheDocument();
   });
 
+  // Regression: clearing the field used to fall back to the catalog density,
+  // so the total silently changed to a figure derived from a number the user
+  // had just deleted — no error, no badge, nothing on screen to explain it.
+  // On a quote that is a real money error.
+  it("blanks the result when the density field is cleared", async () => {
+    const onCalculate = vi.fn();
+    setup({ onCalculate });
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
+
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+
+    // Must NOT revert to the catalog 7850 (which would read 15.4134 kg).
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
+    expect(onCalculate.mock.calls.at(-1)![0]).toBeNull();
+  });
+
+  it("recovers the result once a density is typed again after clearing", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
+
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
+  });
+
   it("drops the override and uses the new catalog value when the grade changes", async () => {
     setup();
     await fillRoundBar();

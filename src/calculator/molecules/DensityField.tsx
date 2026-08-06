@@ -19,7 +19,6 @@ export interface DensityFieldProps {
   /** Resolved error message, or undefined when the value is valid. */
   error?: string;
   onChange: (raw: string) => void;
-  onClear: () => void;
 }
 
 const PLACEHOLDER = "—";
@@ -27,13 +26,15 @@ const PLACEHOLDER = "—";
 /**
  * Shows the density driving the calculation, and lets the user replace it.
  *
- * Read-only by default: the value is informational for almost every user, and
- * an always-editable input invites accidental edits to a figure that silently
- * rescales every result. Edit mode is the only local state here; the value
- * itself lives in the reducer.
+ * Read-only until the user asks to edit, so a figure that silently rescales
+ * every result is not sitting in an input inviting stray keystrokes. Once
+ * revealed the field behaves like any dimension entry — each keystroke
+ * applies immediately, with no confirmation step — and stays a field for the
+ * rest of the session. Reverting to the catalog value is the form's Reset
+ * button; there is no separate control for it.
  */
 export function DensityField({
-  idPrefix, gradeId, catalogDensity, override, raw, error, onChange, onClear,
+  idPrefix, gradeId, catalogDensity, override, raw, error, onChange,
 }: DensityFieldProps) {
   const t = useTranslate();
   const [editing, setEditing] = useState(false);
@@ -44,18 +45,9 @@ export function DensityField({
   // then get overwritten mid-type.
   const [text, setText] = useState("");
   const inputRef = useRef<HTMLDivElement>(null);
-  const editButtonRef = useRef<HTMLButtonElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  // Set when edit mode is left, so focus returns to the Edit control rather
-  // than falling back to the document.
-  const returnFocus = useRef(false);
-  // Snapshot of `raw` when editing began, so Cancel can restore exactly what
-  // was committed before this edit rather than wiping the field to catalog:
-  // CLEAR_DENSITY resets to catalog unconditionally, which is right for the
-  // "Reset" control but wrong for "Cancel" on top of an existing override.
-  const committedRaw = useRef("");
   // Last gradeId seen, so the re-seed effect below can tell "grade changed
-  // under an open editor" apart from "re-rendered for an unrelated reason"
+  // under an open field" apart from "re-rendered for an unrelated reason"
   // (mount is instead guarded by `editing` being false at that point).
   const lastGradeId = useRef(gradeId);
 
@@ -64,36 +56,26 @@ export function DensityField({
   const disabled = catalogDensity === null;
 
   useEffect(() => {
-    if (editing) {
-      inputRef.current?.querySelector("input")?.focus();
-    } else if (returnFocus.current) {
-      returnFocus.current = false;
-      editButtonRef.current?.focus();
-    }
+    if (editing) inputRef.current?.querySelector("input")?.focus();
   }, [editing]);
 
   // Selecting a different grade clears the reducer's override underneath an
-  // open editor. When the new grade still has a catalog density (disabled
-  // stays false), re-seed the editor from it instead of leaving it open on
-  // the old grade's value: the in-progress edit belonged to the old grade,
-  // so carrying it over to the new one would silently apply the wrong
-  // number. Re-seeding rather than closing keeps the editor open so a user
-  // mid-edit isn't dropped back to read-only just for browsing grades. When
-  // the new grade has no catalog density at all, the effect below closes
-  // the editor instead, since there is nothing left to edit.
+  // open field. When the new grade still has a catalog density (disabled
+  // stays false), re-seed from it instead of leaving the old grade's number
+  // in place: the in-progress edit belonged to the old grade, so carrying it
+  // over would silently apply the wrong figure. Keyed on grade identity, not
+  // on the density value — two grades can share a density, and the reducer
+  // clears on every grade change regardless.
   useEffect(() => {
     const changed = lastGradeId.current !== gradeId;
     lastGradeId.current = gradeId;
     if (!changed || !editing || disabled) return;
-    committedRaw.current = "";
     setText(catalogDensity !== null ? String(catalogDensity) : "");
   }, [gradeId, catalogDensity, editing, disabled]);
 
-  // A grade change clears the override underneath an open editor; without
-  // this the field would keep showing a stale input over a new catalog value.
-  // The Edit button is itself disabled in this state, so focus can't return
-  // there the way it does from a normal Done/Cancel — send it to the
-  // container instead of letting it fall through to the document body.
+  // A grade with no catalog density leaves nothing to edit, so close the
+  // field. Focus would otherwise fall to the document body: the Edit button
+  // is itself disabled in this state and cannot receive it.
   useEffect(() => {
     if (!disabled) return;
     setEditing((was) => {
@@ -102,13 +84,7 @@ export function DensityField({
     });
   }, [disabled]);
 
-  function leaveEditing() {
-    returnFocus.current = true;
-    setEditing(false);
-  }
-
   function beginEditing() {
-    committedRaw.current = raw;
     setText(raw !== "" ? raw : effective !== null ? String(effective) : "");
     setEditing(true);
   }
@@ -118,58 +94,21 @@ export function DensityField({
     onChange(next);
   }
 
-  function commit() {
-    if (error || text === "") return;
-    leaveEditing();
-  }
-
-  function cancel() {
-    // Empty means "nothing was committed before this edit" rather than "the
-    // committed value happened to be an empty string" — commit() above never
-    // leaves edit mode while text is "", so an empty snapshot can only come
-    // from an edit that started fresh. If that guard in commit() ever
-    // changes, this fallback needs to be revisited too.
-    if (committedRaw.current !== "") onChange(committedRaw.current);
-    else onClear();
-    leaveEditing();
-  }
-
   if (editing) {
     return (
-      <div className="pfm-material-density" ref={inputRef}>
+      <div className="pfm-material-density pfm-material-density--editing" ref={inputRef}>
         <NumberField
           id={id}
           label={`${t("ui.density")} (${t("unit.kgm3")})`}
           value={text}
           error={error}
           onChange={handleChange}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              commit();
-            } else if (e.key === "Escape") {
-              e.preventDefault();
-              cancel();
-            }
-          }}
         />
-        <div className="pfm-material-density__actions">
-          <button
-            type="button"
-            className="pfm-material-density__button"
-            disabled={Boolean(error) || text === ""}
-            onClick={commit}
-          >
-            {t("ui.densityDone")}
-          </button>
-          <button
-            type="button"
-            className="pfm-material-density__button"
-            onClick={cancel}
-          >
-            {t("ui.densityCancel")}
-          </button>
-        </div>
+        {override !== null && (
+          <span className="pfm-material-density__badge pfm-material-density__badge--float">
+            {t("ui.densityEdited")}
+          </span>
+        )}
       </div>
     );
   }
@@ -190,18 +129,7 @@ export function DensityField({
           <span className="pfm-material-density__badge">{t("ui.densityEdited")}</span>
         )}
 
-        {override !== null && (
-          <button
-            type="button"
-            className="pfm-material-density__button"
-            onClick={onClear}
-          >
-            {t("ui.densityReset")}
-          </button>
-        )}
-
         <button
-          ref={editButtonRef}
           type="button"
           className="pfm-material-density__button"
           disabled={disabled}

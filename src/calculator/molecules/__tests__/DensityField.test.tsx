@@ -13,7 +13,6 @@ function renderField(props: Partial<React.ComponentProps<typeof DensityField>> =
     override: null,
     raw: "",
     onChange: vi.fn(),
-    onClear: vi.fn(),
     ...props,
   };
   render(
@@ -65,10 +64,6 @@ function Harness({
             const n = Number(next);
             setOverride(next !== "" && n >= 1 && n <= 25000 ? n : null);
           }}
-          onClear={() => {
-            setRaw("");
-            setOverride(null);
-          }}
         />
       </div>
     </LanguageProvider>
@@ -109,65 +104,48 @@ describe("DensityField", () => {
     expect(props.onChange.mock.calls.at(-1)![0]).toBe("7800");
   });
 
-  it("commits on Done and shows the edited badge", async () => {
+  // The field behaves like a dimension entry once revealed: what you type is
+  // what is in force, with no confirmation step standing between the two.
+  it("applies each keystroke immediately, with no confirmation step", async () => {
     render(<Harness />);
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox"));
-    await userEvent.type(screen.getByRole("textbox"), "7800");
-    await userEvent.click(screen.getByRole("button", { name: /done/i }));
+    await userEvent.type(screen.getByRole("textbox"), "2700");
 
-    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
-    expect(screen.getByText("7800 kg/m³")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /done/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /cancel/i })).not.toBeInTheDocument();
     expect(screen.getByText("edited")).toBeInTheDocument();
   });
 
-  it("returns focus to Edit after leaving edit mode", async () => {
-    render(<Harness />);
-    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
-    await userEvent.click(screen.getByRole("button", { name: /done/i }));
-    expect(screen.getByRole("button", { name: /edit/i })).toHaveFocus();
-  });
-
-  it("discards the edit on Cancel", async () => {
+  it("stays an input once revealed rather than collapsing back to read-only", async () => {
     render(<Harness />);
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox"));
-    await userEvent.type(screen.getByRole("textbox"), "7800");
-    await userEvent.click(screen.getByRole("button", { name: /cancel/i }));
+    await userEvent.type(screen.getByRole("textbox"), "2700");
+    await userEvent.tab();
 
-    expect(screen.getByText("7850 kg/m³")).toBeInTheDocument();
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /edit/i })).not.toBeInTheDocument();
+  });
+
+  // Reverting is the form's own Reset button; a second control for it would
+  // be one more thing to explain and to keep in sync.
+  it("offers no reset-to-catalog control", () => {
+    renderField({ override: 7800, raw: "7800" });
+    expect(
+      screen.queryByRole("button", { name: /reset to catalog/i })
+    ).not.toBeInTheDocument();
+  });
+
+  it("shows the edited badge only while an override is in force", () => {
+    renderField();
     expect(screen.queryByText("edited")).not.toBeInTheDocument();
   });
 
-  it("commits on Enter and cancels on Escape", async () => {
-    render(<Harness />);
-    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
-    await userEvent.clear(screen.getByRole("textbox"));
-    await userEvent.type(screen.getByRole("textbox"), "7800{Enter}");
-    expect(screen.getByText("7800 kg/m³")).toBeInTheDocument();
-
-    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
-    await userEvent.clear(screen.getByRole("textbox"));
-    await userEvent.type(screen.getByRole("textbox"), "1234{Escape}");
-    expect(screen.getByText("7800 kg/m³")).toBeInTheDocument();
-  });
-
-  // Leaving edit mode with a broken value would strand the calculator with no
-  // result and no visible cause, so Done stays unavailable until it parses.
-  it("disables Done while the value is invalid", async () => {
+  it("shows the error message while the value is invalid", async () => {
     renderField({ error: "Must be between 1 and 25000 kg/m³", raw: "0" });
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
-    expect(screen.getByRole("button", { name: /done/i })).toBeDisabled();
     expect(screen.getByText("Must be between 1 and 25000 kg/m³")).toBeInTheDocument();
-  });
-
-  it("offers Reset only while an override is active", async () => {
-    renderField();
-    expect(screen.queryByRole("button", { name: /reset to catalog/i })).not.toBeInTheDocument();
-
-    const props = renderField({ override: 7800, raw: "7800" });
-    await userEvent.click(screen.getByRole("button", { name: /reset to catalog/i }));
-    expect(props.onClear).toHaveBeenCalled();
   });
 
   it("renders the value left-to-right so it does not reorder in Hebrew", () => {
@@ -175,9 +153,8 @@ describe("DensityField", () => {
     expect(screen.getByText("7800 kg/m³")).toHaveAttribute("dir", "ltr");
   });
 
-  // Regression: switching grades while the editor is open used to leave the
-  // old grade's text and committedRaw snapshot in place, so Cancel and Done
-  // both resolved against stale data superimposed on the new grade.
+  // Regression: switching grades while the field is open used to leave the
+  // old grade's text in place, superimposed on the new grade's density.
   it("re-seeds from the new catalog density when the grade changes mid-edit", async () => {
     const { rerender } = render(<Harness gradeId="grade-a" catalogDensity={7850} />);
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
@@ -185,18 +162,14 @@ describe("DensityField", () => {
 
     rerender(<Harness gradeId="grade-b" catalogDensity={4500} />);
     expect(screen.getByRole("textbox")).toHaveValue("4500");
-
-    // Cancel now falls back to the new grade's catalog value, not a snapshot
-    // of the old grade's committed raw.
-    await userEvent.click(screen.getByRole("button", { name: /cancel/i }));
-    expect(screen.getByText("4500 kg/m³")).toBeInTheDocument();
+    expect(screen.queryByText("edited")).not.toBeInTheDocument();
   });
 
   // Regression: the re-seed effect used to key off catalogDensity instead of
   // grade identity, so switching between two DIFFERENT grades that happen to
   // share a catalog density looked like "nothing changed" and the stale
-  // in-progress edit (and its committedRaw snapshot) survived the switch,
-  // even though the reducer had already cleared the override underneath it.
+  // in-progress edit survived the switch, even though the reducer had
+  // already cleared the override underneath it.
   it("re-seeds when the grade changes even if the new grade has the same catalog density", async () => {
     const { rerender } = render(<Harness gradeId="grade-a" catalogDensity={7850} />);
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
@@ -207,11 +180,7 @@ describe("DensityField", () => {
     // Same catalog density (7850) as grade-a, but a different grade.
     rerender(<Harness gradeId="grade-c" catalogDensity={7850} />);
     expect(screen.getByRole("textbox")).toHaveValue("7850");
-
-    // Cancel now falls back to the new grade's catalog value, not a
-    // leftover snapshot of the old grade's committed raw.
-    await userEvent.click(screen.getByRole("button", { name: /cancel/i }));
-    expect(screen.getByText("7850 kg/m³")).toBeInTheDocument();
+    expect(screen.queryByText("edited")).not.toBeInTheDocument();
   });
 
   it("closes the editor when the new grade has no catalog density", async () => {

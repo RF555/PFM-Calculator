@@ -20,9 +20,6 @@ describe("dictionaries", () => {
     const keys = [
       "ui.density",
       "ui.densityEdit",
-      "ui.densityDone",
-      "ui.densityCancel",
-      "ui.densityReset",
       "ui.densityEdited",
       "ui.densityDisabledHint",
       "error.densityRange",

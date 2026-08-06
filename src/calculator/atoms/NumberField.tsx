@@ -9,6 +9,7 @@ interface NumberFieldProps {
   value: string;
   onChange: (raw: string) => void;
   onBlur?: () => void;
+  onKeyDown?: (event: React.KeyboardEvent<HTMLInputElement>) => void;
   error?: string;
   hint?: string;
 }
@@ -19,7 +20,7 @@ interface NumberFieldProps {
  * would be invisible to the parser. inputmode keeps the mobile numeric pad.
  */
 export function NumberField({
-  id, label, value, onChange, onBlur, error, hint,
+  id, label, value, onChange, onBlur, onKeyDown, error, hint,
 }: NumberFieldProps) {
   const errorId = `${id}-error`;
   return (
@@ -41,6 +42,7 @@ export function NumberField({
         aria-describedby={error ? errorId : undefined}
         onChange={(e) => onChange(e.target.value)}
         onBlur={onBlur}
+        onKeyDown={onKeyDown}
       />
       <FieldError id={errorId} message={error} />
     </div>

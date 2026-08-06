@@ -1,0 +1,64 @@
+/*
+ * The density line. Named pfm-material-density, not pfm-density: the token
+ * layer already uses data-density for *spacing* density (tokens.css), and one
+ * word for two meanings is a trap for whoever reads this next.
+ */
+.pfm-calc .pfm-material-density {
+  display: flex;
+  flex-direction: column;
+  gap: var(--pfm-gap-tight);
+}
+
+.pfm-calc .pfm-material-density__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--pfm-gap);
+  min-height: var(--pfm-control-h);
+}
+
+.pfm-calc .pfm-material-density__value {
+  font-family: var(--pfm-font-num);
+  font-size: var(--pfm-fs-base);
+  color: var(--pfm-fg);
+}
+
+/*
+ * Text, not a colour swatch: a quote may be printed in greyscale, and the
+ * distinction between a catalog density and an edited one has to survive that.
+ */
+.pfm-calc .pfm-material-density__badge {
+  font-size: var(--pfm-fs-sm);
+  padding: 2px 8px;
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-surface);
+  color: var(--pfm-muted);
+}
+
+.pfm-calc .pfm-material-density__button {
+  min-height: var(--pfm-control-h);
+  padding: 0 12px;
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-bg);
+  color: var(--pfm-fg);
+  font-size: var(--pfm-fs-sm);
+  cursor: pointer;
+}
+
+.pfm-calc .pfm-material-density__button:disabled {
+  color: var(--pfm-muted);
+  cursor: not-allowed;
+}
+
+.pfm-calc .pfm-material-density__hint {
+  font-size: var(--pfm-fs-sm);
+  color: var(--pfm-muted);
+}
+
+.pfm-calc .pfm-material-density__actions {
+  display: flex;
+  gap: var(--pfm-gap);
+  margin-block-start: var(--pfm-gap-tight);
+}

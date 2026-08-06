@@ -3,11 +3,13 @@ import { LanguageSwitch } from "../atoms/LanguageSwitch";
 import { SegmentedControl } from "../atoms/SegmentedControl";
 import { QuantityField } from "../atoms/QuantityField";
 import { useTranslate } from "../i18n/LanguageContext";
+import { DensityField } from "../molecules/DensityField";
 import { GradeCombobox } from "../molecules/GradeCombobox";
 import { MaterialCombobox } from "../molecules/MaterialCombobox";
 import { ResultPanel, type ResultValues } from "../molecules/ResultPanel";
 import { ShapeCombobox } from "../molecules/ShapeCombobox";
 import { m3ToCm3, mm3ToM3, weightKg } from "../model/calculate";
+import { MAX_DENSITY, MIN_DENSITY } from "../model/density";
 import { calcReducer, initialState } from "../model/reducer";
 import type { Material } from "../model/schema";
 import { SHAPES, checkConstraints, volumeMm3, type ShapeId } from "../model/shapes";
@@ -23,6 +25,8 @@ export interface CalculationResult {
   totalKg: number;
   quantity: number;
   volumeCm3: number;
+  /** Density used for this result, whether from the catalog or user-edited. */
+  densityKgM3: number;
 }
 
 interface Props {
@@ -73,13 +77,22 @@ export function CalculatorForm({
   const material = materials.find((m) => m.id === state.materialId) ?? null;
   const grade = material?.grades.find((g) => g.id === state.gradeId) ?? null;
 
+  // The override wins when present; otherwise the grade's catalog value. Kept
+  // derived rather than copied into state so there is one source of truth.
+  const density = state.densityOverride ?? grade?.density ?? null;
+
   const violations = useMemo(
     () => (state.shapeId ? checkConstraints(state.shapeId, state.dimensions) : []),
     [state.shapeId, state.dimensions]
   );
 
   const result = useMemo<ResultValues | null>(() => {
-    if (!state.shapeId || !grade || violations.length > 0) return null;
+    if (!state.shapeId || density === null) return null;
+    // A cleared field is suppressed alongside an invalid one: falling back to
+    // the catalog density would show a weight computed from a number the user
+    // has just deleted, with nothing on screen to explain it.
+    if (state.densityError || state.densityCleared) return null;
+    if (violations.length > 0) return null;
     // `SHAPES[id].fields` narrows to a union of the registry's per-shape
     // literal field types unless pinned explicitly here, which loses the
     // `optional` property for every shape that never sets it.
@@ -90,8 +103,11 @@ export function CalculatorForm({
     if (!complete) return null;
 
     const mm3 = volumeMm3(state.shapeId, state.dimensions);
-    return { unitKg: weightKg(mm3, grade.density), volumeCm3: m3ToCm3(mm3ToM3(mm3)) };
-  }, [state.shapeId, state.dimensions, grade, violations]);
+    return { unitKg: weightKg(mm3, density), volumeCm3: m3ToCm3(mm3ToM3(mm3)) };
+  }, [
+    state.shapeId, state.dimensions, state.densityError, state.densityCleared,
+    density, violations,
+  ]);
 
   // Reported from an effect rather than the memo above: notifying the host is
   // a side effect, and a memo may re-run at React's discretion. null is sent
@@ -107,8 +123,9 @@ export function CalculatorForm({
       totalKg: result.unitKg * state.quantity,
       quantity: state.quantity,
       volumeCm3: result.volumeCm3,
+      densityKgM3: density!,
     };
-  }, [result, material, grade, state.shapeId, state.quantity]);
+  }, [result, material, grade, state.shapeId, state.quantity, density]);
 
   // Hosts commonly pass inline arrow callbacks, which get a new identity on
   // every render. Depending on the callback itself would re-run this effect
@@ -199,6 +216,18 @@ export function CalculatorForm({
       )}
 
       <div className="pfm-form__footer">
+        <DensityField
+          idPrefix={idPrefix}
+          gradeId={state.gradeId}
+          catalogDensity={grade?.density ?? null}
+          override={state.densityOverride}
+          raw={state.densityRaw}
+          error={state.densityError ? t(state.densityError, {
+            min: MIN_DENSITY,
+            max: MAX_DENSITY,
+          }) : undefined}
+          onChange={(raw) => dispatch({ type: "SET_DENSITY", raw })}
+        />
         <QuantityField
           idPrefix={idPrefix}
           value={state.quantity}
@@ -220,6 +249,11 @@ export function CalculatorForm({
         result={result}
         quantity={state.quantity}
         massUnit={state.massUnit}
+        densityNotice={
+          state.densityOverride !== null && grade
+            ? { value: state.densityOverride, catalog: grade.density }
+            : undefined
+        }
       />
     </div>
   );

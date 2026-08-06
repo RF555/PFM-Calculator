@@ -1,4 +1,5 @@
 import { parseDimension } from "./parse";
+import { parseDensity } from "./density";
 import type { ShapeId } from "./shapes";
 import type { DimensionValues, MassUnit, Unit } from "./types";
 import { formatAsFraction, inchToMm, mmToInch } from "./units";
@@ -16,6 +17,18 @@ export interface CalcState {
   raw: Record<string, string>;
   /** Translation keys for per-field errors, resolved by the view. */
   errors: Record<string, string>;
+  /** User's override in kg/m³, or null when the catalog value is in force. */
+  densityOverride: number | null;
+  /** Exactly what the user typed into the density field. */
+  densityRaw: string;
+  /** Translation key for a density parse/range error, resolved by the view. */
+  densityError: string;
+  /**
+   * The user emptied the density field rather than never having touched it.
+   * Distinct from `densityOverride === null`, which also covers "the catalog
+   * value is in force" — here the result must be suppressed instead.
+   */
+  densityCleared: boolean;
 }
 
 export type CalcAction =
@@ -26,6 +39,8 @@ export type CalcAction =
   | { type: "SET_MASS_UNIT"; massUnit: MassUnit }
   | { type: "SET_DIMENSION"; key: string; raw: string }
   | { type: "SET_QUANTITY"; quantity: number }
+  | { type: "SET_DENSITY"; raw: string }
+  | { type: "CLEAR_DENSITY" }
   | { type: "RESET" };
 
 export interface InitialOptions {
@@ -45,6 +60,10 @@ export function initialState(opts: InitialOptions): CalcState {
     dimensions: {},
     raw: {},
     errors: {},
+    densityOverride: null,
+    densityRaw: "",
+    densityError: "",
+    densityCleared: false,
   };
 }
 
@@ -63,6 +82,14 @@ function toDisplay(mm: number, unit: Unit): string {
 const toCanonical = (value: number, unit: Unit): number =>
   unit === "mm" ? value : inchToMm(value);
 
+/** Field-clearing patch applied wherever an override stops being valid. */
+const NO_DENSITY_OVERRIDE = {
+  densityOverride: null,
+  densityRaw: "",
+  densityError: "",
+  densityCleared: false,
+} as const;
+
 /**
  * Whole pieces, at least one. Guards the non-finite cases too: a host may
  * pass any number as defaultQuantity, and Infinity would multiply through
@@ -76,11 +103,18 @@ function clampQuantity(value: number): number {
 export function calcReducer(state: CalcState, action: CalcAction): CalcState {
   switch (action.type) {
     case "SELECT_MATERIAL":
-      // Grades belong to a material, so a material change invalidates the grade.
-      return { ...state, materialId: action.materialId, gradeId: null };
+      // Grades belong to a material, so a material change invalidates the
+      // grade — and with it any density override made against that grade.
+      return {
+        ...state,
+        materialId: action.materialId,
+        gradeId: null,
+        ...NO_DENSITY_OVERRIDE,
+      };
 
     case "SELECT_GRADE":
-      return { ...state, gradeId: action.gradeId };
+      // The override belonged to the previous grade's catalog value.
+      return { ...state, gradeId: action.gradeId, ...NO_DENSITY_OVERRIDE };
 
     case "SELECT_SHAPE":
       // Field sets differ per shape, so previous values no longer apply.
@@ -124,6 +158,46 @@ export function calcReducer(state: CalcState, action: CalcAction): CalcState {
 
     case "SET_QUANTITY":
       return { ...state, quantity: clampQuantity(action.quantity) };
+
+    case "SET_DENSITY": {
+      const result = parseDensity(action.raw);
+      if (result.ok) {
+        return {
+          ...state,
+          densityRaw: action.raw,
+          densityOverride: result.value,
+          densityCleared: false,
+          densityError: "",
+        };
+      }
+      // An emptied field is not "no override" — the user deleted a figure and
+      // has not replaced it yet. Falling back to the catalog density here
+      // would recompute the weight from a number no longer on screen, with no
+      // error to explain the change. Flagged so the view can suppress the
+      // result until something parses, exactly as an invalid entry does.
+      if (action.raw.trim() === "") {
+        return {
+          ...state,
+          densityRaw: action.raw,
+          densityOverride: null,
+          densityCleared: true,
+          densityError: "",
+        };
+      }
+      // `"errorKey" in result` rather than a plain else: this project's
+      // tsconfig has strictNullChecks off, which loses discriminated-union
+      // narrowing on the else branch. Same guard as SET_DIMENSION.
+      return {
+        ...state,
+        densityRaw: action.raw,
+        densityOverride: null,
+        densityCleared: false,
+        densityError: "errorKey" in result ? result.errorKey : "",
+      };
+    }
+
+    case "CLEAR_DENSITY":
+      return { ...state, ...NO_DENSITY_OVERRIDE };
 
     case "RESET":
       return initialState({

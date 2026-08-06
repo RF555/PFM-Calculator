@@ -18,6 +18,10 @@ const en: Dictionary = {
   "ui.noMatches": "No matches",
   "ui.dimensionUnit": "Dimension unit",
   "ui.massUnit": "Mass unit",
+  "ui.density": "Density",
+  "ui.densityEdit": "Edit",
+  "ui.densityEdited": "edited",
+  "ui.densityDisabledHint": "Select a grade first",
   "ui.language": "Language",
   "ui.dimensions": "Dimensions",
   "ui.results": "Results",
@@ -61,6 +65,7 @@ const en: Dictionary = {
 
   "error.notANumber": "Enter a number",
   "error.notPositive": "Must be greater than zero",
+  "error.densityRange": "Must be between {min} and {max} kg/m³",
 
   "constraint.wallHalfOuterDiameter":
     "Wall must be less than half the outer diameter (under {max})",
@@ -77,6 +82,8 @@ const en: Dictionary = {
   "a11y.pounds": "{value} pounds",
   "a11y.decreaseQuantity": "Decrease quantity",
   "a11y.increaseQuantity": "Increase quantity",
+  "a11y.densityOverridden":
+    "Density overridden: {value} kg/m³, catalog value {catalog} kg/m³",
 };
 
 const he: Dictionary = {
@@ -93,6 +100,10 @@ const he: Dictionary = {
   "ui.noMatches": "אין תוצאות",
   "ui.dimensionUnit": "יחידת מידה",
   "ui.massUnit": "יחידת משקל",
+  "ui.density": "צפיפות",
+  "ui.densityEdit": "עריכה",
+  "ui.densityEdited": "נערך",
+  "ui.densityDisabledHint": "בחר סוג תחילה",
   "ui.language": "שפה",
   "ui.dimensions": "מידות",
   "ui.results": "תוצאות",
@@ -135,6 +146,7 @@ const he: Dictionary = {
 
   "error.notANumber": "הזן מספר",
   "error.notPositive": "חייב להיות גדול מאפס",
+  "error.densityRange": "חייב להיות בין {min} ל-{max}",
 
   "constraint.wallHalfOuterDiameter":
     "הדופן חייבת להיות קטנה מחצי הקוטר החיצוני (מתחת ל-{max})",
@@ -151,6 +163,7 @@ const he: Dictionary = {
   "a11y.pounds": "{value} ליברות",
   "a11y.decreaseQuantity": "הפחת כמות",
   "a11y.increaseQuantity": "הוסף כמות",
+  "a11y.densityOverridden": "צפיפות מותאמת: {value}, ערך מקורי {catalog}",
 };
 
 export const STRINGS: Record<Language, Dictionary> = { he, en };

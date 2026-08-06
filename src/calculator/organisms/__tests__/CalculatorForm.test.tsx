@@ -20,7 +20,15 @@ if (!Element.prototype.scrollIntoView) {
 
 const MATERIALS = [
   { id: "steel", name: { he: "פלדה", en: "Steel" },
-    grades: [{ id: "steel.carbon", name: { he: "פלדת פחמן", en: "Carbon Steel" }, density: 7850 }] },
+    grades: [
+      { id: "steel.carbon", name: { he: "פלדת פחמן", en: "Carbon Steel" }, density: 7850 },
+      { id: "steel.stainless", name: { he: "נירוסטה", en: "Stainless 304" }, density: 7930 },
+      // Shares steel.carbon's catalog density on purpose: regression coverage
+      // for a re-seed bug that keyed off density value instead of grade
+      // identity, so switching between two same-density grades looked like
+      // no change at all and left a stale in-progress edit on screen.
+      { id: "steel.carbon2", name: { he: "פלדת פחמן 2", en: "Carbon Steel 2" }, density: 7850 },
+    ] },
 ];
 
 function renderEn(ui: React.ReactElement) {
@@ -222,5 +230,140 @@ describe("CalculatorForm", () => {
     await userEvent.type(screen.getByLabelText("אורך (מ\"מ)"), "1000");
     await userEvent.tab();
     expect(await screen.findByText(/הדופן חייבת להיות קטנה/)).toBeInTheDocument();
+  });
+
+  async function fillRoundBar() {
+    await pick("Material", "Steel");
+    await pick("Grade", "Carbon Steel");
+    await pick("Shape", "Round Bar");
+    await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+  }
+
+  it("places the density field alongside quantity", async () => {
+    setup();
+    await pick("Material", "Steel");
+    await pick("Grade", "Carbon Steel");
+
+    const footer = screen.getByLabelText("Quantity").closest(".pfm-form__footer");
+    expect(footer).not.toBeNull();
+    expect(footer!.querySelector(".pfm-material-density")).not.toBeNull();
+  });
+
+  it("recalculates from an overridden density", async () => {
+    setup();
+    await fillRoundBar();
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("15.4134 kg");
+
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+
+    // Same 1963495.4 mm^3 at 2700 kg/m3 instead of 7850.
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
+  });
+
+  it("blanks the result while the density is invalid", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "99999");
+
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
+    expect(screen.getByText(/Must be between 1 and 25000/)).toBeInTheDocument();
+  });
+
+  // Regression: clearing the field used to fall back to the catalog density,
+  // so the total silently changed to a figure derived from a number the user
+  // had just deleted — no error, no badge, nothing on screen to explain it.
+  // On a quote that is a real money error.
+  it("blanks the result when the density field is cleared", async () => {
+    const onCalculate = vi.fn();
+    setup({ onCalculate });
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
+
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+
+    // Must NOT revert to the catalog 7850 (which would read 15.4134 kg).
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
+    expect(onCalculate.mock.calls.at(-1)![0]).toBeNull();
+  });
+
+  it("recovers the result once a density is typed again after clearing", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
+
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
+  });
+
+  it("drops the override and uses the new catalog value when the grade changes", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    expect(screen.getByText("edited")).toBeInTheDocument();
+
+    await pick("Grade", "Stainless 304");
+
+    // The field stays revealed once opened, so the new grade's catalog value
+    // shows in the input rather than as read-only text.
+    expect(screen.queryByText("edited")).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /density/i })).toHaveValue("7930");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("15.5705 kg");
+  });
+
+  // Regression: the density re-seed effect used to key off catalogDensity
+  // instead of grade identity. Carbon Steel and Carbon Steel 2 share a
+  // catalog density (7850), so the old comparison saw "no change" and left
+  // the previous grade's in-progress edit on screen even though the reducer
+  // had already cleared the override underneath it.
+  it("drops a stale in-progress edit when switching to a different grade with the same catalog density", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+
+    await pick("Grade", "Carbon Steel 2");
+
+    // The stale "2700" must not still be showing; the field re-seeds to the
+    // new grade's catalog value (also 7850) and the result agrees with it.
+    expect(screen.queryByDisplayValue("2700")).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /density/i })).toHaveValue("7850");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("15.4134 kg");
+  });
+
+  it("reports the density that produced the result", async () => {
+    const onCalculate = vi.fn();
+    setup({ onCalculate });
+    await fillRoundBar();
+    expect(onCalculate.mock.calls.at(-1)![0].densityKgM3).toBe(7850);
+
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+
+    expect(onCalculate.mock.calls.at(-1)![0].densityKgM3).toBe(2700);
+  });
+
+  it("clears the override on reset", async () => {
+    setup();
+    await fillRoundBar();
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+
+    await userEvent.click(screen.getByRole("button", { name: "Reset" }));
+    expect(screen.queryByText("edited")).not.toBeInTheDocument();
   });
 });

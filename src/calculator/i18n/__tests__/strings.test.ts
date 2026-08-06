@@ -15,6 +15,28 @@ describe("dictionaries", () => {
       }
     }
   });
+
+  it("has every density key in both languages", () => {
+    const keys = [
+      "ui.density",
+      "ui.densityEdit",
+      "ui.densityEdited",
+      "ui.densityDisabledHint",
+      "error.densityRange",
+      "a11y.densityOverridden",
+    ];
+    for (const key of keys) {
+      expect(STRINGS.en[key], `en.${key}`).toBeTruthy();
+      expect(STRINGS.he[key], `he.${key}`).toBeTruthy();
+    }
+  });
+
+  it("keeps the bound placeholders in the density range message", () => {
+    for (const language of ["en", "he"] as const) {
+      expect(STRINGS[language]["error.densityRange"]).toContain("{min}");
+      expect(STRINGS[language]["error.densityRange"]).toContain("{max}");
+    }
+  });
 });
 
 describe("translate", () => {

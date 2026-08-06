@@ -71,4 +71,32 @@ describe("ResultPanel", () => {
     expect(screen.getByTestId("total-secondary")).toHaveAttribute("dir", "ltr");
     expect(screen.getByTestId("unit-primary")).toHaveAttribute("dir", "ltr");
   });
+
+  it("announces an overridden density alongside the weight", async () => {
+    renderEn(
+      <ResultPanel
+        result={{ unitKg: 5.3, volumeCm3: 1963.5 }}
+        quantity={1}
+        massUnit="kg"
+        densityNotice={{ value: 2700, catalog: 7850 }}
+      />
+    );
+    // findBy* retries past the LiveRegion announcement delay.
+    const status = await screen.findByText(/2700/);
+    expect(status).toHaveTextContent(/7850/);
+  });
+
+  it("says nothing about density when no override is active", async () => {
+    renderEn(
+      <ResultPanel
+        result={{ unitKg: 5.3, volumeCm3: 1963.5 }}
+        quantity={1}
+        massUnit="kg"
+      />
+    );
+    // Wait for the announcement to land, then confirm it carries only the
+    // weight — asserting immediately would pass against a still-empty region.
+    await screen.findByText(/kilograms/);
+    expect(screen.getByRole("status")).not.toHaveTextContent(/7850/);
+  });
 });

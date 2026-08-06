@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { LanguageProvider } from "../../i18n/LanguageContext";
 import { DensityField } from "../DensityField";
@@ -25,10 +25,22 @@ function renderField(props: Partial<React.ComponentProps<typeof DensityField>> =
   return merged;
 }
 
-/** Drives the component with real state, the way CalculatorForm does. */
+/**
+ * Drives the component with real state, the way CalculatorForm does.
+ * Also mirrors the reducer's SELECT_GRADE behaviour: a changed catalogDensity
+ * resets raw/override, so a rerender with a new prop here matches what
+ * happens when the user actually picks a different grade mid-edit.
+ */
 function Harness({ catalogDensity = 7850 }: { catalogDensity?: number | null }) {
   const [raw, setRaw] = useState("");
   const [override, setOverride] = useState<number | null>(null);
+  const lastCatalogDensity = useRef(catalogDensity);
+  useEffect(() => {
+    if (lastCatalogDensity.current === catalogDensity) return;
+    lastCatalogDensity.current = catalogDensity;
+    setRaw("");
+    setOverride(null);
+  }, [catalogDensity]);
   return (
     <LanguageProvider language="en" setLanguage={() => {}}>
       <div className="pfm-calc">
@@ -150,5 +162,32 @@ describe("DensityField", () => {
   it("renders the value left-to-right so it does not reorder in Hebrew", () => {
     renderField({ override: 7800, raw: "7800" });
     expect(screen.getByText("7800 kg/m³")).toHaveAttribute("dir", "ltr");
+  });
+
+  // Regression: switching grades while the editor is open used to leave the
+  // old grade's text and committedRaw snapshot in place, so Cancel and Done
+  // both resolved against stale data superimposed on the new grade.
+  it("re-seeds from the new catalog density when the grade changes mid-edit", async () => {
+    const { rerender } = render(<Harness catalogDensity={7850} />);
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    expect(screen.getByRole("textbox")).toHaveValue("7850");
+
+    rerender(<Harness catalogDensity={4500} />);
+    expect(screen.getByRole("textbox")).toHaveValue("4500");
+
+    // Cancel now falls back to the new grade's catalog value, not a snapshot
+    // of the old grade's committed raw.
+    await userEvent.click(screen.getByRole("button", { name: /cancel/i }));
+    expect(screen.getByText("4500 kg/m³")).toBeInTheDocument();
+  });
+
+  it("closes the editor when the new grade has no catalog density", async () => {
+    const { rerender } = render(<Harness catalogDensity={7850} />);
+    await userEvent.click(screen.getByRole("button", { name: /edit/i }));
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
+
+    rerender(<Harness catalogDensity={null} />);
+    expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
+    expect(screen.getByText("Select a grade first")).toBeInTheDocument();
   });
 });

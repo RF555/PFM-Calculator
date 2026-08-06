@@ -41,6 +41,7 @@ export function DensityField({
   const [text, setText] = useState("");
   const inputRef = useRef<HTMLDivElement>(null);
   const editButtonRef = useRef<HTMLButtonElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   // Set when edit mode is left, so focus returns to the Edit control rather
   // than falling back to the document.
   const returnFocus = useRef(false);
@@ -49,6 +50,10 @@ export function DensityField({
   // CLEAR_DENSITY resets to catalog unconditionally, which is right for the
   // "Reset" control but wrong for "Cancel" on top of an existing override.
   const committedRaw = useRef("");
+  // Last catalogDensity seen, so the re-seed effect below can tell "grade
+  // changed under an open editor" apart from "component just mounted" or
+  // "re-rendered for an unrelated reason".
+  const lastCatalogDensity = useRef(catalogDensity);
 
   const id = `${idPrefix}-density`;
   const effective = override ?? catalogDensity;
@@ -63,10 +68,34 @@ export function DensityField({
     }
   }, [editing]);
 
+  // Selecting a different grade clears the reducer's override underneath an
+  // open editor. When the new grade still has a catalog density (disabled
+  // stays false), re-seed the editor from it instead of leaving it open on
+  // the old grade's value: the in-progress edit belonged to the old grade,
+  // so carrying it over to the new one would silently apply the wrong
+  // number. Re-seeding rather than closing keeps the editor open so a user
+  // mid-edit isn't dropped back to read-only just for browsing grades. When
+  // the new grade has no catalog density at all, the effect below closes
+  // the editor instead, since there is nothing left to edit.
+  useEffect(() => {
+    const changed = lastCatalogDensity.current !== catalogDensity;
+    lastCatalogDensity.current = catalogDensity;
+    if (!changed || !editing || disabled) return;
+    committedRaw.current = "";
+    setText(catalogDensity !== null ? String(catalogDensity) : "");
+  }, [catalogDensity, editing, disabled]);
+
   // A grade change clears the override underneath an open editor; without
   // this the field would keep showing a stale input over a new catalog value.
+  // The Edit button is itself disabled in this state, so focus can't return
+  // there the way it does from a normal Done/Cancel — send it to the
+  // container instead of letting it fall through to the document body.
   useEffect(() => {
-    if (disabled) setEditing(false);
+    if (!disabled) return;
+    setEditing((was) => {
+      if (was) containerRef.current?.focus();
+      return false;
+    });
   }, [disabled]);
 
   function leaveEditing() {
@@ -91,6 +120,11 @@ export function DensityField({
   }
 
   function cancel() {
+    // Empty means "nothing was committed before this edit" rather than "the
+    // committed value happened to be an empty string" — commit() above never
+    // leaves edit mode while text is "", so an empty snapshot can only come
+    // from an edit that started fresh. If that guard in commit() ever
+    // changes, this fallback needs to be revisited too.
     if (committedRaw.current !== "") onChange(committedRaw.current);
     else onClear();
     leaveEditing();
@@ -137,7 +171,7 @@ export function DensityField({
   }
 
   return (
-    <div className="pfm-material-density">
+    <div className="pfm-material-density" ref={containerRef} tabIndex={-1}>
       {/* Not paired via htmlFor: the read-only row has no single control to
           receive focus from a label click, and pointing it at the Edit
           button below would let the label's text override the button's own

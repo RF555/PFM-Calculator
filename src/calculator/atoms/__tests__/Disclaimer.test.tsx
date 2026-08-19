@@ -20,22 +20,22 @@ describe("Disclaimer", () => {
 
   it("keeps the panel hidden until the trigger is activated", () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    const trigger = screen.getByRole("button", { name: "Why? Explains why weights vary" });
+    const trigger = screen.getByRole("button", { name: "Why? Weights can vary from this estimate" });
     expect(trigger).toHaveAttribute("aria-expanded", "false");
     expect(screen.queryByText(/varies between heats/)).not.toBeInTheDocument();
   });
 
   it("opens on click and marks the trigger expanded", async () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    await userEvent.click(screen.getByRole("button", { name: "Why? Explains why weights vary" }));
-    expect(screen.getByRole("button", { name: "Why? Explains why weights vary" }))
+    await userEvent.click(screen.getByRole("button", { name: "Why? Weights can vary from this estimate" }));
+    expect(screen.getByRole("button", { name: "Why? Weights can vary from this estimate" }))
       .toHaveAttribute("aria-expanded", "true");
     expect(screen.getByText(/varies between heats/)).toBeInTheDocument();
   });
 
   it("closes when the trigger is activated again", async () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    const trigger = screen.getByRole("button", { name: "Why? Explains why weights vary" });
+    const trigger = screen.getByRole("button", { name: "Why? Weights can vary from this estimate" });
     await userEvent.click(trigger);
     await userEvent.click(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -43,7 +43,7 @@ describe("Disclaimer", () => {
 
   it("closes on the close button and returns focus to the trigger", async () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    const trigger = screen.getByRole("button", { name: "Why? Explains why weights vary" });
+    const trigger = screen.getByRole("button", { name: "Why? Weights can vary from this estimate" });
     await userEvent.click(trigger);
     await userEvent.click(screen.getByRole("button", { name: "Close" }));
     expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -52,7 +52,7 @@ describe("Disclaimer", () => {
 
   it("closes on Escape and returns focus to the trigger", async () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    const trigger = screen.getByRole("button", { name: "Why? Explains why weights vary" });
+    const trigger = screen.getByRole("button", { name: "Why? Weights can vary from this estimate" });
     await userEvent.click(trigger);
     await userEvent.keyboard("{Escape}");
     expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -61,21 +61,21 @@ describe("Disclaimer", () => {
 
   it("leaves focus on the trigger when opening — the panel is not a dialog", async () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    const trigger = screen.getByRole("button", { name: "Why? Explains why weights vary" });
+    const trigger = screen.getByRole("button", { name: "Why? Weights can vary from this estimate" });
     await userEvent.click(trigger);
     expect(trigger).toHaveFocus();
   });
 
   it("does not open on hover", async () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    const trigger = screen.getByRole("button", { name: "Why? Explains why weights vary" });
+    const trigger = screen.getByRole("button", { name: "Why? Weights can vary from this estimate" });
     await userEvent.hover(trigger);
     expect(trigger).toHaveAttribute("aria-expanded", "false");
   });
 
   it("points aria-controls at the namespaced panel id", async () => {
     renderEn(<Disclaimer idPrefix="abc" />);
-    const trigger = screen.getByRole("button", { name: "Why? Explains why weights vary" });
+    const trigger = screen.getByRole("button", { name: "Why? Weights can vary from this estimate" });
     expect(trigger).toHaveAttribute("aria-controls", "abc-disclaimer");
     await userEvent.click(trigger);
     expect(document.getElementById("abc-disclaimer")).toBeInTheDocument();
@@ -83,7 +83,7 @@ describe("Disclaimer", () => {
 
   it("renders the trigger as a non-submitting button", () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    expect(screen.getByRole("button", { name: "Why? Explains why weights vary" }))
+    expect(screen.getByRole("button", { name: "Why? Weights can vary from this estimate" }))
       .toHaveAttribute("type", "button");
   });
 
@@ -146,7 +146,7 @@ describe("Disclaimer", () => {
         <button type="button">elsewhere</button>
       </>
     );
-    const trigger = screen.getByRole("button", { name: "Why? Explains why weights vary" });
+    const trigger = screen.getByRole("button", { name: "Why? Weights can vary from this estimate" });
     await userEvent.click(trigger);
     await userEvent.click(screen.getByRole("button", { name: "elsewhere" }));
     expect(trigger).toHaveAttribute("aria-expanded", "false");
@@ -156,13 +156,13 @@ describe("Disclaimer", () => {
   it("accepts a summary override while keeping the default points", async () => {
     renderEn(<Disclaimer idPrefix="t" text={{ summary: "Custom notice." }} />);
     expect(screen.getByText("Custom notice.")).toBeInTheDocument();
-    await userEvent.click(screen.getByRole("button", { name: "Why? Explains why weights vary" }));
+    await userEvent.click(screen.getByRole("button", { name: "Why? Weights can vary from this estimate" }));
     expect(screen.getByText(/varies between heats/)).toBeInTheDocument();
   });
 
   it("ignores an empty points override rather than rendering an empty panel", async () => {
     renderEn(<Disclaimer idPrefix="t" text={{ points: [] }} />);
-    await userEvent.click(screen.getByRole("button", { name: "Why? Explains why weights vary" }));
+    await userEvent.click(screen.getByRole("button", { name: "Why? Weights can vary from this estimate" }));
     expect(screen.getByText(/varies between heats/)).toBeInTheDocument();
   });
 });

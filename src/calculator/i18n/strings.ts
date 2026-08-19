@@ -93,7 +93,7 @@ const en: Dictionary = {
   "legal.why": "Why?",
   // Must contain "legal.why" verbatim — SC 2.5.3 Label in Name, so a speech-input
   // user can activate the control by saying the word they can see.
-  "legal.whyLabel": "Why? Explains why weights vary",
+  "legal.whyLabel": "Why? Weights can vary from this estimate",
   "legal.close": "Close",
   "legal.heading": "Legal notice",
   "legal.point1":

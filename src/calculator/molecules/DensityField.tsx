@@ -57,7 +57,10 @@ export function DensityField({
 
   const id = `${idPrefix}-density`;
   const effective = override ?? catalogDensity;
-  const disabled = catalogDensity === null;
+  // Derived from `effective`, not `catalogDensity`: with no density from
+  // either source there is nothing to show or edit. Narrowing `effective`
+  // here also lets the read-only branch below use it as a plain number.
+  const disabled = effective === null;
   // Unit lives in the label, as it does for every dimension field, so the
   // value beside it stays a bare number.
   const label = t("ui.fieldWithUnit", {

@@ -822,7 +822,7 @@
         {
           "id": "copper.c10200-of-oxygen-free-copper",
           "name": {
-            "he": "C10200 OF (נחושת נטולת חמצן)",
+            "he": "C10200 OF",
             "en": "C10200 OF (Oxygen-Free Copper)"
           },
           "density": 8940
@@ -830,15 +830,15 @@
         {
           "id": "copper.c11000-etp-pure-copper",
           "name": {
-            "he": "C11000 ETP (נחושת טהורה)",
-            "en": "C11000 ETP (Pure Copper)"
+            "he": "C11000 ETP",
+            "en": "C11000 Electrolytic Tough Pitch (ETP Pure Copper)"
           },
           "density": 8960
         },
         {
           "id": "copper.c12000-dtp-deoxidized-copper",
           "name": {
-            "he": "C12000 DTP (נחושת מחוזרת)",
+            "he": "C12000 DTP",
             "en": "C12000 DTP (Deoxidized Copper)"
           },
           "density": 8960
@@ -846,7 +846,7 @@
         {
           "id": "copper.c14500-tellurium-copper",
           "name": {
-            "he": "C14500 נחושת טלורית",
+            "he": "C14500",
             "en": "C14500 Tellurium Copper"
           },
           "density": 8950
@@ -854,7 +854,7 @@
         {
           "id": "copper.c17200-beryllium-copper",
           "name": {
-            "he": "C17200 נחושת ברילית",
+            "he": "C17200",
             "en": "C17200 Beryllium Copper"
           },
           "density": 8250
@@ -862,10 +862,18 @@
         {
           "id": "copper.c81500-chromium-copper",
           "name": {
-            "he": "C81500 נחושת כרומית",
+            "he": "C81500",
             "en": "C81500 Chromium Copper"
           },
           "density": 8820
+        },
+        {
+          "id": "copper.c10100-oxygen-free-electronic-copper",
+          "name": {
+            "he": "C10100",
+            "en": "C10100 Oxygen Free ElectronicCopper"
+          },
+          "density": 8940
         }
       ]
     },
@@ -879,7 +887,7 @@
         {
           "id": "brass.c22000-commercial-bronze-90-percent-brass",
           "name": {
-            "he": "C22000 ברונזה מסחרית (90% פליז)",
+            "he": "C22000",
             "en": "C22000 Commercial Bronze (90% Brass)"
           },
           "density": 8800
@@ -887,7 +895,7 @@
         {
           "id": "brass.c23000-red-brass-85-percent-brass",
           "name": {
-            "he": "C23000 פליז אדום (85% פליז)",
+            "he": "C23000",
             "en": "C23000 Red Brass (85% Brass)"
           },
           "density": 8750
@@ -895,15 +903,15 @@
         {
           "id": "brass.c26000-cartridge-brass-70-30",
           "name": {
-            "he": "C26000 פליז תרמילים (70/30)",
-            "en": "C26000 Cartridge Brass (70/30)"
+            "he": "C26000",
+            "en": "C26000 Brass (70/30)"
           },
           "density": 8530
         },
         {
           "id": "brass.c26800-yellow-brass",
           "name": {
-            "he": "C26800 פליז צהוב",
+            "he": "C26800",
             "en": "C26800 Yellow Brass"
           },
           "density": 8470
@@ -911,7 +919,7 @@
         {
           "id": "brass.c27000-yellow-brass",
           "name": {
-            "he": "C27000 פליז צהוב",
+            "he": "C27000",
             "en": "C27000 Yellow Brass"
           },
           "density": 8470
@@ -919,7 +927,7 @@
         {
           "id": "brass.c27400-yellow-brass",
           "name": {
-            "he": "C27400 פליז צהוב",
+            "he": "C27400",
             "en": "C27400 Yellow Brass"
           },
           "density": 8470
@@ -927,32 +935,32 @@
         {
           "id": "brass.c36000-free-cutting-brass",
           "name": {
-            "he": "C36000 פליז לחיתוך חופשי",
-            "en": "C36000 Free-Cutting Brass"
+            "he": "C36000 / CW603N פליז לחריטה",
+            "en": "C36000 / CW603N Free-Cutting Brass"
           },
           "density": 8500
         },
         {
           "id": "brass.c37700-forging-brass",
           "name": {
-            "he": "C37700 פליז לחישול",
-            "en": "C37700 Forging Brass"
+            "he": "C37700 / CW617N פליז לכבישה חמה",
+            "en": "C37700 / CW617N Forging Brass"
           },
           "density": 8440
         },
         {
           "id": "brass.c38500-architectural-brass",
           "name": {
-            "he": "C38500 פליז אדריכלי",
-            "en": "C38500 Architectural Brass"
+            "he": "C38500 / CW614N פליז לחריטה",
+            "en": "C38500 / CW614N Free cutting brass"
           },
           "density": 8470
         },
         {
           "id": "brass.c46400-naval-brass",
           "name": {
-            "he": "C46400 פליז ימי",
-            "en": "C46400 Naval Brass"
+            "he": "C46400 / CW719R",
+            "en": "C46400 / CW719R Naval Brass"
           },
           "density": 8410
         },
@@ -963,6 +971,30 @@
             "en": "C86300 Manganese Brass"
           },
           "density": 7700
+        },
+        {
+          "id": "brass.cw710r-high-tensile-brass",
+          "name": {
+            "he": "CW710R",
+            "en": "CW710R"
+          },
+          "density": 8300
+        },
+        {
+          "id": "brass.c67400-cw713r",
+          "name": {
+            "he": "C67400 / CW713R",
+            "en": "C67400 / CW713R"
+          },
+          "density": 8470
+        },
+        {
+          "id": "brass.c69300-cw724r-lead-free-brass",
+          "name": {
+            "he": "C69300 / CW724R",
+            "en": "C69300 / CW724R Lead free brass (Eco)"
+          },
+          "density": 8300
         }
       ]
     },
@@ -976,7 +1008,7 @@
         {
           "id": "bronze.c51000-phosphor-bronze",
           "name": {
-            "he": "C51000 ברונזה זרחנית",
+            "he": "C51000",
             "en": "C51000 Phosphor Bronze"
           },
           "density": 8800
@@ -984,7 +1016,7 @@
         {
           "id": "bronze.c54400-phosphor-bronze-free-cutting",
           "name": {
-            "he": "C54400 ברונזה זרחנית (לחיתוך חופשי)",
+            "he": "C54400",
             "en": "C54400 Phosphor Bronze (Free-Cutting)"
           },
           "density": 8890
@@ -992,7 +1024,7 @@
         {
           "id": "bronze.c60800-aluminum-bronze-5-percent-al",
           "name": {
-            "he": "C60800 ברונזת אלומיניום (5% Al)",
+            "he": "C60800",
             "en": "C60800 Aluminum Bronze (5% Al)"
           },
           "density": 8170
@@ -1000,15 +1032,15 @@
         {
           "id": "bronze.c63000-aluminum-bronze-ni-al",
           "name": {
-            "he": "C63000 ברונזת אלומיניום (ניקל-אלומיניום)",
-            "en": "C63000 Aluminum Bronze (Ni-Al)"
+            "he": "C63000",
+            "en": "C63000 Nickel Aluminum Bronze"
           },
           "density": 7580
         },
         {
           "id": "bronze.c65500-silicon-bronze",
           "name": {
-            "he": "C65500 ברונזת סיליקון",
+            "he": "C65500",
             "en": "C65500 Silicon Bronze"
           },
           "density": 8520
@@ -1016,23 +1048,23 @@
         {
           "id": "bronze.c83600-gunmetal-lg2",
           "name": {
-            "he": "C83600 ברונזת תותחים (LG2)",
-            "en": "C83600 Gunmetal (LG2)"
+            "he": "C83600",
+            "en": "C83600 Gunmetal (Rg7)"
           },
           "density": 8800
         },
         {
           "id": "bronze.c90700-gear-bronze",
           "name": {
-            "he": "C90700 / SAE 65 ברונזה לגלגלי שיניים",
-            "en": "C90700 / SAE 65 Gear Bronze"
+            "he": "C90700 / SAE 65",
+            "en": "C90700 / SAE 65 Tin Bronze"
           },
           "density": 8770
         },
         {
           "id": "bronze.c93200-bearing-bronze-sae-660",
           "name": {
-            "he": "C93200 / SAE 660 ברונזת מסבים",
+            "he": "C93200 / SAE 660 / Rg7",
             "en": "C93200 / SAE 660 Bearing Bronze"
           },
           "density": 8910
@@ -1040,15 +1072,15 @@
         {
           "id": "bronze.c93700-bearing-bronze",
           "name": {
-            "he": "C93700 / sAE 64 ברונזת מסבים",
-            "en": "C93700 / sAE 64 Bearing Bronze"
+            "he": "C93700 / SAE 64",
+            "en": "C93700 / SAE 64 High Leaded Tin Bronze"
           },
           "density": 8930
         },
         {
           "id": "bronze.c95400-aluminum-bronze",
           "name": {
-            "he": "C95400 ברונזת אלומיניום",
+            "he": "C95400",
             "en": "C95400 Aluminum Bronze"
           },
           "density": 7650
@@ -1056,10 +1088,34 @@
         {
           "id": "bronze.c95500-aluminum-bronze-high-strength",
           "name": {
-            "he": "C95500 / SAE 630 ברונזת אלומיניום (חוזק גבוה)",
-            "en": "C95500 / SAE 630 Aluminum Bronze (High Strength)"
+            "he": "C95500",
+            "en": "C95500 Nickel Aluminum Bronze"
           },
           "density": 7530
+        },
+        {
+          "id": "bronze.c64200-silicon-aluminum-bronze",
+          "name": {
+            "he": "C64200",
+            "en": "C64200 Silicon Aluminum Bronze"
+          },
+          "density": 7690
+        },
+        {
+          "id": "bronze.c69400-silicon-bronze",
+          "name": {
+            "he": "C69400",
+            "en": "C69400 Silicon Bronze"
+          },
+          "density": 8190
+        },
+        {
+          "id": "bronze.c90300-tin-bronze",
+          "name": {
+            "he": "C90300",
+            "en": "C90300 Tin Bronze"
+          },
+          "density": 8800
         }
       ]
     },

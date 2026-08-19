@@ -1,3 +1,5 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it } from "vitest";
@@ -128,5 +130,45 @@ describe("Disclaimer", () => {
     renderEn(<Disclaimer idPrefix="t" text={{ points: [] }} />);
     await userEvent.click(screen.getByRole("button", { name: "Why weights vary" }));
     expect(screen.getByText(/varies between heats/)).toBeInTheDocument();
+  });
+});
+
+describe("Disclaimer styles", () => {
+  const css = readFileSync(join(import.meta.dirname, "../Disclaimer.css"), "utf-8");
+  const rule = (selector: string) => {
+    const start = css.indexOf(selector + " {");
+    expect(start, `${selector} rule is missing`).toBeGreaterThan(-1);
+    return css.slice(start, css.indexOf("}", start));
+  };
+
+  it("keeps the trigger at the minimum target size", () => {
+    expect(rule(".pfm-disclaimer__trigger")).toContain("min-block-size: 24px");
+  });
+
+  // The panel must never escape the widget's border box: a host page can put
+  // overflow:hidden on an ancestor, and a clipped legal notice is worse than
+  // none. max-block-size is what guarantees containment.
+  it("caps the panel inside the widget box", () => {
+    expect(rule(".pfm-disclaimer__panel")).toContain("max-block-size");
+  });
+
+  // An absolutely-positioned child of a scroll container scrolls away with
+  // the content. The close button must be a flex sibling of the scrolling
+  // body, positioned with align-self, never with inset-*.
+  it("keeps the close button out of the scroll container", () => {
+    const closeRule = rule(".pfm-disclaimer__close");
+    expect(closeRule).toContain("align-self");
+    expect(closeRule).not.toContain("position: absolute");
+  });
+
+  it("scrolls the body rather than the panel", () => {
+    expect(rule(".pfm-disclaimer__body")).toContain("overflow-y");
+  });
+
+  // Berman v. Freedom Financial rejected notice set in "tiny gray font".
+  // The summary must use the full foreground token, not the muted one.
+  it("does not mute the summary text", () => {
+    expect(rule(".pfm-disclaimer__summary")).toContain("var(--pfm-fg)");
+    expect(rule(".pfm-disclaimer__summary")).not.toContain("var(--pfm-muted)");
   });
 });

@@ -1,5 +1,6 @@
 import { useLanguage, useTranslate } from "../i18n/LanguageContext";
 import type { Material } from "../model/schema";
+import { sortOptions } from "../model/sortOptions";
 import { Combobox } from "./Combobox";
 
 interface Props {
@@ -18,7 +19,10 @@ export function MaterialCombobox({ idPrefix, materials, value, onChange }: Props
       id={`${idPrefix}-material`}
       label={t("ui.material")}
       placeholder={t("ui.materialPlaceholder")}
-      options={materials.map((m) => ({ value: m.id, label: m.name[language] }))}
+      options={sortOptions(
+        materials.map((m) => ({ value: m.id, label: m.name[language] })),
+        language
+      )}
       value={value}
       onChange={onChange}
     />

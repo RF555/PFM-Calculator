@@ -40,6 +40,31 @@ The file is hand-maintained, so `validateMaterials` in
 no duplicate ids, density a finite number within 1–25000 kg/m³. A bad edit
 fails the test suite rather than surfacing in a quote.
 
+## Legal disclaimer
+
+Every result carries a short, always-visible notice that the weight is
+theoretical and not binding, with the detail — mill tolerances, density
+variation between heats, saw kerf, rounding — behind a "Why" control.
+
+Hosts may replace the copy, but not remove it:
+
+```tsx
+<MaterialCalculator
+  disclaimer={{
+    summary: { he: "…", en: "…" },
+    points: { he: ["…"], en: ["…"] },
+  }}
+/>
+```
+
+Either field may be omitted to keep the bundled text for that half. Wrap any
+Latin or numeric run in `[[…]]` — for example `[[EN 10029]]` — so it stays
+left-to-right inside Hebrew text.
+
+The bundled wording is drafted from the research in
+`.claude/markdowns/disclaimer-research/` and is **not legal advice**; have
+counsel review it before relying on it.
+
 ## Available scripts
 
 - `npm run dev` — start the development server

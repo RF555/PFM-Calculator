@@ -1,0 +1,155 @@
+/*
+ * Legal notice under the results. The summary is always visible; the panel
+ * overlays the results when opened, growing upward from the widget's bottom
+ * edge so its content never needs to scroll.
+ */
+.pfm-calc .pfm-disclaimer {
+  border-block-start: 1px solid var(--pfm-border);
+  padding-block-start: var(--pfm-gap-tight);
+}
+
+/* Full foreground colour, never muted: faint legal text is the failure mode
+   courts actually punish, and it fails WCAG 1.4.3 besides. */
+.pfm-calc .pfm-disclaimer__summary {
+  margin: 0;
+  font-size: var(--pfm-fs-sm);
+  line-height: 1.6;
+  color: var(--pfm-fg);
+}
+
+/* Keeps the trigger bound to the preceding word so a line break cannot strand
+   it alone on its own line, where it reads as unrelated to the sentence. */
+.pfm-calc .pfm-disclaimer__nowrap {
+  white-space: nowrap;
+}
+
+/* Text only, riding the end of the sentence. No icon: an (i) glyph signals
+   "optional extra info", which is the wrong category for a legal qualifier,
+   and it adds nothing beside a word that already says what it opens. */
+.pfm-calc .pfm-disclaimer__trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  margin-inline-start: 4px;
+  padding: 2px 4px;
+  min-block-size: 24px;          /* SC 2.5.8 Target Size (Minimum) */
+  border: 0;
+  border-radius: var(--pfm-radius);
+  background: none;
+  color: var(--pfm-accent);
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+
+/*
+ * Anchored to .pfm-calc__inner and pinned to its bottom edge, with height
+ * driven by content so it grows up over the results. max-block-size keeps it
+ * inside the widget's own box — a host page may set overflow:hidden on an
+ * ancestor, and container-type:inline-size does not apply paint containment,
+ * so containment has to come from the panel's own sizing.
+ */
+.pfm-calc .pfm-disclaimer__panel {
+  position: absolute;
+  inset-inline: var(--pfm-pad);
+  inset-block-end: var(--pfm-pad);
+  z-index: 5;
+  block-size: auto;
+  max-block-size: calc(100% - var(--pfm-pad) * 2);
+
+  display: flex;
+  flex-direction: column;
+  min-block-size: 0;
+
+  padding: 10px 12px;
+  border: 1px solid var(--pfm-border);
+  border-radius: var(--pfm-radius);
+  background: var(--pfm-surface);
+  color: var(--pfm-fg);
+  font-size: var(--pfm-fs-sm);
+  line-height: 1.55;
+  box-shadow: 0 6px 20px -8px rgb(0 0 0 / 0.28);
+}
+
+/*
+ * `display: flex` above outranks the UA stylesheet's `[hidden] { display: none }`,
+ * so without this the collapsed panel still paints — an empty box sitting over
+ * the summary sentence at z-index 5, hiding the very notice it belongs to.
+ * jsdom resolves no cascade, so only a real browser catches this.
+ */
+.pfm-calc .pfm-disclaimer__panel[hidden] {
+  display: none;
+}
+
+/*
+ * align-self, not inset-inline-end: the panel is a scroll container, and an
+ * absolutely-positioned child of one scrolls away with the content. Flex
+ * alignment also mirrors correctly in RTL for free.
+ */
+.pfm-calc .pfm-disclaimer__close {
+  align-self: flex-end;
+  flex: none;
+  inline-size: 26px;
+  block-size: 26px;
+  margin-block: -4px 2px;
+  margin-inline-end: -4px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: var(--pfm-radius);
+  background: none;
+  color: var(--pfm-muted);
+  cursor: pointer;
+}
+
+.pfm-calc .pfm-disclaimer__heading {
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+
+/* Only the body scrolls, and only as a last resort — at every normal size the
+   panel grows upward far enough that the content fits. */
+.pfm-calc .pfm-disclaimer__body {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  min-block-size: 0;
+}
+
+.pfm-calc .pfm-disclaimer__body ul {
+  margin: 0;
+  padding-inline-start: 18px;
+  display: grid;
+  gap: 4px;
+}
+
+.pfm-calc .pfm-disclaimer__body li::marker {
+  color: var(--pfm-muted);
+}
+
+/* Wider containers get slightly larger text and a capped measure; the
+   mechanism and the content are identical at every size. */
+@container pfm-calc (min-width: 30rem) {
+  .pfm-calc .pfm-disclaimer__summary {
+    font-size: var(--pfm-fs-base);
+    line-height: 1.5;
+  }
+  .pfm-calc .pfm-disclaimer__panel {
+    font-size: var(--pfm-fs-base);
+    /*
+     * Each point is a discrete clause, not flowing prose, so the ~60ch measure
+     * that suits paragraphs only forces one-line clauses onto a second line.
+     * A wider cap lets every point sit on its own line where there is room,
+     * which is easier to scan; the cap still stops the text running the full
+     * width of a very wide host.
+     */
+    max-inline-size: 100ch;
+  }
+  /* Keeps each clause on one line when the panel is wide enough to hold it,
+     rather than wrapping mid-sentence. Falls back to normal wrapping when it
+     genuinely does not fit. */
+  .pfm-calc .pfm-disclaimer__body li {
+    text-wrap: pretty;
+  }
+}

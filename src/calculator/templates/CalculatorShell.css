@@ -5,4 +5,10 @@
   padding: var(--pfm-pad);
   width: 100%;
   min-width: 0;
+
+  /* Containing block for the disclaimer panel, which pins to this element's
+     bottom edge and grows upward over the results. Padding lives here rather
+     than on .pfm-calc, so this is the box the panel's inset-* must resolve
+     against. */
+  position: relative;
 }

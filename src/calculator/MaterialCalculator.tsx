@@ -2,11 +2,21 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import bundled from "./data/materials.json";
 import { LanguageProvider } from "./i18n/LanguageContext";
 import { DEFAULT_LANGUAGE, LANGUAGES } from "./i18n/strings";
-import type { Language } from "./i18n/types";
+import type { Language, Localized } from "./i18n/types";
 import { CalculatorForm, type CalculationResult } from "./organisms/CalculatorForm";
 import { validateMaterials, type Material } from "./model/schema";
 import type { MassUnit, Unit } from "./model/types";
 import { CalculatorShell } from "./templates/CalculatorShell";
+
+/**
+ * Host-facing disclaimer copy, in both languages. There is deliberately no
+ * way to remove the disclaimer — a host with different counsel can reword it,
+ * but the notice itself always renders.
+ */
+export interface DisclaimerCopy {
+  summary: Localized<string>;
+  points: Localized<string[]>;
+}
 
 export interface MaterialCalculatorProps {
   /** Defaults to the bundled data. */
@@ -23,6 +33,8 @@ export interface MaterialCalculatorProps {
   onUnitChange?: (unit: Unit) => void;
   /** Fires when the user switches between Hebrew and English. */
   onLanguageChange?: (language: Language) => void;
+  /** Replaces the default disclaimer copy. The disclaimer cannot be removed. */
+  disclaimer?: Partial<DisclaimerCopy>;
   className?: string;
 }
 
@@ -51,6 +63,7 @@ export function MaterialCalculator({
   onCalculate,
   onUnitChange,
   onLanguageChange,
+  disclaimer,
   className,
 }: MaterialCalculatorProps) {
   const [language, setLanguage] = useState<Language>(() => coerceLanguage(defaultLanguage));
@@ -61,6 +74,23 @@ export function MaterialCalculator({
     if (materials === defaultMaterials) return materials;
     return validateMaterials({ version: 2, materials }).materials;
   }, [materials]);
+
+  // Hosts are not necessarily TypeScript, so each field is validated
+  // independently and a malformed one falls back to the bundled copy rather
+  // than blanking the notice.
+  const disclaimerText = useMemo(() => {
+    const summary = disclaimer?.summary?.[language];
+    const points = disclaimer?.points?.[language];
+    return {
+      summary: typeof summary === "string" && summary.trim() ? summary : undefined,
+      points:
+        Array.isArray(points) &&
+        points.length &&
+        points.every((p) => typeof p === "string" && p.trim())
+          ? points
+          : undefined,
+    };
+  }, [disclaimer, language]);
 
   // Hosts commonly pass inline arrow callbacks, which get a new identity on
   // every render; stashing the latest in a ref keeps setLanguage's identity
@@ -85,6 +115,7 @@ export function MaterialCalculator({
           defaultQuantity={defaultQuantity}
           onCalculate={onCalculate}
           onUnitChange={onUnitChange}
+          disclaimerText={disclaimerText}
         />
       </CalculatorShell>
     </LanguageProvider>

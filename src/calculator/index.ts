@@ -1,5 +1,6 @@
 export { MaterialCalculator, defaultMaterials } from "./MaterialCalculator";
-export type { MaterialCalculatorProps } from "./MaterialCalculator";
+export type { MaterialCalculatorProps, DisclaimerCopy } from "./MaterialCalculator";
+export type { DisclaimerText } from "./atoms/Disclaimer";
 export type { CalculationResult } from "./organisms/CalculatorForm";
 export type { Grade, Material, MaterialsFile } from "./model/schema";
 export type { MassUnit, Unit } from "./model/types";

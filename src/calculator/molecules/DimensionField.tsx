@@ -6,6 +6,8 @@ interface Props {
   idPrefix: string;
   fieldKey: string;
   label: string;
+  /** Letter marking this dimension on the shape sketch, e.g. "OD". */
+  notation?: string;
   value: string;
   unit: Unit;
   onChange: (raw: string) => void;
@@ -14,7 +16,7 @@ interface Props {
 }
 
 export function DimensionField({
-  idPrefix, fieldKey, label, value, unit, onChange, onBlur, error,
+  idPrefix, fieldKey, label, notation, value, unit, onChange, onBlur, error,
 }: Props) {
   const t = useTranslate();
 
@@ -22,6 +24,7 @@ export function DimensionField({
     <NumberField
       id={`${idPrefix}-dim-${fieldKey}`}
       label={t("ui.fieldWithUnit", { label, unit: t(`unit.${unit}`) })}
+      notation={notation}
       value={value}
       onChange={onChange}
       onBlur={onBlur}

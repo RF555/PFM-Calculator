@@ -42,6 +42,7 @@ export function DimensionFieldset({
             idPrefix={idPrefix}
             fieldKey={f.key}
             label={t(f.labelKey)}
+            notation={f.notation}
             unit={unit}
             value={raw[f.key] ?? ""}
             error={errors[f.key]}

@@ -1,4 +1,7 @@
 import { describe, expect, it } from "vitest";
+import { cleanup, render } from "@testing-library/react";
+import { createElement } from "react";
+import { ShapeIcon } from "../../atoms/ShapeIcon";
 import { SHAPES, SHAPE_IDS, checkConstraints, volumeMm3 } from "../shapes";
 import type { ShapeId } from "../shapes";
 import type { DimensionValues } from "../types";
@@ -7,6 +10,23 @@ import { STRINGS } from "../../i18n/strings";
 
 const STEEL = 7850;
 const ALL = Object.keys(SHAPES) as Array<keyof typeof SHAPES>;
+
+/**
+ * The callout letters a shape's annotated sketch actually paints, read out of
+ * the rendered SVG rather than from the source, so the check covers what
+ * ships. Anchored on the `iso` variant with hints, which is what sits beside
+ * the dimension fields.
+ */
+function calloutLetters(id: ShapeId): string[] {
+  const { container } = render(
+    createElement(ShapeIcon, { shapeId: id, variant: "iso", hints: true })
+  );
+  const letters = [...container.querySelectorAll("[data-hint] text")].map(
+    (n) => n.textContent ?? ""
+  );
+  cleanup();
+  return letters;
+}
 
 describe("registry completeness", () => {
   it("covers the ten supported shapes", () => {
@@ -34,6 +54,26 @@ describe("registry completeness", () => {
         expect(STRINGS.en[field.labelKey], `en missing ${field.labelKey}`).toBeTruthy();
         expect(STRINGS.he[field.labelKey], `he missing ${field.labelKey}`).toBeTruthy();
       }
+    }
+  });
+
+  it("every dimension field carries a sketch notation", () => {
+    for (const id of SHAPE_IDS) {
+      for (const field of SHAPES[id].fields) {
+        expect(field.notation, `${id}.${field.key} has no notation`).toBeTruthy();
+      }
+    }
+  });
+
+  // A field's notation is only useful if the same letter is actually drawn on
+  // that shape's sketch — the letter is what ties the two together, so a field
+  // labelled "W" whose drawing never marks W sends the user hunting. Guards
+  // both directions: a field with no callout, and a callout for no field.
+  it("field notations match the letters drawn on each sketch", () => {
+    for (const id of SHAPE_IDS) {
+      const fields = SHAPES[id].fields.map((f) => f.notation).sort();
+      expect(calloutLetters(id).sort(), `${id} sketch/field letters differ`)
+        .toEqual(fields);
     }
   });
 });

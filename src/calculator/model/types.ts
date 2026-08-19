@@ -17,6 +17,13 @@ export interface DimensionFieldDef {
   /** Translation key for the field's label, e.g. "field.diameter". */
   labelKey: string;
   /**
+   * The letter marking this dimension on the shape's sketch, e.g. "OD".
+   * Shown beside the field label so the drawing can be read without a
+   * separate legend. Latin engineering notation in every locale — that is
+   * how these are read on drawings and mill certs.
+   */
+  notation: string;
+  /**
    * Not required for a complete, calculable shape. An optional field is
    * excluded from the "all fields finite" completeness check, so the shape
    * still calculates (typically falling back to another field's value)

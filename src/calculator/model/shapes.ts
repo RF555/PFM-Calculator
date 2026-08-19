@@ -22,9 +22,9 @@ export const SHAPES = {
   sheet: {
     labelKey: "shape.sheet",
     fields: [
-      { key: "length", labelKey: "field.length" },
-      { key: "width", labelKey: "field.width" },
-      { key: "thickness", labelKey: "field.thickness" },
+      { key: "length", labelKey: "field.length", notation: "L" },
+      { key: "width", labelKey: "field.width", notation: "W" },
+      { key: "thickness", labelKey: "field.thickness", notation: "t" },
     ],
     constraints: [],
     volume: (d) => d.length * d.width * d.thickness,
@@ -33,8 +33,8 @@ export const SHAPES = {
   roundBar: {
     labelKey: "shape.roundBar",
     fields: [
-      { key: "diameter", labelKey: "field.diameter" },
-      { key: "length", labelKey: "field.length" },
+      { key: "diameter", labelKey: "field.diameter", notation: "D" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [],
     volume: (d) => Math.PI * sq(d.diameter / 2) * d.length,
@@ -43,8 +43,8 @@ export const SHAPES = {
   squareBar: {
     labelKey: "shape.squareBar",
     fields: [
-      { key: "side", labelKey: "field.side" },
-      { key: "length", labelKey: "field.length" },
+      { key: "side", labelKey: "field.side", notation: "A" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [],
     volume: (d) => sq(d.side) * d.length,
@@ -53,9 +53,9 @@ export const SHAPES = {
   flatBar: {
     labelKey: "shape.flatBar",
     fields: [
-      { key: "width", labelKey: "field.width" },
-      { key: "thickness", labelKey: "field.thickness" },
-      { key: "length", labelKey: "field.length" },
+      { key: "width", labelKey: "field.width", notation: "W" },
+      { key: "thickness", labelKey: "field.thickness", notation: "t" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [],
     volume: (d) => d.width * d.thickness * d.length,
@@ -64,8 +64,8 @@ export const SHAPES = {
   hexBar: {
     labelKey: "shape.hexBar",
     fields: [
-      { key: "flatToFlat", labelKey: "field.flatToFlat" },
-      { key: "length", labelKey: "field.length" },
+      { key: "flatToFlat", labelKey: "field.flatToFlat", notation: "A/F" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [],
     // Area by across-flats F: side = F/sqrt(3), so area = (sqrt(3)/2)*F^2.
@@ -75,9 +75,9 @@ export const SHAPES = {
   roundTubeOuter: {
     labelKey: "shape.roundTubeOuter",
     fields: [
-      { key: "outerDiameter", labelKey: "field.outerDiameter" },
-      { key: "wallThickness", labelKey: "field.wallThickness" },
-      { key: "length", labelKey: "field.length" },
+      { key: "outerDiameter", labelKey: "field.outerDiameter", notation: "OD" },
+      { key: "wallThickness", labelKey: "field.wallThickness", notation: "t" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [
       {
@@ -97,9 +97,9 @@ export const SHAPES = {
   roundTubeInner: {
     labelKey: "shape.roundTubeInner",
     fields: [
-      { key: "innerDiameter", labelKey: "field.innerDiameter" },
-      { key: "wallThickness", labelKey: "field.wallThickness" },
-      { key: "length", labelKey: "field.length" },
+      { key: "innerDiameter", labelKey: "field.innerDiameter", notation: "ID" },
+      { key: "wallThickness", labelKey: "field.wallThickness", notation: "t" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     // Wall grows outward from a fixed bore, so there is no upper bound.
     constraints: [],
@@ -111,10 +111,10 @@ export const SHAPES = {
   rectangularHollow: {
     labelKey: "shape.rectangularHollow",
     fields: [
-      { key: "width", labelKey: "field.width" },
-      { key: "height", labelKey: "field.height" },
-      { key: "wallThickness", labelKey: "field.wallThickness" },
-      { key: "length", labelKey: "field.length" },
+      { key: "width", labelKey: "field.width", notation: "W" },
+      { key: "height", labelKey: "field.height", notation: "H" },
+      { key: "wallThickness", labelKey: "field.wallThickness", notation: "t" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [
       {
@@ -135,9 +135,9 @@ export const SHAPES = {
   squareHollow: {
     labelKey: "shape.squareHollow",
     fields: [
-      { key: "side", labelKey: "field.side" },
-      { key: "wallThickness", labelKey: "field.wallThickness" },
-      { key: "length", labelKey: "field.length" },
+      { key: "side", labelKey: "field.side", notation: "A" },
+      { key: "wallThickness", labelKey: "field.wallThickness", notation: "t" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [
       {
@@ -156,10 +156,10 @@ export const SHAPES = {
   angle: {
     labelKey: "shape.angle",
     fields: [
-      { key: "leg", labelKey: "field.legA" },
-      { key: "legB", labelKey: "field.legB", optional: true },
-      { key: "thickness", labelKey: "field.thickness" },
-      { key: "length", labelKey: "field.length" },
+      { key: "leg", labelKey: "field.legA", notation: "L1" },
+      { key: "legB", labelKey: "field.legB", notation: "L2", optional: true },
+      { key: "thickness", labelKey: "field.thickness", notation: "t" },
+      { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [
       {

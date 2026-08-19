@@ -59,8 +59,8 @@
         {
           "id": "steel.1-2344",
           "name": {
-            "he": "1.2344",
-            "en": "1.2344"
+            "he": "1.2344 / AISI H13",
+            "en": "1.2344 / AISI H13"
           },
           "density": 7800
         },
@@ -75,8 +75,8 @@
         {
           "id": "steel.1-2379",
           "name": {
-            "he": "1.2379",
-            "en": "1.2379"
+            "he": "1.2379 / AISI D2",
+            "en": "1.2379 / AISI D2"
           },
           "density": 7700
         },
@@ -217,42 +217,18 @@
           "density": 7850
         },
         {
-          "id": "steel.alloy-steel-4130-chrome-moly",
+          "id": "steel.9310",
           "name": {
-            "he": "פלדת סגסוגת (4130 כרום-מוליבדן)",
-            "en": "Alloy Steel (4130 Chrome-Moly)"
-          },
-          "density": 7850
-        },
-        {
-          "id": "steel.alloy-steel-4140-chrome-moly",
-          "name": {
-            "he": "פלדת סגסוגת (4140 כרום-מוליבדן)",
-            "en": "Alloy Steel (4140 Chrome-Moly)"
-          },
-          "density": 7850
-        },
-        {
-          "id": "steel.alloy-steel-4340-ni-cr-mo",
-          "name": {
-            "he": "פלדת סגסוגת (4340 ניקל-כרום-מוליבדן)",
-            "en": "Alloy Steel (4340 Ni-Cr-Mo)"
-          },
-          "density": 7850
-        },
-        {
-          "id": "steel.alloy-steel-9310-gear-steel",
-          "name": {
-            "he": "פלדת סגסוגת (9310 לגלגלי שיניים)",
-            "en": "Alloy Steel (9310 Gear Steel)"
+            "he": "9310",
+            "en": "9310"
           },
           "density": 7850
         },
         {
           "id": "steel.carbon-steel-structural-a36",
           "name": {
-            "he": "פלדת פחמן (מבנית / A36)",
-            "en": "Carbon Steel (Structural / A36)"
+            "he": "ASTM A36",
+            "en": "ASTM A36"
           },
           "density": 7850
         },
@@ -273,14 +249,6 @@
           "density": 7150
         },
         {
-          "id": "steel.low-carbon-steel-1018",
-          "name": {
-            "he": "פלדת פחמן נמוכה (1018)",
-            "en": "Low Carbon Steel (1018)"
-          },
-          "density": 7870
-        },
-        {
           "id": "steel.maraging-steel-18ni-300",
           "name": {
             "he": "פלדת מרייג'ינג (18Ni-300)",
@@ -289,50 +257,26 @@
           "density": 8000
         },
         {
-          "id": "steel.medium-carbon-steel-1045",
-          "name": {
-            "he": "פלדת פחמן בינונית (1045)",
-            "en": "Medium Carbon Steel (1045)"
-          },
-          "density": 7850
-        },
-        {
           "id": "steel.st-37",
           "name": {
-            "he": "St 37",
-            "en": "St 37"
+            "he": "ST-37",
+            "en": "ST-37"
           },
           "density": 7850
         },
         {
           "id": "steel.st-52",
           "name": {
-            "he": "St 52",
-            "en": "St 52"
-          },
-          "density": 7850
-        },
-        {
-          "id": "steel.tool-steel-d2-cold-work",
-          "name": {
-            "he": "פלדת כלים (D2 לעיבוד קר)",
-            "en": "Tool Steel (D2 Cold Work)"
-          },
-          "density": 7680
-        },
-        {
-          "id": "steel.tool-steel-general-h13",
-          "name": {
-            "he": "פלדת כלים (כללית / H13)",
-            "en": "Tool Steel (General / H13)"
+            "he": "ST-52",
+            "en": "ST-52"
           },
           "density": 7850
         },
         {
           "id": "steel.tool-steel-m2-high-speed",
           "name": {
-            "he": "פלדת כלים (M2 מהירה)",
-            "en": "Tool Steel (M2 High Speed)"
+            "he": "1.3343 / AISI M2",
+            "en": "1.3343 / AISI M2"
           },
           "density": 8160
         },
@@ -343,14 +287,6 @@
             "en": "White Cast Iron"
           },
           "density": 7700
-        },
-        {
-          "id": "steel.wrought-iron",
-          "name": {
-            "he": "ברזל מחושל",
-            "en": "Wrought Iron"
-          },
-          "density": 7750
         }
       ]
     },
@@ -404,184 +340,184 @@
         {
           "id": "stainless.254smo",
           "name": {
-            "he": "254SMO",
-            "en": "254SMO"
+            "he": "254 SMO",
+            "en": "254 SMO"
           },
           "density": 8000
         },
         {
           "id": "stainless.301",
           "name": {
-            "he": "301",
-            "en": "301"
+            "he": "S.S. 301",
+            "en": "S.S. 301"
           },
           "density": 8000
         },
         {
           "id": "stainless.302",
           "name": {
-            "he": "302",
-            "en": "302"
+            "he": "S.S. 302",
+            "en": "S.S. 302"
           },
           "density": 8000
         },
         {
           "id": "stainless.303",
           "name": {
-            "he": "303",
-            "en": "303"
+            "he": "S.S. 303",
+            "en": "S.S. 303"
           },
           "density": 8000
         },
         {
           "id": "stainless.304",
           "name": {
-            "he": "304",
-            "en": "304"
+            "he": "S.S. 304",
+            "en": "S.S. 304"
           },
           "density": 8000
         },
         {
           "id": "stainless.304l",
           "name": {
-            "he": "304L",
-            "en": "304L"
+            "he": "S.S. 304L",
+            "en": "S.S. 304L"
           },
           "density": 8000
         },
         {
           "id": "stainless.309",
           "name": {
-            "he": "309",
-            "en": "309"
+            "he": "S.S. 309",
+            "en": "S.S. 309"
           },
           "density": 8000
         },
         {
           "id": "stainless.310",
           "name": {
-            "he": "310",
-            "en": "310"
+            "he": "S.S. 310",
+            "en": "S.S. 310"
           },
           "density": 8000
         },
         {
           "id": "stainless.316",
           "name": {
-            "he": "316",
-            "en": "316"
+            "he": "S.S. 316",
+            "en": "S.S. 316"
           },
           "density": 7980
         },
         {
           "id": "stainless.316l",
           "name": {
-            "he": "316L",
-            "en": "316L"
+            "he": "S.S. 316L",
+            "en": "S.S. 316L"
           },
           "density": 7980
         },
         {
           "id": "stainless.317l",
           "name": {
-            "he": "317L",
-            "en": "317L"
+            "he": "S.S. 317L",
+            "en": "S.S. 317L"
           },
           "density": 8000
         },
         {
           "id": "stainless.321",
           "name": {
-            "he": "321",
-            "en": "321"
+            "he": "S.S. 321",
+            "en": "S.S. 321"
           },
           "density": 8000
         },
         {
           "id": "stainless.330",
           "name": {
-            "he": "330",
-            "en": "330"
+            "he": "S.S. 330",
+            "en": "S.S. 330"
           },
           "density": 7980
         },
         {
           "id": "stainless.347",
           "name": {
-            "he": "347",
-            "en": "347"
+            "he": "S.S. 347",
+            "en": "S.S. 347"
           },
           "density": 8000
         },
         {
           "id": "stainless.409",
           "name": {
-            "he": "409",
-            "en": "409"
+            "he": "S.S. 409",
+            "en": "S.S. 409"
           },
           "density": 7800
         },
         {
           "id": "stainless.410",
           "name": {
-            "he": "410",
-            "en": "410"
+            "he": "S.S. 410",
+            "en": "S.S. 410"
           },
           "density": 7750
         },
         {
           "id": "stainless.416",
           "name": {
-            "he": "416",
-            "en": "416"
+            "he": "S.S. 416",
+            "en": "S.S. 416"
           },
           "density": 7750
         },
         {
           "id": "stainless.420",
           "name": {
-            "he": "420",
-            "en": "420"
+            "he": "S.S. 420",
+            "en": "S.S. 420"
           },
           "density": 7740
         },
         {
           "id": "stainless.430",
           "name": {
-            "he": "430",
-            "en": "430"
+            "he": "S.S. 430",
+            "en": "S.S. 430"
           },
           "density": 7700
         },
         {
           "id": "stainless.430f",
           "name": {
-            "he": "430F",
-            "en": "430F"
+            "he": "S.S. 430F",
+            "en": "S.S. 430F"
           },
           "density": 7700
         },
         {
           "id": "stainless.431",
           "name": {
-            "he": "431",
-            "en": "431"
+            "he": "S.S. 431",
+            "en": "S.S. 431"
           },
           "density": 7750
         },
         {
           "id": "stainless.440c",
           "name": {
-            "he": "440C",
-            "en": "440C"
+            "he": "S.S. 440C",
+            "en": "S.S. 440C"
           },
           "density": 7650
         },
         {
           "id": "stainless.446",
           "name": {
-            "he": "446",
-            "en": "446"
+            "he": "S.S. 446",
+            "en": "S.S. 446"
           },
           "density": 7700
         },
@@ -596,8 +532,8 @@
         {
           "id": "stainless.904l",
           "name": {
-            "he": "904L",
-            "en": "904L"
+            "he": "S.S. 904L",
+            "en": "S.S. 904L"
           },
           "density": 7950
         },
@@ -605,7 +541,7 @@
           "id": "stainless.2205-duplex",
           "name": {
             "he": "2205 דופלקס",
-            "en": "2205 Duplex"
+            "en": "Duplex 2205"
           },
           "density": 7800
         }
@@ -621,232 +557,232 @@
         {
           "id": "aluminum.1050",
           "name": {
-            "he": "1050",
-            "en": "1050"
+            "he": "Al. 1050",
+            "en": "Al. 1050"
           },
           "density": 2705
         },
         {
           "id": "aluminum.1100",
           "name": {
-            "he": "1100",
-            "en": "1100"
+            "he": "Al. 1100",
+            "en": "Al. 1100"
           },
           "density": 2710
         },
         {
           "id": "aluminum.2011",
           "name": {
-            "he": "2011",
-            "en": "2011"
+            "he": "Al. 2011",
+            "en": "Al. 2011"
           },
           "density": 2820
         },
         {
           "id": "aluminum.2014",
           "name": {
-            "he": "2014",
-            "en": "2014"
+            "he": "Al. 2014",
+            "en": "Al. 2014"
           },
           "density": 2800
         },
         {
           "id": "aluminum.2017",
           "name": {
-            "he": "2017",
-            "en": "2017"
+            "he": "Al. 2017",
+            "en": "Al. 2017"
           },
           "density": 2790
         },
         {
           "id": "aluminum.2024",
           "name": {
-            "he": "2024",
-            "en": "2024"
+            "he": "Al. 2024",
+            "en": "Al. 2024"
           },
           "density": 2780
         },
         {
           "id": "aluminum.2124",
           "name": {
-            "he": "2124",
-            "en": "2124"
+            "he": "Al. 2124",
+            "en": "Al. 2124"
           },
           "density": 2780
         },
         {
           "id": "aluminum.2219",
           "name": {
-            "he": "2219",
-            "en": "2219"
+            "he": "Al. 2219",
+            "en": "Al. 2219"
           },
           "density": 2840
         },
         {
           "id": "aluminum.3003",
           "name": {
-            "he": "3003",
-            "en": "3003"
+            "he": "Al. 3003",
+            "en": "Al. 3003"
           },
           "density": 2730
         },
         {
           "id": "aluminum.3004",
           "name": {
-            "he": "3004",
-            "en": "3004"
+            "he": "Al. 3004",
+            "en": "Al. 3004"
           },
           "density": 2720
         },
         {
           "id": "aluminum.3105",
           "name": {
-            "he": "3105",
-            "en": "3105"
+            "he": "Al. 3105",
+            "en": "Al. 3105"
           },
           "density": 2730
         },
         {
           "id": "aluminum.5005",
           "name": {
-            "he": "5005",
-            "en": "5005"
+            "he": "Al. 5005",
+            "en": "Al. 5005"
           },
           "density": 2700
         },
         {
           "id": "aluminum.5052",
           "name": {
-            "he": "5052",
-            "en": "5052"
+            "he": "Al. 5052",
+            "en": "Al. 5052"
           },
           "density": 2680
         },
         {
           "id": "aluminum.5056",
           "name": {
-            "he": "5056",
-            "en": "5056"
+            "he": "Al. 5056",
+            "en": "Al. 5056"
           },
           "density": 2640
         },
         {
           "id": "aluminum.5083",
           "name": {
-            "he": "5083",
-            "en": "5083"
+            "he": "Al. 5083",
+            "en": "Al. 5083"
           },
           "density": 2660
         },
         {
           "id": "aluminum.5086",
           "name": {
-            "he": "5086",
-            "en": "5086"
+            "he": "Al. 5086",
+            "en": "Al. 5086"
           },
           "density": 2660
         },
         {
           "id": "aluminum.5754",
           "name": {
-            "he": "5754",
-            "en": "5754"
+            "he": "Al. 5754",
+            "en": "Al. 5754"
           },
           "density": 2670
         },
         {
           "id": "aluminum.6013",
           "name": {
-            "he": "6013",
-            "en": "6013"
+            "he": "Al. 6013",
+            "en": "Al. 6013"
           },
           "density": 2710
         },
         {
           "id": "aluminum.6061",
           "name": {
-            "he": "6061",
-            "en": "6061"
+            "he": "Al. 6061",
+            "en": "Al. 6061"
           },
           "density": 2700
         },
         {
           "id": "aluminum.6063",
           "name": {
-            "he": "6063",
-            "en": "6063"
+            "he": "Al. 6063",
+            "en": "Al. 6063"
           },
           "density": 2700
         },
         {
           "id": "aluminum.6082",
           "name": {
-            "he": "6082",
-            "en": "6082"
+            "he": "Al. 6082",
+            "en": "Al. 6082"
           },
           "density": 2700
         },
         {
           "id": "aluminum.7050",
           "name": {
-            "he": "7050",
-            "en": "7050"
+            "he": "Al. 7050",
+            "en": "Al. 7050"
           },
           "density": 2830
         },
         {
           "id": "aluminum.7075",
           "name": {
-            "he": "7075",
-            "en": "7075"
+            "he": "Al. 7075",
+            "en": "Al. 7075"
           },
           "density": 2810
         },
         {
           "id": "aluminum.7150",
           "name": {
-            "he": "7150",
-            "en": "7150"
+            "he": "Al. 7150",
+            "en": "Al. 7150"
           },
           "density": 2830
         },
         {
           "id": "aluminum.7175",
           "name": {
-            "he": "7175",
-            "en": "7175"
+            "he": "Al. 7175",
+            "en": "Al. 7175"
           },
           "density": 2800
         },
         {
           "id": "aluminum.7178",
           "name": {
-            "he": "7178",
-            "en": "7178"
+            "he": "Al. 7178",
+            "en": "Al. 7178"
           },
           "density": 2830
         },
         {
           "id": "aluminum.8000",
           "name": {
-            "he": "8000",
-            "en": "8000"
+            "he": "Al. 8000",
+            "en": "Al. 8000"
           },
           "density": 2700
         },
         {
           "id": "aluminum.c-250",
           "name": {
-            "he": "C-250",
-            "en": "C-250"
+            "he": "Al. C-250",
+            "en": "Al. C-250"
           },
           "density": 2750
         },
         {
           "id": "aluminum.c210",
           "name": {
-            "he": "C210",
-            "en": "C210"
+            "he": "Al. C210",
+            "en": "Al. C210"
           },
           "density": 2750
         },
@@ -869,8 +805,8 @@
         {
           "id": "aluminum.certal",
           "name": {
-            "he": "Certal",
-            "en": "Certal"
+            "he": "Al. Certal",
+            "en": "Al. Certal"
           },
           "density": 2700
         }
@@ -1088,24 +1024,24 @@
         {
           "id": "bronze.c90700-gear-bronze",
           "name": {
-            "he": "C90700 ברונזה לגלגלי שיניים",
-            "en": "C90700 Gear Bronze"
+            "he": "C90700 / SAE 65 ברונזה לגלגלי שיניים",
+            "en": "C90700 / SAE 65 Gear Bronze"
           },
           "density": 8770
         },
         {
           "id": "bronze.c93200-bearing-bronze-sae-660",
           "name": {
-            "he": "C93200 ברונזת מסבים (SAE 660)",
-            "en": "C93200 Bearing Bronze (SAE 660)"
+            "he": "C93200 / SAE 660 ברונזת מסבים",
+            "en": "C93200 / SAE 660 Bearing Bronze"
           },
           "density": 8910
         },
         {
           "id": "bronze.c93700-bearing-bronze",
           "name": {
-            "he": "C93700 ברונזת מסבים",
-            "en": "C93700 Bearing Bronze"
+            "he": "C93700 / sAE 64 ברונזת מסבים",
+            "en": "C93700 / sAE 64 Bearing Bronze"
           },
           "density": 8930
         },
@@ -1120,8 +1056,8 @@
         {
           "id": "bronze.c95500-aluminum-bronze-high-strength",
           "name": {
-            "he": "C95500 ברונזת אלומיניום (חוזק גבוה)",
-            "en": "C95500 Aluminum Bronze (High Strength)"
+            "he": "C95500 / SAE 630 ברונזת אלומיניום (חוזק גבוה)",
+            "en": "C95500 / SAE 630 Aluminum Bronze (High Strength)"
           },
           "density": 7530
         }
@@ -1379,8 +1315,8 @@
         {
           "id": "magnesium.magnesium-az31b",
           "name": {
-            "he": "מגנזיום AZ31B",
-            "en": "Magnesium AZ31B"
+            "he": "AZ31B מגנזיום",
+            "en": "AZ31B Magnesium"
           },
           "density": 1770
         }
@@ -1396,8 +1332,8 @@
         {
           "id": "lead.antimonial-lead-hard-lead",
           "name": {
-            "he": "עופרת אנטימונית (עופרת קשה)",
-            "en": "Antimonial Lead (Hard Lead)"
+            "he": "עופרת קשה",
+            "en": "Hard Lead"
           },
           "density": 10900
         },

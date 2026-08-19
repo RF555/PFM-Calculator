@@ -82,13 +82,13 @@ describe("CalculatorForm", () => {
     await pick("Material", "Steel");
     await pick("Grade", "Carbon Steel");
     await pick("Shape", "Square Hollow Section");
-    await userEvent.type(screen.getByLabelText("Side (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Width (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "30");
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
     await userEvent.tab();
 
     expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
-    expect(screen.getByText(/less than half the side/)).toBeInTheDocument();
+    expect(screen.getByText(/less than half the width/)).toBeInTheDocument();
   });
 
   it("converts entered values when the unit changes", async () => {
@@ -134,12 +134,12 @@ describe("CalculatorForm", () => {
     await pick("Material", "Steel");
     await pick("Grade", "Carbon Steel");
     await pick("Shape", "Square Hollow Section");
-    await userEvent.type(screen.getByLabelText("Side (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Width (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "5");
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
     expect(onCalculate.mock.calls.at(-1)![0]).not.toBeNull();
 
-    // A wall at or above half the side is impossible. The host must be told,
+    // A wall at or above half the width is impossible. The host must be told,
     // or it keeps a figure the user can no longer see.
     await userEvent.clear(screen.getByLabelText("Wall Thickness (mm)"));
     await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "30");
@@ -182,7 +182,7 @@ describe("CalculatorForm", () => {
     await pick("Shape", "Round Bar");
     await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
     await pick("Shape", "Square Bar");
-    expect(screen.getByLabelText("Side (mm)")).toHaveValue("");
+    expect(screen.getByLabelText("Width (mm)")).toHaveValue("");
   });
 
   // A stable vi.fn() cannot catch this: the bug only shows up when the host
@@ -221,7 +221,7 @@ describe("CalculatorForm", () => {
       </LanguageProvider>
     );
     await pick("צורה", "פרופיל מרובע חלול");
-    await userEvent.type(screen.getByLabelText("צלע (מ\"מ)"), "50");
+    await userEvent.type(screen.getByLabelText("רוחב (מ\"מ)"), "50");
     const wall = screen.getByLabelText("עובי דופן (מ\"מ)");
     await userEvent.type(wall, "30");
     // checkConstraints only evaluates once every field is filled (see
@@ -257,9 +257,9 @@ describe("CalculatorForm", () => {
 
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
-    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2.7");
 
-    // Same 1963495.4 mm^3 at 2700 kg/m3 instead of 7850.
+    // Same 1963495.4 mm^3 at 2.7 g/cm3 (2700 kg/m3) instead of 7850.
     expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
   });
 
@@ -271,7 +271,7 @@ describe("CalculatorForm", () => {
     await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "99999");
 
     expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
-    expect(screen.getByText(/Must be between 1 and 25000/)).toBeInTheDocument();
+    expect(screen.getByText(/Must be between 0.001 and 25/)).toBeInTheDocument();
   });
 
   // Regression: clearing the field used to fall back to the catalog density,
@@ -284,7 +284,7 @@ describe("CalculatorForm", () => {
     await fillRoundBar();
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
-    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2.7");
     expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
 
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
@@ -301,7 +301,7 @@ describe("CalculatorForm", () => {
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
     expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
 
-    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2.7");
     expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
   });
 
@@ -310,7 +310,7 @@ describe("CalculatorForm", () => {
     await fillRoundBar();
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
-    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2.7");
     expect(screen.getByText("edited")).toBeInTheDocument();
 
     await pick("Grade", "Stainless 304");
@@ -318,7 +318,7 @@ describe("CalculatorForm", () => {
     // The field stays revealed once opened, so the new grade's catalog value
     // shows in the input rather than as read-only text.
     expect(screen.queryByText("edited")).not.toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: /density/i })).toHaveValue("7930");
+    expect(screen.getByRole("textbox", { name: /density/i })).toHaveValue("7.93");
     expect(screen.getByTestId("total-primary")).toHaveTextContent("15.5705 kg");
   });
 
@@ -332,14 +332,14 @@ describe("CalculatorForm", () => {
     await fillRoundBar();
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
-    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2.7");
 
     await pick("Grade", "Carbon Steel 2");
 
-    // The stale "2700" must not still be showing; the field re-seeds to the
-    // new grade's catalog value (also 7850) and the result agrees with it.
-    expect(screen.queryByDisplayValue("2700")).not.toBeInTheDocument();
-    expect(screen.getByRole("textbox", { name: /density/i })).toHaveValue("7850");
+    // The stale "2.7" must not still be showing; the field re-seeds to the
+    // new grade's catalog value (also 7850 kg/m³) and the result agrees.
+    expect(screen.queryByDisplayValue("2.7")).not.toBeInTheDocument();
+    expect(screen.getByRole("textbox", { name: /density/i })).toHaveValue("7.85");
     expect(screen.getByTestId("total-primary")).toHaveTextContent("15.4134 kg");
   });
 
@@ -351,7 +351,7 @@ describe("CalculatorForm", () => {
 
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
-    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2.7");
 
     expect(onCalculate.mock.calls.at(-1)![0].densityKgM3).toBe(2700);
   });
@@ -361,7 +361,7 @@ describe("CalculatorForm", () => {
     await fillRoundBar();
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox", { name: /density/i }));
-    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2700");
+    await userEvent.type(screen.getByRole("textbox", { name: /density/i }), "2.7");
 
     await userEvent.click(screen.getByRole("button", { name: "Reset" }));
     expect(screen.queryByText("edited")).not.toBeInTheDocument();

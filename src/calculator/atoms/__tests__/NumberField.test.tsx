@@ -55,6 +55,30 @@ describe("NumberField", () => {
     expect(input).not.toHaveAttribute("aria-describedby");
   });
 
+  it("shows the sketch notation beside the label", () => {
+    render(
+      <NumberField id="od" label="Outer Diameter (mm)" notation="OD" value="" onChange={() => {}} />
+    );
+    expect(screen.getByText("OD")).toBeInTheDocument();
+  });
+
+  // Regression: the chip started out inside the <label>, which folded it into
+  // the input's accessible name ("OD Outer Diameter (mm)") — wrong, and noisier
+  // than the name it replaced. It is decoration pointing at the sketch, so it
+  // must stay out of the name entirely.
+  it("keeps the notation out of the accessible name", () => {
+    render(
+      <NumberField id="od" label="Outer Diameter (mm)" notation="OD" value="" onChange={() => {}} />
+    );
+    expect(screen.getByLabelText("Outer Diameter (mm)")).toBeInTheDocument();
+    expect(screen.getByText("OD")).toHaveAttribute("aria-hidden", "true");
+  });
+
+  it("renders no notation chip when none is given", () => {
+    render(<NumberField id="len" label="Length" value="" onChange={() => {}} />);
+    expect(document.querySelector(".pfm-label__notation")).toBeNull();
+  });
+
   it("calls onBlur so validation can be deferred until focus leaves", async () => {
     const onBlur = vi.fn();
     render(

@@ -11,6 +11,34 @@
   color: var(--pfm-muted);
 }
 
+/* Holds the notation chip beside the label it belongs to. */
+.pfm-calc .pfm-label-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+/*
+ * The letter this dimension carries on the shape sketch. A chip rather than
+ * bare text: it has to read as a marker pointing at the drawing, not as the
+ * first word of the label. Monospace so "A/F" and "ID" hold the same column
+ * as "t", and a min-width so the chips line up down the field list however
+ * wide each letter is.
+ */
+.pfm-calc .pfm-label__notation {
+  flex: none;
+  min-width: 1.9em;
+  padding: 0 4px;
+  border-radius: calc(var(--pfm-radius) / 2);
+  background: var(--pfm-surface);
+  border: 1px solid var(--pfm-border);
+  color: var(--pfm-accent);
+  font-family: var(--pfm-font-num);
+  font-size: 0.9em;
+  text-align: center;
+}
+
 .pfm-calc .pfm-input {
   min-height: var(--pfm-control-h);
   padding: 0 12px;

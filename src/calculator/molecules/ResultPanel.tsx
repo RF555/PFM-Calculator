@@ -17,7 +17,8 @@ interface Props {
   result: ResultValues | null;
   quantity: number;
   massUnit: MassUnit;
-  /** Set only when a density override is active, to announce the substitution. */
+  /** Set only when a density override is active, to announce the
+   *  substitution. Both figures are in the displayed g/cm³. */
   densityNotice?: { value: number; catalog: number };
 }
 

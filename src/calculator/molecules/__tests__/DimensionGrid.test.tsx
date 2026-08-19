@@ -35,10 +35,10 @@ describe("DimensionGrid", () => {
     renderEn(
       <DimensionGrid>
         <DimensionField idPrefix="pfm" fieldKey="wallThickness" label="Wall Thickness" value="30" unit="mm"
-          onChange={() => {}} error="Wall must be less than half the side (under 25.00)" />
+          onChange={() => {}} error="Wall must be less than half the width (under 25.00)" />
       </DimensionGrid>
     );
-    expect(screen.getByText(/less than half the side/)).toBeInTheDocument();
+    expect(screen.getByText(/less than half the width/)).toBeInTheDocument();
     expect(screen.getByLabelText("Wall Thickness (mm)")).toHaveAttribute("aria-invalid", "true");
   });
 });

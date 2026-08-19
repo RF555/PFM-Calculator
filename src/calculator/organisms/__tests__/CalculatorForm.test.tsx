@@ -366,4 +366,21 @@ describe("CalculatorForm", () => {
     await userEvent.click(screen.getByRole("button", { name: "Reset" }));
     expect(screen.queryByText("edited")).not.toBeInTheDocument();
   });
+
+  it("shows the disclaimer summary beneath the results", () => {
+    setup();
+    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+  });
+
+  it("renders the disclaimer outside the results panel", () => {
+    const { container } = setup();
+    const results = container.querySelector(".pfm-results");
+    expect(results?.querySelector(".pfm-disclaimer")).toBeNull();
+    expect(container.querySelector(".pfm-disclaimer")).toBeInTheDocument();
+  });
+
+  it("passes a host override through to the disclaimer", () => {
+    setup({ disclaimerText: { summary: "Custom notice." } });
+    expect(screen.getByText("Custom notice.")).toBeInTheDocument();
+  });
 });

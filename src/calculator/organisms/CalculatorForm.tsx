@@ -1,4 +1,5 @@
 import { useEffect, useId, useMemo, useReducer, useRef, useState } from "react";
+import { Disclaimer, type DisclaimerText } from "../atoms/Disclaimer";
 import { LanguageSwitch } from "../atoms/LanguageSwitch";
 import { SegmentedControl } from "../atoms/SegmentedControl";
 import { QuantityField } from "../atoms/QuantityField";
@@ -37,11 +38,13 @@ interface Props {
   /** Receives the result, or null while it is incomplete or invalid. */
   onCalculate?: (result: CalculationResult | null) => void;
   onUnitChange?: (unit: Unit) => void;
+  /** Overrides the disclaimer copy for the active language. */
+  disclaimerText?: Partial<DisclaimerText>;
 }
 
 export function CalculatorForm({
   materials, defaultUnit, defaultMassUnit, defaultQuantity,
-  onCalculate, onUnitChange,
+  onCalculate, onUnitChange, disclaimerText,
 }: Props) {
   // React's useId() is stable across a component's lifetime and unique per
   // mounted instance, so two calculators on one page never collide on the
@@ -258,6 +261,7 @@ export function CalculatorForm({
             : undefined
         }
       />
+      <Disclaimer idPrefix={idPrefix} text={disclaimerText} />
     </div>
   );
 }

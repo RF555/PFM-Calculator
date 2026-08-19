@@ -140,7 +140,9 @@ describe("angle supports unequal legs", () => {
     const [v] = checkConstraints("angle", {
       leg: 100, legB: 75, thickness: 80, length: 1000,
     });
-    expect(v.message.params).toEqual({ max: "75.00" });
+    // Canonical millimetres, unformatted: the view converts to the active unit
+    // and labels it, since the model has no idea which unit is on screen.
+    expect(v.message.params).toEqual({ max: 75 });
   });
 
   it("unequal-leg geometry within limits passes the constraint", () => {
@@ -195,7 +197,7 @@ describe("constraints reject impossible geometry", () => {
     expect(violations).toHaveLength(1);
     expect(violations[0].field).toBe("wallThickness");
     expect(violations[0].message.key).toBe("constraint.wallHalfSide");
-    expect(violations[0].message.params).toEqual({ max: "25.00" });
+    expect(violations[0].message.params).toEqual({ max: 25 });
   });
 
   it("every constraint message key exists in both dictionaries", () => {

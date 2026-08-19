@@ -4,6 +4,7 @@ import { LanguageSwitch } from "../atoms/LanguageSwitch";
 import { SegmentedControl } from "../atoms/SegmentedControl";
 import { QuantityField } from "../atoms/QuantityField";
 import { useTranslate } from "../i18n/LanguageContext";
+import type { TranslationParams } from "../i18n/types";
 import { DensityField } from "../molecules/DensityField";
 import { GradeCombobox } from "../molecules/GradeCombobox";
 import { MaterialCombobox } from "../molecules/MaterialCombobox";
@@ -15,6 +16,7 @@ import { calcReducer, initialState } from "../model/reducer";
 import type { Material } from "../model/schema";
 import { SHAPES, checkConstraints, volumeMm3, type ShapeId } from "../model/shapes";
 import type { DimensionFieldDef, MassUnit, Unit } from "../model/types";
+import { formatDimension, mmToInch } from "../model/units";
 import { DimensionFieldset } from "./DimensionFieldset";
 import "./CalculatorForm.css";
 
@@ -149,6 +151,20 @@ export function CalculatorForm({
     onCalculateRef.current?.(report);
   }, [report]);
 
+  /**
+   * Projects a constraint's `max` into the active unit and labels it.
+   *
+   * The model works in canonical millimetres and has no notion of which unit
+   * is on screen, so it emits a bare mm number. Left alone, an inch-mode user
+   * measuring in inches would be told the limit in millimetres, with nothing
+   * to say so — a wrong number, not just an unlabelled one.
+   */
+  const localizeBounds = (params?: TranslationParams): TranslationParams | undefined => {
+    if (!params || typeof params.max !== "number") return params;
+    const value = state.unit === "mm" ? params.max : mmToInch(params.max);
+    return { ...params, max: `${formatDimension(value)} ${t(`unit.${state.unit}`)}` };
+  };
+
   // Parse errors and constraint violations share one map; both only surface
   // once the field has been touched. The model stores translation keys, which
   // are resolved to display text here.
@@ -157,7 +173,9 @@ export function CalculatorForm({
     if (touched[key]) visibleErrors[key] = t(errorKey);
   }
   for (const v of violations) {
-    if (touched[v.field]) visibleErrors[v.field] = t(v.message.key, v.message.params);
+    if (touched[v.field]) {
+      visibleErrors[v.field] = t(v.message.key, localizeBounds(v.message.params));
+    }
   }
 
   return (

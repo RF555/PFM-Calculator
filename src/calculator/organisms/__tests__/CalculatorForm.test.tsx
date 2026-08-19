@@ -91,6 +91,37 @@ describe("CalculatorForm", () => {
     expect(screen.getByText(/less than half the width/)).toBeInTheDocument();
   });
 
+  // The bound is a length, so it reads like one: the figure the user would
+  // type, with its unit. Not "25.00" — that is mass/volume formatting, and
+  // padding a round limit makes it look measured rather than derived.
+  it("states the constraint limit unpadded and with its unit", async () => {
+    setup();
+    await pick("Shape", "Square Hollow Section");
+    await userEvent.type(screen.getByLabelText("Width (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "30");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+    await userEvent.tab();
+
+    expect(screen.getByText(/under 25 mm/)).toBeInTheDocument();
+    expect(screen.queryByText(/25\.00/)).not.toBeInTheDocument();
+  });
+
+  // Regression: the model's bound is canonical millimetres. Shown raw in inch
+  // mode it stated a millimetre limit to someone typing inches, unlabelled —
+  // a wrong number rather than merely an unlabelled one.
+  it("converts the constraint limit into the active unit", async () => {
+    setup();
+    await pick("Shape", "Square Hollow Section");
+    await userEvent.click(screen.getByRole("radio", { name: "inch" }));
+    await userEvent.type(screen.getByLabelText("Width (inch)"), "2");
+    await userEvent.type(screen.getByLabelText("Wall Thickness (inch)"), "1.5");
+    await userEvent.type(screen.getByLabelText("Length (inch)"), "40");
+    await userEvent.tab();
+
+    // Half of 2 inch, stated in inches — not the 25.4 mm the model computed.
+    expect(screen.getByText(/under 1 inch/)).toBeInTheDocument();
+  });
+
   it("converts entered values when the unit changes", async () => {
     setup();
     await pick("Shape", "Round Bar");

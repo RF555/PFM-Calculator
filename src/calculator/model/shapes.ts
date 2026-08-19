@@ -1,4 +1,3 @@
-import { formatNumber } from "./format";
 import { translate } from "../i18n/strings";
 import type { Language } from "../i18n/types";
 import type {
@@ -85,7 +84,7 @@ export const SHAPES = {
         test: (d) => d.wallThickness < d.outerDiameter / 2,
         message: (d) => ({
           key: "constraint.wallHalfOuterDiameter",
-          params: { max: formatNumber(d.outerDiameter / 2) },
+          params: { max: d.outerDiameter / 2 },
         }),
       },
     ],
@@ -122,7 +121,7 @@ export const SHAPES = {
         test: (d) => d.wallThickness < Math.min(d.width, d.height) / 2,
         message: (d) => ({
           key: "constraint.wallHalfSmallerSide",
-          params: { max: formatNumber(Math.min(d.width, d.height) / 2) },
+          params: { max: Math.min(d.width, d.height) / 2 },
         }),
       },
     ],
@@ -145,7 +144,7 @@ export const SHAPES = {
         test: (d) => d.wallThickness < d.side / 2,
         message: (d) => ({
           key: "constraint.wallHalfSide",
-          params: { max: formatNumber(d.side / 2) },
+          params: { max: d.side / 2 },
         }),
       },
     ],
@@ -167,7 +166,7 @@ export const SHAPES = {
         test: (d) => d.thickness < Math.min(d.leg, effectiveLegB(d)),
         message: (d) => ({
           key: "constraint.thicknessSmallerLeg",
-          params: { max: formatNumber(Math.min(d.leg, effectiveLegB(d))) },
+          params: { max: Math.min(d.leg, effectiveLegB(d)) },
         }),
       },
     ],

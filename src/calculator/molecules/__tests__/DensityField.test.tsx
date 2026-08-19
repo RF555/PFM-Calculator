@@ -61,8 +61,9 @@ function Harness({
           raw={raw}
           onChange={(next) => {
             setRaw(next);
-            const n = Number(next);
-            setOverride(next !== "" && n >= 1 && n <= 25000 ? n : null);
+            // Mirrors parseDensity: text is g/cm³, state is canonical kg/m³.
+            const kg = Number(next) * 1000;
+            setOverride(next !== "" && kg >= 1 && kg <= 25000 ? kg : null);
           }}
         />
       </div>
@@ -71,12 +72,13 @@ function Harness({
 }
 
 describe("DensityField", () => {
-  it("shows the catalog density read-only, with no input", () => {
+  // Props carry canonical kg/m³; the field shows g/cm³.
+  it("shows the catalog density read-only in g/cm³, with no input", () => {
     renderField();
     // The unit lives in the label, as it does for every dimension field, so
     // the value beside it is a bare number.
-    expect(screen.getByText("Density (kg/m³)")).toBeInTheDocument();
-    expect(screen.getByText("7850")).toBeInTheDocument();
+    expect(screen.getByText("Density (g/cm³)")).toBeInTheDocument();
+    expect(screen.getByText("7.85")).toBeInTheDocument();
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
   });
 
@@ -89,7 +91,7 @@ describe("DensityField", () => {
   it("reveals an input seeded with the current value when Edit is clicked", async () => {
     renderField();
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
-    expect(screen.getByRole("textbox")).toHaveValue("7850");
+    expect(screen.getByRole("textbox")).toHaveValue("7.85");
   });
 
   it("moves focus into the input on entering edit mode", async () => {
@@ -102,9 +104,9 @@ describe("DensityField", () => {
     const props = renderField();
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox"));
-    await userEvent.type(screen.getByRole("textbox"), "7800");
+    await userEvent.type(screen.getByRole("textbox"), "7.8");
     expect(props.onChange).toHaveBeenCalled();
-    expect(props.onChange.mock.calls.at(-1)![0]).toBe("7800");
+    expect(props.onChange.mock.calls.at(-1)![0]).toBe("7.8");
   });
 
   // The field behaves like a dimension entry once revealed: what you type is
@@ -113,7 +115,7 @@ describe("DensityField", () => {
     render(<Harness />);
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox"));
-    await userEvent.type(screen.getByRole("textbox"), "2700");
+    await userEvent.type(screen.getByRole("textbox"), "2.7");
 
     expect(screen.queryByRole("button", { name: /done/i })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: /cancel/i })).not.toBeInTheDocument();
@@ -124,7 +126,7 @@ describe("DensityField", () => {
     render(<Harness />);
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox"));
-    await userEvent.type(screen.getByRole("textbox"), "2700");
+    await userEvent.type(screen.getByRole("textbox"), "2.7");
     await userEvent.tab();
 
     expect(screen.getByRole("textbox")).toBeInTheDocument();
@@ -134,7 +136,7 @@ describe("DensityField", () => {
   // Reverting is the form's own Reset button; a second control for it would
   // be one more thing to explain and to keep in sync.
   it("offers no reset-to-catalog control", () => {
-    renderField({ override: 7800, raw: "7800" });
+    renderField({ override: 7800, raw: "7.8" });
     expect(
       screen.queryByRole("button", { name: /reset to catalog/i })
     ).not.toBeInTheDocument();
@@ -146,14 +148,14 @@ describe("DensityField", () => {
   });
 
   it("shows the error message while the value is invalid", async () => {
-    renderField({ error: "Must be between 1 and 25000 kg/m³", raw: "0" });
+    renderField({ error: "Must be between 0.001 and 25 g/cm³", raw: "0" });
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
-    expect(screen.getByText("Must be between 1 and 25000 kg/m³")).toBeInTheDocument();
+    expect(screen.getByText("Must be between 0.001 and 25 g/cm³")).toBeInTheDocument();
   });
 
   it("renders the value left-to-right so it does not reorder in Hebrew", () => {
-    renderField({ override: 7800, raw: "7800" });
-    expect(screen.getByText("7800")).toHaveAttribute("dir", "ltr");
+    renderField({ override: 7800, raw: "7.8" });
+    expect(screen.getByText("7.8")).toHaveAttribute("dir", "ltr");
   });
 
   // Regression: switching grades while the field is open used to leave the
@@ -161,10 +163,10 @@ describe("DensityField", () => {
   it("re-seeds from the new catalog density when the grade changes mid-edit", async () => {
     const { rerender } = render(<Harness gradeId="grade-a" catalogDensity={7850} />);
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
-    expect(screen.getByRole("textbox")).toHaveValue("7850");
+    expect(screen.getByRole("textbox")).toHaveValue("7.85");
 
     rerender(<Harness gradeId="grade-b" catalogDensity={4500} />);
-    expect(screen.getByRole("textbox")).toHaveValue("4500");
+    expect(screen.getByRole("textbox")).toHaveValue("4.5");
     expect(screen.queryByText("edited")).not.toBeInTheDocument();
   });
 
@@ -177,12 +179,12 @@ describe("DensityField", () => {
     const { rerender } = render(<Harness gradeId="grade-a" catalogDensity={7850} />);
     await userEvent.click(screen.getByRole("button", { name: /edit/i }));
     await userEvent.clear(screen.getByRole("textbox"));
-    await userEvent.type(screen.getByRole("textbox"), "2700");
-    expect(screen.getByRole("textbox")).toHaveValue("2700");
+    await userEvent.type(screen.getByRole("textbox"), "2.7");
+    expect(screen.getByRole("textbox")).toHaveValue("2.7");
 
     // Same catalog density (7850) as grade-a, but a different grade.
     rerender(<Harness gradeId="grade-c" catalogDensity={7850} />);
-    expect(screen.getByRole("textbox")).toHaveValue("7850");
+    expect(screen.getByRole("textbox")).toHaveValue("7.85");
     expect(screen.queryByText("edited")).not.toBeInTheDocument();
   });
 

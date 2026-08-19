@@ -9,7 +9,7 @@ import { MaterialCombobox } from "../molecules/MaterialCombobox";
 import { ResultPanel, type ResultValues } from "../molecules/ResultPanel";
 import { ShapeCombobox } from "../molecules/ShapeCombobox";
 import { m3ToCm3, mm3ToM3, weightKg } from "../model/calculate";
-import { MAX_DENSITY, MIN_DENSITY } from "../model/density";
+import { MAX_DENSITY_DISPLAY, MIN_DENSITY_DISPLAY, gPerCm3 } from "../model/density";
 import { calcReducer, initialState } from "../model/reducer";
 import type { Material } from "../model/schema";
 import { SHAPES, checkConstraints, volumeMm3, type ShapeId } from "../model/shapes";
@@ -223,8 +223,8 @@ export function CalculatorForm({
           override={state.densityOverride}
           raw={state.densityRaw}
           error={state.densityError ? t(state.densityError, {
-            min: MIN_DENSITY,
-            max: MAX_DENSITY,
+            min: MIN_DENSITY_DISPLAY,
+            max: MAX_DENSITY_DISPLAY,
           }) : undefined}
           onChange={(raw) => dispatch({ type: "SET_DENSITY", raw })}
         />
@@ -251,7 +251,10 @@ export function CalculatorForm({
         massUnit={state.massUnit}
         densityNotice={
           state.densityOverride !== null && grade
-            ? { value: state.densityOverride, catalog: grade.density }
+            ? {
+                value: gPerCm3(state.densityOverride),
+                catalog: gPerCm3(grade.density),
+              }
             : undefined
         }
       />

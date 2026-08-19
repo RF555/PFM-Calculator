@@ -108,17 +108,18 @@ describe("calcReducer", () => {
     expect(base.densityError).toBe("");
   });
 
+  // Raw text is the g/cm³ the user typed; the override is canonical kg/m³.
   it("stores a valid density override with its raw text", () => {
-    const s = calcReducer(base, { type: "SET_DENSITY", raw: "7800" });
+    const s = calcReducer(base, { type: "SET_DENSITY", raw: "7.8" });
     expect(s.densityOverride).toBe(7800);
-    expect(s.densityRaw).toBe("7800");
+    expect(s.densityRaw).toBe("7.8");
     expect(s.densityError).toBe("");
   });
 
   // The raw text survives so the field does not blank out mid-keystroke; the
   // parsed value is dropped so no stale figure can drive a calculation.
   it("keeps the raw text but drops the value when the density is invalid", () => {
-    const valid = calcReducer(base, { type: "SET_DENSITY", raw: "7800" });
+    const valid = calcReducer(base, { type: "SET_DENSITY", raw: "7.8" });
     const s = calcReducer(valid, { type: "SET_DENSITY", raw: "99999" });
     expect(s.densityRaw).toBe("99999");
     expect(s.densityOverride).toBeNull();
@@ -130,7 +131,7 @@ describe("calcReducer", () => {
   // showed a weight derived from a figure the user had just deleted.
   it("marks an emptied field as cleared rather than as no override", () => {
     const s = calcReducer(
-      calcReducer(base, { type: "SET_DENSITY", raw: "2700" }),
+      calcReducer(base, { type: "SET_DENSITY", raw: "2.7" }),
       { type: "SET_DENSITY", raw: "" }
     );
     expect(s.densityOverride).toBeNull();
@@ -142,7 +143,7 @@ describe("calcReducer", () => {
   it("stops treating the field as cleared once a value parses again", () => {
     const s = calcReducer(
       calcReducer(base, { type: "SET_DENSITY", raw: "" }),
-      { type: "SET_DENSITY", raw: "2700" }
+      { type: "SET_DENSITY", raw: "2.7" }
     );
     expect(s.densityCleared).toBe(false);
     expect(s.densityOverride).toBe(2700);
@@ -156,7 +157,7 @@ describe("calcReducer", () => {
 
   it("clears the override", () => {
     const s = calcReducer(
-      calcReducer(base, { type: "SET_DENSITY", raw: "7800" }),
+      calcReducer(base, { type: "SET_DENSITY", raw: "7.8" }),
       { type: "CLEAR_DENSITY" }
     );
     expect(s.densityOverride).toBeNull();
@@ -168,7 +169,7 @@ describe("calcReducer", () => {
   // user quote 316 stainless at aluminium's density without noticing.
   it("clears the override when the grade changes", () => {
     const s = calcReducer(
-      calcReducer(base, { type: "SET_DENSITY", raw: "7800" }),
+      calcReducer(base, { type: "SET_DENSITY", raw: "7.8" }),
       { type: "SELECT_GRADE", gradeId: "steel.a36" }
     );
     expect(s.densityOverride).toBeNull();
@@ -177,7 +178,7 @@ describe("calcReducer", () => {
 
   it("clears the override when the material changes", () => {
     const s = calcReducer(
-      calcReducer(base, { type: "SET_DENSITY", raw: "7800" }),
+      calcReducer(base, { type: "SET_DENSITY", raw: "7.8" }),
       { type: "SELECT_MATERIAL", materialId: "aluminum" }
     );
     expect(s.densityOverride).toBeNull();
@@ -186,7 +187,7 @@ describe("calcReducer", () => {
 
   it("clears the override on reset", () => {
     const s = calcReducer(
-      calcReducer(withDims, { type: "SET_DENSITY", raw: "7800" }),
+      calcReducer(withDims, { type: "SET_DENSITY", raw: "7.8" }),
       { type: "RESET" }
     );
     expect(s.densityOverride).toBeNull();

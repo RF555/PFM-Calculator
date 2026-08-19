@@ -37,7 +37,7 @@ const en: Dictionary = {
   "unit.kg": "kg",
   "unit.lbs": "lbs",
   "unit.cm3": "cm³",
-  "unit.kgm3": "kg/m³",
+  "unit.gcm3": "g/cm³",
 
   "shape.sheet": "Sheet / Plate",
   "shape.roundBar": "Round Bar",
@@ -65,7 +65,7 @@ const en: Dictionary = {
 
   "error.notANumber": "Enter a number",
   "error.notPositive": "Must be greater than zero",
-  "error.densityRange": "Must be between {min} and {max} kg/m³",
+  "error.densityRange": "Must be between {min} and {max} g/cm³",
 
   "constraint.wallHalfOuterDiameter":
     "Wall must be less than half the outer diameter (under {max})",
@@ -83,7 +83,7 @@ const en: Dictionary = {
   "a11y.decreaseQuantity": "Decrease quantity",
   "a11y.increaseQuantity": "Increase quantity",
   "a11y.densityOverridden":
-    "Density overridden: {value} kg/m³, catalog value {catalog} kg/m³",
+    "Density overridden: {value} g/cm³, catalog value {catalog} g/cm³",
 };
 
 const he: Dictionary = {
@@ -118,7 +118,7 @@ const he: Dictionary = {
   "unit.kg": "ק\"ג",
   "unit.lbs": "ליברה",
   "unit.cm3": "סמ\"ק",
-  "unit.kgm3": "ק\"ג/מ\"ק",
+  "unit.gcm3": "גר'/סמ\"ק",
 
   "shape.sheet": "פח / לוח",
   "shape.roundBar": "מוט עגול",

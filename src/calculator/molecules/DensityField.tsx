@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { FieldLabel } from "../atoms/FieldLabel";
 import { NumberField } from "../atoms/NumberField";
 import { useTranslate } from "../i18n/LanguageContext";
+import { gPerCm3 } from "../model/density";
 import "./DensityField.css";
 
 export interface DensityFieldProps {
@@ -10,11 +11,12 @@ export interface DensityFieldProps {
    *  the re-seed effect: the reducer clears any override on every grade
    *  change, even between two grades that share a catalog density. */
   gradeId: string | null;
-  /** Catalog density of the selected grade, or null when none is selected. */
+  /** Catalog density of the selected grade in kg/m³, or null when none is
+   *  selected. Converted to g/cm³ for display. */
   catalogDensity: number | null;
-  /** Active override, or null when the catalog value is in force. */
+  /** Active override in kg/m³, or null when the catalog value is in force. */
   override: number | null;
-  /** Raw text of an in-progress edit. */
+  /** Raw text of an in-progress edit, already in the displayed g/cm³. */
   raw: string;
   /** Resolved error message, or undefined when the value is valid. */
   error?: string;
@@ -23,6 +25,10 @@ export interface DensityFieldProps {
 
 /**
  * Shows the density driving the calculation, and lets the user replace it.
+ *
+ * Densities cross this boundary in canonical kg/m³ and are shown in g/cm³,
+ * the unit material datasheets use. This component converts on the way out;
+ * the reducer's parseDensity converts what the user types on the way back in.
  *
  * Read-only until the user asks to edit, so a figure that silently rescales
  * every result is not sitting in an input inviting stray keystrokes. Once
@@ -56,7 +62,7 @@ export function DensityField({
   // value beside it stays a bare number.
   const label = t("ui.fieldWithUnit", {
     label: t("ui.density"),
-    unit: t("unit.kgm3"),
+    unit: t("unit.gcm3"),
   });
 
   useEffect(() => {
@@ -74,7 +80,7 @@ export function DensityField({
     const changed = lastGradeId.current !== gradeId;
     lastGradeId.current = gradeId;
     if (!changed || !editing || disabled) return;
-    setText(catalogDensity !== null ? String(catalogDensity) : "");
+    setText(catalogDensity !== null ? String(gPerCm3(catalogDensity)) : "");
   }, [gradeId, catalogDensity, editing, disabled]);
 
   // A grade with no catalog density leaves nothing to edit, so close the
@@ -89,7 +95,8 @@ export function DensityField({
   }, [disabled]);
 
   function beginEditing() {
-    setText(raw !== "" ? raw : effective !== null ? String(effective) : "");
+    // `raw` is already the displayed unit; `effective` is canonical.
+    setText(raw !== "" ? raw : effective !== null ? String(gPerCm3(effective)) : "");
     setEditing(true);
   }
 
@@ -133,7 +140,7 @@ export function DensityField({
           </span>
         ) : (
           <span id={`${id}-value`} className="pfm-material-density__value" dir="ltr">
-            {effective}
+            {gPerCm3(effective)}
           </span>
         )}
 

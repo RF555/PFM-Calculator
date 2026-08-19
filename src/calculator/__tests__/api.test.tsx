@@ -161,6 +161,14 @@ describe("public API", () => {
     expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
   });
 
+  it("falls back when a host supplies non-string points", () => {
+    render(
+      // @ts-expect-error deliberately passing non-string array entries
+      <MaterialCalculator defaultLanguage="en" disclaimer={{ points: { he: [1], en: [1, 2] } }} />
+    );
+    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+  });
+
   it("gives two instances distinct disclaimer panel ids", () => {
     const { container } = render(
       <>

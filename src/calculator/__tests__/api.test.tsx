@@ -135,4 +135,42 @@ describe("public API", () => {
       )
     ).toThrow(/missing a non-empty "en" translation/);
   });
+
+  it("renders the disclaimer with no props", () => {
+    render(<MaterialCalculator defaultLanguage="en" />);
+    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+  });
+
+  it("lets a host replace the disclaimer copy in the active language", () => {
+    render(
+      <MaterialCalculator
+        defaultLanguage="en"
+        disclaimer={{
+          summary: { he: "הודעה מותאמת.", en: "Custom notice." },
+        }}
+      />
+    );
+    expect(screen.getByText("Custom notice.")).toBeInTheDocument();
+  });
+
+  it("keeps the disclaimer when a host supplies a malformed override", () => {
+    render(
+      // @ts-expect-error deliberately passing a non-Localized value
+      <MaterialCalculator defaultLanguage="en" disclaimer={{ summary: "oops" }} />
+    );
+    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+  });
+
+  it("gives two instances distinct disclaimer panel ids", () => {
+    const { container } = render(
+      <>
+        <MaterialCalculator defaultLanguage="en" />
+        <MaterialCalculator defaultLanguage="en" />
+      </>
+    );
+    const ids = Array.from(container.querySelectorAll(".pfm-disclaimer__panel"))
+      .map((el) => el.id);
+    expect(ids).toHaveLength(2);
+    expect(new Set(ids).size).toBe(2);
+  });
 });

@@ -58,6 +58,16 @@
   float: inline-end;
   margin-inline-start: var(--pfm-gap);
   color: var(--pfm-muted);
+  /*
+   * The SVG carries width/height attributes, which do not shrink on their own:
+   * in a narrow container the figure kept its full size and left the fields
+   * flowing in whatever gutter remained — about 100px at a 320px width, enough
+   * to wrap a constraint message onto four lines. Capping it against the
+   * container keeps the artwork subordinate to the measurements it annotates.
+   * height:auto so it scales rather than distorting.
+   */
+  max-width: 40%;
+  height: auto;
 }
 
 /*

@@ -17,8 +17,9 @@
   color: var(--pfm-fg);
 }
 
-/* Icon plus one word, riding the end of the sentence. The word is what makes
-   the control recognisable — an icon alone has to be learned. */
+/* Text only, riding the end of the sentence. No icon: an (i) glyph signals
+   "optional extra info", which is the wrong category for a legal qualifier,
+   and it adds nothing beside a word that already says what it opens. */
 .pfm-calc .pfm-disclaimer__trigger {
   display: inline-flex;
   align-items: center;
@@ -35,9 +36,6 @@
   text-underline-offset: 2px;
 }
 
-.pfm-calc .pfm-disclaimer__trigger svg {
-  flex: none;
-}
 
 /*
  * Anchored to .pfm-calc__inner and pinned to its bottom edge, with height

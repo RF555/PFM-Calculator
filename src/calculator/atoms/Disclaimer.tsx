@@ -95,13 +95,12 @@ export function Disclaimer({ idPrefix, text }: Props) {
             ref={triggerRef}
             aria-expanded={open}
             aria-controls={panelId}
-            aria-label={t("legal.whyLabel")}
+            // No aria-label: the visible text IS the accessible name, so
+            // SC 2.5.3 Label in Name holds by construction and speech input
+            // always matches what is on screen. The panel keeps the fuller
+            // legal.whyLabel as its own label.
             onClick={() => setOpen((wasOpen) => !wasOpen)}
           >
-            <svg width="13" height="13" viewBox="0 0 16 16" aria-hidden="true" focusable="false">
-              <circle cx="8" cy="8" r="7" fill="none" stroke="currentColor" strokeWidth="1.35" />
-              <path d="M8 7v4.4M8 4.6v.9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
             {t("legal.why")}
           </button>
         </span>

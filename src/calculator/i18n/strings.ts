@@ -190,10 +190,10 @@ const he: Dictionary = {
 
   "legal.summary":
     "משקל תיאורטי להערכה בלבד — ייתכנו הפרשים בפועל. אינו מהווה הצעת מחיר או התחייבות.",
-  // The "?" sits first in source order: in an RTL run the bidi algorithm
-  // places it at the visual end, i.e. the left of the word.
-  "legal.why": "?למה",
-  "legal.whyLabel": "?למה המשקלים משתנים",
+  // The "?" sits LAST in logical order, as Hebrew punctuation does; the bidi
+  // algorithm renders it at the visual left. Leading it renders on the wrong side.
+  "legal.why": "למה?",
+  "legal.whyLabel": "למה המשקלים משתנים?",
   "legal.close": "סגור",
   "legal.heading": "הבהרה משפטית",
   "legal.point1":

@@ -58,14 +58,25 @@ describe("dictionaries", () => {
     }
   });
 
-  // SC 2.5.3 Label in Name: the accessible name must contain the visible
-  // word, or speech-input users cannot activate the control by saying what
-  // they see.
-  it("keeps the visible trigger word inside its accessible name", () => {
+  // legal.whyLabel now labels the PANEL, not the trigger. The trigger carries no
+  // aria-label at all, so its visible text is its accessible name and SC 2.5.3
+  // Label in Name holds by construction rather than by string comparison.
+  it("gives the panel a label that names its subject", () => {
     for (const language of ["en", "he"] as const) {
-      expect(STRINGS[language]["legal.whyLabel"])
-        .toContain(STRINGS[language]["legal.why"]);
+      expect(STRINGS[language]["legal.whyLabel"].length).toBeGreaterThan(
+        STRINGS[language]["legal.why"].length
+      );
     }
+  });
+
+  // Hebrew punctuation sits at the LOGICAL end of the string; the bidi algorithm
+  // then renders it at the visual left. Leading the "?" put it on the wrong side
+  // on screen — a real bug this guards against.
+  it("ends the Hebrew trigger strings with their question mark", () => {
+    expect(STRINGS.he["legal.why"].startsWith("?")).toBe(false);
+    expect(STRINGS.he["legal.why"].endsWith("?")).toBe(true);
+    expect(STRINGS.he["legal.whyLabel"].startsWith("?")).toBe(false);
+    expect(STRINGS.he["legal.whyLabel"].endsWith("?")).toBe(true);
   });
 
   it("keeps the quantity placeholder in the revised total label", () => {

@@ -72,7 +72,7 @@ const en: Dictionary = {
   "constraint.wallHalfSmallerSide":
     "Wall must be less than half the smaller side (under {max})",
   "constraint.wallHalfSide":
-    "Wall must be less than half the side (under {max})",
+    "Wall must be less than half the width (under {max})",
   "constraint.thicknessSmallerLeg":
     "Thickness must be less than the smaller leg (under {max})",
 
@@ -153,7 +153,7 @@ const he: Dictionary = {
   "constraint.wallHalfSmallerSide":
     "הדופן חייבת להיות קטנה מחצי הצלע הקטנה (מתחת ל-{max})",
   "constraint.wallHalfSide":
-    "הדופן חייבת להיות קטנה מחצי הצלע (מתחת ל-{max})",
+    "הדופן חייבת להיות קטנה מחצי הרוחב (מתחת ל-{max})",
   "constraint.thicknessSmallerLeg":
     "העובי חייב להיות קטן מהשוק הקטנה (מתחת ל-{max})",
 

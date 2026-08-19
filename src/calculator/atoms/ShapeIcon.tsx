@@ -494,11 +494,11 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
    * all distances between two edges, which a single arrow cannot express.
    */
 
-  // Front face 20x20 at (10,16), extruded 1 unit. Square section: one side
-  // dimension covers both axes, so only A and L are asked for.
+  // Front face 20x20 at (10,16), extruded 1 unit. Square section: one width
+  // dimension covers both axes, so only W and L are asked for.
   squareBar: (
     <>
-      {span("A", [10, 36], [30, 36], 7)}
+      {span("W", [10, 36], [30, 36], 7)}
       {/* Length along the bottom-right receding edge, offset down and out so
           the span sits below the solid rather than across it. */}
       {span("L", [30, 36], [30 + ISO_DX, 36 + ISO_DY], 7)}
@@ -533,10 +533,10 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
    */
 
   // Outer (10,17)-(29,36), bore (14,21)-(25,32): a square section needs one
-  // side dimension, so only A, t and L are asked for.
+  // width dimension, so only W, t and L are asked for.
   squareHollow: (
     <>
-      {span("A", [10, 36], [29, 36], 7)}
+      {span("W", [10, 36], [29, 36], 7)}
       {/* A leader, not a span: the wall gap is only ~4 units, narrower than the
           label itself, so a dimension line there is swallowed by the artwork.
           The dot sits mid-wall on the left edge. */}
@@ -573,7 +573,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
     <>
       {span("L1", [11, 16], [11, 37], 7)}
       {span("L2", [11, 37], [32, 37], 7)}
-      {/* Anchored mid-wall on the upright, led straight up: A already occupies
+      {/* Anchored mid-wall on the upright, led straight up: L1 already occupies
           the left margin, so a leader out that way would stack the labels. */}
       {hint("t", [14, 20], [14, 6])}
       {span("L", [32, 37], [32 + ISO_DX, 37 + ISO_DY], 7)}

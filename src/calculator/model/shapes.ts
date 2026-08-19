@@ -43,7 +43,7 @@ export const SHAPES = {
   squareBar: {
     labelKey: "shape.squareBar",
     fields: [
-      { key: "side", labelKey: "field.side", notation: "A" },
+      { key: "side", labelKey: "field.width", notation: "W" },
       { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [],
@@ -135,7 +135,7 @@ export const SHAPES = {
   squareHollow: {
     labelKey: "shape.squareHollow",
     fields: [
-      { key: "side", labelKey: "field.side", notation: "A" },
+      { key: "side", labelKey: "field.width", notation: "W" },
       { key: "wallThickness", labelKey: "field.wallThickness", notation: "t" },
       { key: "length", labelKey: "field.length", notation: "L" },
     ],

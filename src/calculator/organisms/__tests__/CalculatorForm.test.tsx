@@ -82,13 +82,13 @@ describe("CalculatorForm", () => {
     await pick("Material", "Steel");
     await pick("Grade", "Carbon Steel");
     await pick("Shape", "Square Hollow Section");
-    await userEvent.type(screen.getByLabelText("Side (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Width (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "30");
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
     await userEvent.tab();
 
     expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
-    expect(screen.getByText(/less than half the side/)).toBeInTheDocument();
+    expect(screen.getByText(/less than half the width/)).toBeInTheDocument();
   });
 
   it("converts entered values when the unit changes", async () => {
@@ -134,12 +134,12 @@ describe("CalculatorForm", () => {
     await pick("Material", "Steel");
     await pick("Grade", "Carbon Steel");
     await pick("Shape", "Square Hollow Section");
-    await userEvent.type(screen.getByLabelText("Side (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Width (mm)"), "50");
     await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "5");
     await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
     expect(onCalculate.mock.calls.at(-1)![0]).not.toBeNull();
 
-    // A wall at or above half the side is impossible. The host must be told,
+    // A wall at or above half the width is impossible. The host must be told,
     // or it keeps a figure the user can no longer see.
     await userEvent.clear(screen.getByLabelText("Wall Thickness (mm)"));
     await userEvent.type(screen.getByLabelText("Wall Thickness (mm)"), "30");
@@ -182,7 +182,7 @@ describe("CalculatorForm", () => {
     await pick("Shape", "Round Bar");
     await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
     await pick("Shape", "Square Bar");
-    expect(screen.getByLabelText("Side (mm)")).toHaveValue("");
+    expect(screen.getByLabelText("Width (mm)")).toHaveValue("");
   });
 
   // A stable vi.fn() cannot catch this: the bug only shows up when the host
@@ -221,7 +221,7 @@ describe("CalculatorForm", () => {
       </LanguageProvider>
     );
     await pick("צורה", "פרופיל מרובע חלול");
-    await userEvent.type(screen.getByLabelText("צלע (מ\"מ)"), "50");
+    await userEvent.type(screen.getByLabelText("רוחב (מ\"מ)"), "50");
     const wall = screen.getByLabelText("עובי דופן (מ\"מ)");
     await userEvent.type(wall, "30");
     // checkConstraints only evaluates once every field is filled (see

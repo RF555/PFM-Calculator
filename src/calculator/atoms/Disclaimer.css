@@ -17,6 +17,12 @@
   color: var(--pfm-fg);
 }
 
+/* Keeps the trigger bound to the preceding word so a line break cannot strand
+   it alone on its own line, where it reads as unrelated to the sentence. */
+.pfm-calc .pfm-disclaimer__nowrap {
+  white-space: nowrap;
+}
+
 /* Text only, riding the end of the sentence. No icon: an (i) glyph signals
    "optional extra info", which is the wrong category for a legal qualifier,
    and it adds nothing beside a word that already says what it opens. */

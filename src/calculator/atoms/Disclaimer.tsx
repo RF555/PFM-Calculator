@@ -89,6 +89,16 @@ export function Disclaimer({ idPrefix, text }: Props) {
       <p className="pfm-disclaimer__summary">
         <span>
           {isolateLatinRuns(summary)}
+          {/*
+            Binds the trigger to the word before it. Without this the line can
+            break at the space and strand the trigger alone on its own line,
+            reading as unrelated to the sentence it qualifies. The NBSP closes
+            the break opportunity; nowrap keeps the pair together if the browser
+            still tries. Verified orphaning at 300-310px and 630-670px before
+            this was added.
+          */}
+          <span className="pfm-disclaimer__nowrap">
+            {" "}
           <button
             type="button"
             className="pfm-disclaimer__trigger"
@@ -103,6 +113,7 @@ export function Disclaimer({ idPrefix, text }: Props) {
           >
             {t("legal.why")}
           </button>
+          </span>
         </span>
       </p>
 

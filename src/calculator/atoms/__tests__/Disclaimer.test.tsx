@@ -96,6 +96,18 @@ describe("Disclaimer", () => {
     expect(trigger).toHaveTextContent("Why?");
   });
 
+  // Without this the line can break at the space before the trigger, stranding
+  // it alone on its own line where it reads as unrelated to the sentence it
+  // qualifies. Observed at 300-310px and 630-670px before the fix. jsdom runs
+  // no layout, so the guard is the markup, not the rendered position.
+  it("binds the trigger to the preceding word so it cannot be orphaned", () => {
+    const { container } = renderEn(<Disclaimer idPrefix="t" />);
+    const nowrap = container.querySelector(".pfm-disclaimer__nowrap");
+    expect(nowrap).toBeInTheDocument();
+    expect(nowrap?.textContent).toContain(" ");
+    expect(nowrap?.querySelector(".pfm-disclaimer__trigger")).toBeInTheDocument();
+  });
+
   it("isolates Latin runs inside Hebrew text with bdi", async () => {
     render(
       <LanguageProvider language="he" setLanguage={() => {}}>

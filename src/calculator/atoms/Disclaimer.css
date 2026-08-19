@@ -69,6 +69,16 @@
 }
 
 /*
+ * `display: flex` above outranks the UA stylesheet's `[hidden] { display: none }`,
+ * so without this the collapsed panel still paints — an empty box sitting over
+ * the summary sentence at z-index 5, hiding the very notice it belongs to.
+ * jsdom resolves no cascade, so only a real browser catches this.
+ */
+.pfm-calc .pfm-disclaimer__panel[hidden] {
+  display: none;
+}
+
+/*
  * align-self, not inset-inline-end: the panel is a scroll container, and an
  * absolutely-positioned child of one scrolls away with the content. Flex
  * alignment also mirrors correctly in RTL for free.
@@ -123,6 +133,19 @@
   }
   .pfm-calc .pfm-disclaimer__panel {
     font-size: var(--pfm-fs-base);
-    max-inline-size: 60ch;
+    /*
+     * Each point is a discrete clause, not flowing prose, so the ~60ch measure
+     * that suits paragraphs only forces one-line clauses onto a second line.
+     * A wider cap lets every point sit on its own line where there is room,
+     * which is easier to scan; the cap still stops the text running the full
+     * width of a very wide host.
+     */
+    max-inline-size: 100ch;
+  }
+  /* Keeps each clause on one line when the panel is wide enough to hold it,
+     rather than wrapping mid-sentence. Falls back to normal wrapping when it
+     genuinely does not fit. */
+  .pfm-calc .pfm-disclaimer__body li {
+    text-wrap: pretty;
   }
 }

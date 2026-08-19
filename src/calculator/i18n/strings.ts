@@ -90,8 +90,10 @@ const en: Dictionary = {
   // here would leave one audience worse informed.
   "legal.summary":
     "Theoretical estimate only — actual weight may differ. Not a quote or binding commitment.",
-  "legal.why": "Why",
-  "legal.whyLabel": "Why weights vary",
+  "legal.why": "Why?",
+  // Must contain "legal.why" verbatim — SC 2.5.3 Label in Name, so a speech-input
+  // user can activate the control by saying the word they can see.
+  "legal.whyLabel": "Why? Explains why weights vary",
   "legal.close": "Close",
   "legal.heading": "Legal notice",
   "legal.point1":
@@ -188,8 +190,10 @@ const he: Dictionary = {
 
   "legal.summary":
     "משקל תיאורטי להערכה בלבד — ייתכנו הפרשים בפועל. אינו מהווה הצעת מחיר או התחייבות.",
-  "legal.why": "למה",
-  "legal.whyLabel": "למה המשקלים משתנים",
+  // The "?" sits first in source order: in an RTL run the bidi algorithm
+  // places it at the visual end, i.e. the left of the word.
+  "legal.why": "?למה",
+  "legal.whyLabel": "?למה המשקלים משתנים",
   "legal.close": "סגור",
   "legal.heading": "הבהרה משפטית",
   "legal.point1":

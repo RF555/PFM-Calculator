@@ -3,6 +3,7 @@ import { MaterialCalculator } from "../calculator";
 import "./TestBed.css";
 
 const WIDTHS = [320, 480, 768, 1200];
+const DEFAULT_WIDTH = 1400;
 
 /**
  * Review surface for the assembled calculator. The frame stands in for an
@@ -10,7 +11,7 @@ const WIDTHS = [320, 480, 768, 1200];
  * real width rather than the viewport.
  */
 export function TestBed() {
-  const [width, setWidth] = useState(560);
+  const [width, setWidth] = useState(DEFAULT_WIDTH);
   const [density, setDensity] = useState<"compact" | "comfortable">("comfortable");
   const [lastResult, setLastResult] = useState<string | null>(null);
 

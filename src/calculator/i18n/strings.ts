@@ -26,9 +26,9 @@ const en: Dictionary = {
   "ui.dimensions": "Dimensions",
   "ui.results": "Results",
   "ui.volume": "Volume",
-  "ui.unitWeight": "Unit weight",
-  "ui.weight": "Weight",
-  "ui.total": "Total (× {quantity})",
+  "ui.unitWeight": "Theoretical unit weight",
+  "ui.weight": "Theoretical weight",
+  "ui.total": "Theoretical total (× {quantity})",
   // Dimension field label: "Diameter (mm)"
   "ui.fieldWithUnit": "{label} ({unit})",
 
@@ -84,6 +84,27 @@ const en: Dictionary = {
   "a11y.increaseQuantity": "Increase quantity",
   "a11y.densityOverridden":
     "Density overridden: {value} g/cm³, catalog value {catalog} g/cm³",
+
+  // Legal disclaimer. The summary is always visible; the points sit behind a
+  // tap-only panel. Both languages carry identical content — an asymmetry
+  // here would leave one audience worse informed.
+  "legal.summary":
+    "Theoretical estimate only — actual weight may differ. Not a quote or binding commitment.",
+  "legal.why": "Why",
+  "legal.whyLabel": "Why weights vary",
+  "legal.close": "Close",
+  "legal.heading": "Legal notice",
+  "legal.point1":
+    "Density is taken from the catalog as a nominal value; actual density varies between heats.",
+  // [[…]] marks a Latin/numeric run that must stay LTR inside RTL text.
+  "legal.point2":
+    "Actual weight may differ due to manufacturing tolerances under standards such as [[EN 10029]] and [[ASTM A6]].",
+  "legal.point3": "For cut material, add a saw kerf allowance for each cut face.",
+  "legal.point4": "Displayed values are rounded for presentation.",
+  "legal.point5":
+    "The results do not constitute an offer, a price quotation, or a binding commitment.",
+  "legal.point6":
+    "It is the user's responsibility to verify the values entered and to confirm the weight with the supplier before ordering.",
 };
 
 const he: Dictionary = {
@@ -108,9 +129,9 @@ const he: Dictionary = {
   "ui.dimensions": "מידות",
   "ui.results": "תוצאות",
   "ui.volume": "נפח",
-  "ui.unitWeight": "משקל ליחידה",
-  "ui.weight": "משקל",
-  "ui.total": "סה\"כ (× {quantity})",
+  "ui.unitWeight": "משקל תיאורטי ליחידה",
+  "ui.weight": "משקל תיאורטי",
+  "ui.total": "סה\"כ תיאורטי (× {quantity})",
   "ui.fieldWithUnit": "{label} ({unit})",
 
   "unit.mm": "מ\"מ",
@@ -164,6 +185,22 @@ const he: Dictionary = {
   "a11y.decreaseQuantity": "הפחת כמות",
   "a11y.increaseQuantity": "הוסף כמות",
   "a11y.densityOverridden": "צפיפות מותאמת: {value}, ערך מקורי {catalog}",
+
+  "legal.summary":
+    "משקל תיאורטי להערכה בלבד — ייתכנו הפרשים בפועל. אינו מהווה הצעת מחיר או התחייבות.",
+  "legal.why": "למה",
+  "legal.whyLabel": "למה המשקלים משתנים",
+  "legal.close": "סגור",
+  "legal.heading": "הבהרה משפטית",
+  "legal.point1":
+    "הצפיפות נלקחת מהקטלוג ומהווה ערך נומינלי; הצפיפות בפועל משתנה בין יציקות.",
+  "legal.point2":
+    "המשקל בפועל עשוי להיות שונה בשל סטיות ייצור (טולרנסים) לפי תקנים כגון [[EN 10029]] ו-[[ASTM A6]].",
+  "legal.point3": "בחישוב עבור חיתוכים יש להוסיף פחת חיתוך בכל שטח חיתוך.",
+  "legal.point4": "הערכים המוצגים מעוגלים לצורכי תצוגה.",
+  "legal.point5": "אין בתוצאות משום הצעה, הצעת מחיר או התחייבות מחייבת.",
+  "legal.point6":
+    "באחריות המשתמש לוודא את הנתונים שהזין ולאמת את המשקל מול הספק לפני ביצוע הזמנה.",
 };
 
 export const STRINGS: Record<Language, Dictionary> = { he, en };

@@ -37,6 +37,47 @@ describe("dictionaries", () => {
       expect(STRINGS[language]["error.densityRange"]).toContain("{max}");
     }
   });
+
+  it("has every legal key in both languages", () => {
+    const keys = [
+      "legal.summary",
+      "legal.why",
+      "legal.whyLabel",
+      "legal.close",
+      "legal.heading",
+      "legal.point1",
+      "legal.point2",
+      "legal.point3",
+      "legal.point4",
+      "legal.point5",
+      "legal.point6",
+    ];
+    for (const key of keys) {
+      expect(STRINGS.en[key], `en.${key}`).toBeTruthy();
+      expect(STRINGS.he[key], `he.${key}`).toBeTruthy();
+    }
+  });
+
+  // SC 2.5.3 Label in Name: the accessible name must contain the visible
+  // word, or speech-input users cannot activate the control by saying what
+  // they see.
+  it("keeps the visible trigger word inside its accessible name", () => {
+    for (const language of ["en", "he"] as const) {
+      expect(STRINGS[language]["legal.whyLabel"])
+        .toContain(STRINGS[language]["legal.why"]);
+    }
+  });
+
+  it("keeps the quantity placeholder in the revised total label", () => {
+    for (const language of ["en", "he"] as const) {
+      expect(STRINGS[language]["ui.total"]).toContain("{quantity}");
+    }
+  });
+
+  it("labels the weight results as theoretical", () => {
+    expect(STRINGS.en["ui.weight"]).toBe("Theoretical weight");
+    expect(STRINGS.he["ui.weight"]).toBe("משקל תיאורטי");
+  });
 });
 
 describe("translate", () => {

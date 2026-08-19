@@ -88,7 +88,7 @@ export function Disclaimer({ idPrefix, text }: Props) {
     <section className="pfm-disclaimer" ref={rootRef}>
       <p className="pfm-disclaimer__summary">
         <span>
-          {summary}
+          {isolateLatinRuns(summary)}
           <button
             type="button"
             className="pfm-disclaimer__trigger"

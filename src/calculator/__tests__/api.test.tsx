@@ -169,6 +169,19 @@ describe("public API", () => {
     expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
   });
 
+  it("falls back to the bundled copy when a host supplies a whitespace-only override", () => {
+    render(
+      <MaterialCalculator
+        defaultLanguage="en"
+        disclaimer={{
+          summary: { he: "   ", en: "   " },
+          points: { he: ["", "  "], en: ["", "  "] },
+        }}
+      />
+    );
+    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+  });
+
   it("gives two instances distinct disclaimer panel ids", () => {
     const { container } = render(
       <>

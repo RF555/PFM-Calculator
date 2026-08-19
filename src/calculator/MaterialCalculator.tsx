@@ -82,9 +82,11 @@ export function MaterialCalculator({
     const summary = disclaimer?.summary?.[language];
     const points = disclaimer?.points?.[language];
     return {
-      summary: typeof summary === "string" && summary ? summary : undefined,
+      summary: typeof summary === "string" && summary.trim() ? summary : undefined,
       points:
-        Array.isArray(points) && points.length && points.every((p) => typeof p === "string")
+        Array.isArray(points) &&
+        points.length &&
+        points.every((p) => typeof p === "string" && p.trim())
           ? points
           : undefined,
     };

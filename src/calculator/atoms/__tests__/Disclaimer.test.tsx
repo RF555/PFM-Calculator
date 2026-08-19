@@ -105,6 +105,40 @@ describe("Disclaimer", () => {
     expect(isolated).toContain("ASTM A6");
   });
 
+  it("never leaks raw [[…]] markers into the rendered panel", async () => {
+    const { container } = render(
+      <LanguageProvider language="he" setLanguage={() => {}}>
+        <Disclaimer idPrefix="t" />
+      </LanguageProvider>
+    );
+    await userEvent.click(screen.getByRole("button", { name: "למה המשקלים משתנים" }));
+    expect(container.textContent).not.toContain("[[");
+    expect(container.textContent).not.toContain("]]");
+  });
+
+  it("isolates a [[…]]-marked summary override and strips the markers", () => {
+    render(
+      <LanguageProvider language="he" setLanguage={() => {}}>
+        <Disclaimer idPrefix="t" text={{ summary: "עדכון לפי [[EN 10029]]." }} />
+      </LanguageProvider>
+    );
+    const bdi = screen.getByText("EN 10029");
+    expect(bdi.tagName).toBe("BDI");
+    expect(screen.queryByText(/\[\[/)).not.toBeInTheDocument();
+  });
+
+  it("isolates [[…]]-marked points overrides and strips the markers", async () => {
+    render(
+      <LanguageProvider language="he" setLanguage={() => {}}>
+        <Disclaimer idPrefix="t" text={{ points: ["ראה תקן [[ASTM A6]] לפרטים."] }} />
+      </LanguageProvider>
+    );
+    await userEvent.click(screen.getByRole("button", { name: "למה המשקלים משתנים" }));
+    const bdi = screen.getByText("ASTM A6");
+    expect(bdi.tagName).toBe("BDI");
+    expect(screen.queryByText(/\[\[/)).not.toBeInTheDocument();
+  });
+
   it("closes on a click outside without stealing focus back", async () => {
     renderEn(
       <>
@@ -165,10 +199,35 @@ describe("Disclaimer styles", () => {
     expect(rule(".pfm-disclaimer__body")).toContain("overflow-y");
   });
 
+  // Returns EVERY rule body for a selector, not just the first — used for
+  // negative assertions where relying on match order would be unsound.
+  const allRules = (selector: string) => {
+    const bodies: string[] = [];
+    let from = 0;
+    for (;;) {
+      const start = css.indexOf(selector + " {", from);
+      if (start === -1) break;
+      const end = css.indexOf("}", start);
+      bodies.push(css.slice(start, end));
+      from = end + 1;
+    }
+    expect(bodies.length, `${selector} rule is missing`).toBeGreaterThan(0);
+    return bodies;
+  };
+
   // Berman v. Freedom Financial rejected notice set in "tiny gray font".
   // The summary must use the full foreground token, not the muted one.
   it("does not mute the summary text", () => {
     expect(rule(".pfm-disclaimer__summary")).toContain("var(--pfm-fg)");
-    expect(rule(".pfm-disclaimer__summary")).not.toContain("var(--pfm-muted)");
+    // ".pfm-disclaimer__summary" appears twice in the stylesheet: once as the
+    // base rule and again inside the @container block, which carries no
+    // color declaration at all. rule() above returns only the FIRST match,
+    // so a negative assertion built on it would silently start inspecting
+    // the @container block (and thus always pass) if the file were ever
+    // reordered so that block came first. Checking every occurrence makes
+    // the guard correct regardless of rule order.
+    for (const body of allRules(".pfm-disclaimer__summary")) {
+      expect(body).not.toContain("var(--pfm-muted)");
+    }
   });
 });

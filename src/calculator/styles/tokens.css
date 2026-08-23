@@ -20,6 +20,7 @@
   --pfm-font: system-ui, -apple-system, "Segoe UI", sans-serif;
   --pfm-font-num: ui-monospace, "SF Mono", "Cascadia Mono", Menlo, monospace;
   --pfm-fs-sm: 0.8125rem;
+  --pfm-fs-label: 0.9375rem;  /* field labels, matching body text */
   --pfm-fs-base: 0.9375rem;
   --pfm-fs-lg: 1.25rem;
   --pfm-fs-xl: 1.75rem;

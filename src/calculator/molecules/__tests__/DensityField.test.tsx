@@ -1,6 +1,7 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useEffect, useRef, useState } from "react";
+
 import { describe, expect, it, vi } from "vitest";
 import { LanguageProvider } from "../../i18n/LanguageContext";
 import { DensityField } from "../DensityField";
@@ -196,5 +197,67 @@ describe("DensityField", () => {
     rerender(<Harness gradeId={null} catalogDensity={null} />);
     expect(screen.queryByRole("textbox")).not.toBeInTheDocument();
     expect(screen.getByText("Select a grade first")).toBeInTheDocument();
+  });
+});
+
+/**
+ * Custom-density mode. There is no catalog figure to display or fall back to,
+ * so the field is the whole point of the mode: it opens as an input rather
+ * than behind the Edit button that reveals an override elsewhere.
+ */
+describe("DensityField in custom-density mode", () => {
+  const custom = { customDensity: true, gradeId: null, catalogDensity: null };
+
+  it("opens directly as an empty input, with no Edit step", () => {
+    renderField(custom);
+    expect(screen.getByRole("textbox")).toHaveValue("");
+    expect(screen.queryByRole("button", { name: /edit/i })).not.toBeInTheDocument();
+  });
+
+  // The null catalog density is the normal starting state here, not the
+  // "nothing to edit" state that closes the editor for a catalog grade.
+  it("does not close itself despite having no catalog density", () => {
+    renderField(custom);
+    expect(screen.getByRole("textbox")).toBeInTheDocument();
+    expect(screen.queryByText("Select a grade first")).not.toBeInTheDocument();
+  });
+
+  // Driven through a stateful wrapper rather than the static-prop helper: the
+  // custom-mode input is controlled by `raw`, so a caller that never echoes
+  // keystrokes back would leave it stuck on the first character.
+  it("reports what the user types", async () => {
+    function CustomHarness() {
+      const [raw, setRaw] = useState("");
+      return (
+        <LanguageProvider language="en" setLanguage={() => {}}>
+          <div className="pfm-calc">
+            <DensityField
+              idPrefix="t"
+              gradeId={null}
+              catalogDensity={null}
+              customDensity
+              override={null}
+              raw={raw}
+              onChange={setRaw}
+            />
+          </div>
+        </LanguageProvider>
+      );
+    }
+    render(<CustomHarness />);
+    await userEvent.type(screen.getByRole("textbox"), "2.7");
+    expect(screen.getByRole("textbox")).toHaveValue("2.7");
+  });
+
+  // "edited" means "differs from the catalog". With no catalog value behind
+  // it the badge would be claiming a comparison that was never made.
+  it("shows no edited badge, having no catalog value to differ from", () => {
+    renderField({ ...custom, override: 2700, raw: "2.7" });
+    expect(screen.queryByText("edited")).not.toBeInTheDocument();
+  });
+
+  it("shows the range error like any other density entry", () => {
+    renderField({ ...custom, raw: "99999", error: "Must be between 0.001 and 25 g/cm³" });
+    expect(screen.getByText("Must be between 0.001 and 25 g/cm³")).toBeInTheDocument();
   });
 });

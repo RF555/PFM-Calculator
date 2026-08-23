@@ -4,7 +4,7 @@ export type { DisclaimerText } from "./atoms/Disclaimer";
 export type { CalculationResult } from "./organisms/CalculatorForm";
 export type { Grade, Material, MaterialsFile } from "./model/schema";
 export type { MassUnit, Unit } from "./model/types";
-export { validateMaterials } from "./model/schema";
+export { validateMaterials, CUSTOM_MATERIAL_ID } from "./model/schema";
 // The registry stores translation keys, so shapeLabel — not SHAPES[id].label —
 // renders a human-readable name for a ShapeId a host receives via onCalculate.
 export { SHAPES, SHAPE_IDS, shapeLabel } from "./model/shapes";

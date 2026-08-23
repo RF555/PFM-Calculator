@@ -7,6 +7,12 @@ import "./Combobox.css";
 export interface ComboboxOption {
   value: string;
   label: string;
+  /**
+   * Sets this row apart from the rest of the list — a rule above it and its
+   * own styling — for an entry that is an action rather than one more item of
+   * the same kind. Surfaced as a `data-custom` attribute for CSS to hook.
+   */
+  distinct?: boolean;
 }
 
 interface ComboboxProps {
@@ -112,6 +118,7 @@ export function Combobox({
                   key={o.value}
                   value={o.label}
                   className="pfm-combobox__option"
+                  data-custom={o.distinct || undefined}
                   onSelect={() => {
                     onChange(o.value);
                     setOpen(false);

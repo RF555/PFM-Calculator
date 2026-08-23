@@ -13,7 +13,7 @@ import { ShapeCombobox } from "../molecules/ShapeCombobox";
 import { m3ToCm3, mm3ToM3, weightKg } from "../model/calculate";
 import { MAX_DENSITY_DISPLAY, MIN_DENSITY_DISPLAY, gPerCm3 } from "../model/density";
 import { calcReducer, initialState } from "../model/reducer";
-import type { Material } from "../model/schema";
+import { CUSTOM_MATERIAL_ID, type Material } from "../model/schema";
 import { SHAPES, checkConstraints, volumeMm3, type ShapeId } from "../model/shapes";
 import type { DimensionFieldDef, MassUnit, Unit } from "../model/types";
 import { formatDimension, mmToInch } from "../model/units";
@@ -21,8 +21,13 @@ import { DimensionFieldset } from "./DimensionFieldset";
 import "./CalculatorForm.css";
 
 export interface CalculationResult {
-  materialId: string;
-  gradeId: string;
+  /**
+   * Null when the user supplied a density directly instead of picking a
+   * material, in which case `densityKgM3` is the only description of the
+   * material — do not assume a catalog lookup will resolve these ids.
+   */
+  materialId: string | null;
+  gradeId: string | null;
   shapeId: ShapeId;
   unitKg: number;
   totalKg: number;
@@ -79,6 +84,10 @@ export function CalculatorForm({
   // marked invalid while it is still being typed.
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
+  // The synthetic custom-density entry is not in `materials`, so the lookup
+  // below yields null for it — and with it a null grade. That is what makes
+  // the hand-typed override the only density in force in this mode.
+  const customDensity = state.materialId === CUSTOM_MATERIAL_ID;
   const material = materials.find((m) => m.id === state.materialId) ?? null;
   const grade = material?.grades.find((g) => g.id === state.gradeId) ?? null;
 
@@ -119,10 +128,13 @@ export function CalculatorForm({
   // whenever the result becomes unavailable, so a host that prefills from this
   // never holds a figure the user can no longer see.
   const report = useMemo<CalculationResult | null>(() => {
-    if (!result || !material || !grade || !state.shapeId) return null;
+    if (!result || !state.shapeId) return null;
+    // A catalog calculation needs both ids resolved; a custom-density one has
+    // neither by definition, and is described by densityKgM3 instead.
+    if (!customDensity && (!material || !grade)) return null;
     return {
-      materialId: material.id,
-      gradeId: grade.id,
+      materialId: material?.id ?? null,
+      gradeId: grade?.id ?? null,
       shapeId: state.shapeId,
       unitKg: result.unitKg,
       totalKg: result.unitKg * state.quantity,
@@ -130,7 +142,7 @@ export function CalculatorForm({
       volumeCm3: result.volumeCm3,
       densityKgM3: density!,
     };
-  }, [result, material, grade, state.shapeId, state.quantity, density]);
+  }, [result, material, grade, customDensity, state.shapeId, state.quantity, density]);
 
   // Hosts commonly pass inline arrow callbacks, which get a new identity on
   // every render. Depending on the callback itself would re-run this effect
@@ -211,6 +223,7 @@ export function CalculatorForm({
         <GradeCombobox
           idPrefix={idPrefix}
           material={material}
+          customDensity={customDensity}
           value={state.gradeId}
           onChange={(id) => dispatch({ type: "SELECT_GRADE", gradeId: id })}
         />
@@ -241,6 +254,7 @@ export function CalculatorForm({
           idPrefix={idPrefix}
           gradeId={state.gradeId}
           catalogDensity={grade?.density ?? null}
+          customDensity={customDensity}
           override={state.densityOverride}
           raw={state.densityRaw}
           error={state.densityError ? t(state.densityError, {

@@ -1,6 +1,14 @@
 import type { Localized } from "../i18n/types";
 import { MAX_DENSITY, MIN_DENSITY } from "./density";
 
+/**
+ * Stands in for a material in the dropdown when the user supplies a density
+ * directly instead of picking one. Reserved: a materials file claiming this
+ * id is rejected, so a catalog entry can never shadow the synthetic option.
+ * Namespaced to keep it clear of any plausible real-world material id.
+ */
+export const CUSTOM_MATERIAL_ID = "__custom_density__";
+
 export interface Grade {
   id: string;
   name: Localized<string>;
@@ -55,6 +63,11 @@ export function validateMaterials(data: unknown): MaterialsFile {
 
   for (const m of file.materials) {
     if (!m.id) throw new Error(`material missing id: ${JSON.stringify(m)}`);
+    if (m.id === CUSTOM_MATERIAL_ID) {
+      throw new Error(
+        `material id "${CUSTOM_MATERIAL_ID}" is reserved for the custom-density option`
+      );
+    }
     validateName(m.name, `material "${m.id}"`);
     if (seenMaterialIds.has(m.id)) throw new Error(`duplicate material id: ${m.id}`);
     seenMaterialIds.add(m.id);

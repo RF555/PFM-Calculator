@@ -7,9 +7,11 @@ export const DEFAULT_LANGUAGE: Language = "he";
 const en: Dictionary = {
   "ui.material": "Material",
   "ui.materialPlaceholder": "Select material",
+  "ui.customDensity": "Custom density",
   "ui.grade": "Grade",
   "ui.gradePlaceholder": "Select grade",
   "ui.gradeDisabledHint": "Select a material first",
+  "ui.gradeCustomHint": "Not needed for custom density",
   "ui.shape": "Shape",
   "ui.shapePlaceholder": "Select shape",
   "ui.quantity": "Quantity",
@@ -112,9 +114,11 @@ const en: Dictionary = {
 const he: Dictionary = {
   "ui.material": "חומר",
   "ui.materialPlaceholder": "בחר חומר",
+  "ui.customDensity": "צפיפות מותאמת אישית",
   "ui.grade": "סוג",
   "ui.gradePlaceholder": "בחר סוג",
   "ui.gradeDisabledHint": "בחר חומר תחילה",
+  "ui.gradeCustomHint": "לא נדרש בצפיפות מותאמת אישית",
   "ui.shape": "צורה",
   "ui.shapePlaceholder": "בחר צורה",
   "ui.quantity": "כמות",

@@ -93,3 +93,43 @@
   color: var(--pfm-muted);
   font-size: var(--pfm-fs-sm);
 }
+
+/*
+ * A row that is an action rather than another item of the same kind — the
+ * material picker's custom-density entry. The rule above it separates it from
+ * the catalog list it sits after.
+ *
+ * margin-top carries the gap; the border sits on the row itself so it spans
+ * the popover's full width. Hidden while a search filters the list, where the
+ * entries above may be gone and a rule would divide nothing from nothing.
+ */
+.pfm-calc .pfm-combobox__option[data-custom] {
+  position: relative;
+  margin-top: 5px;
+}
+
+.pfm-calc .pfm-combobox__option[data-custom]::before {
+  content: "";
+  position: absolute;
+  inset-inline: -4px;
+  top: -3px;
+  border-top: 1px solid var(--pfm-border);
+}
+
+.pfm-calc .pfm-combobox__option[data-custom]:first-child { margin-top: 0; }
+.pfm-calc .pfm-combobox__option[data-custom]:first-child::before { content: none; }
+
+/*
+ * Sized to the text rather than to the shape artwork's fixed box: this icon
+ * sits beside a label in a list of otherwise icon-less rows, so it reads as a
+ * mark on the text, not as a picture in its own column.
+ */
+.pfm-calc .pfm-combobox__custom-icon {
+  flex: none;
+  color: var(--pfm-muted);
+}
+
+.pfm-calc .pfm-combobox__option[data-selected="true"] .pfm-combobox__custom-icon,
+.pfm-calc .pfm-combobox__trigger .pfm-combobox__custom-icon {
+  color: var(--pfm-fg);
+}

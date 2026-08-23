@@ -8,9 +8,18 @@ interface Props {
   material: Material | null;
   value: string | null;
   onChange: (gradeId: string) => void;
+  /**
+   * The user is supplying a density directly, so no grade applies. Disabled
+   * either way — `material` is null in this mode — but the hint has to say
+   * which of the two reasons it is, or it tells the user to select a material
+   * they have already selected.
+   */
+  customDensity?: boolean;
 }
 
-export function GradeCombobox({ idPrefix, material, value, onChange }: Props) {
+export function GradeCombobox({
+  idPrefix, material, value, onChange, customDensity,
+}: Props) {
   const { language } = useLanguage();
   const t = useTranslate();
 
@@ -32,8 +41,8 @@ export function GradeCombobox({ idPrefix, material, value, onChange }: Props) {
       }
       value={value}
       onChange={onChange}
-      disabled={!material}
-      disabledHint={t("ui.gradeDisabledHint")}
+      disabled={!material || customDensity}
+      disabledHint={t(customDensity ? "ui.gradeCustomHint" : "ui.gradeDisabledHint")}
     />
   );
 }

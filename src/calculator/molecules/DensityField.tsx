@@ -20,6 +20,12 @@ export interface DensityFieldProps {
   raw: string;
   /** Resolved error message, or undefined when the value is valid. */
   error?: string;
+  /**
+   * The user is supplying the density directly instead of picking a material.
+   * There is no catalog figure to show, fall back to, or compare against, so
+   * the field opens as an input and the "edited" badge is suppressed.
+   */
+  customDensity?: boolean;
   onChange: (raw: string) => void;
 }
 
@@ -38,7 +44,7 @@ export interface DensityFieldProps {
  * button; there is no separate control for it.
  */
 export function DensityField({
-  idPrefix, gradeId, catalogDensity, override, raw, error, onChange,
+  idPrefix, gradeId, catalogDensity, override, raw, error, customDensity, onChange,
 }: DensityFieldProps) {
   const t = useTranslate();
   const [editing, setEditing] = useState(false);
@@ -61,6 +67,13 @@ export function DensityField({
   // either source there is nothing to show or edit. Narrowing `effective`
   // here also lets the read-only branch below use it as a plain number.
   const disabled = effective === null;
+  // The Edit button reveals an override of a catalog figure. In custom mode
+  // there is no catalog figure, so entry is the whole point of the field and
+  // it opens as an input.
+  const showInput = editing || customDensity;
+  // "edited" reads as "differs from the catalog"; with no catalog value the
+  // badge would assert a comparison that was never made.
+  const showEditedBadge = override !== null && !customDensity;
   // Unit lives in the label, as it does for every dimension field, so the
   // value beside it stays a bare number.
   const label = t("ui.fieldWithUnit", {
@@ -68,6 +81,9 @@ export function DensityField({
     unit: t("unit.gcm3"),
   });
 
+  // Focus follows the user's own click on Edit. In custom mode the input is
+  // there from the moment the material is picked, so stealing focus would
+  // pull it out of the material combobox the user is still using.
   useEffect(() => {
     if (editing) inputRef.current?.querySelector("input")?.focus();
   }, [editing]);
@@ -89,13 +105,16 @@ export function DensityField({
   // A grade with no catalog density leaves nothing to edit, so close the
   // field. Focus would otherwise fall to the document body: the Edit button
   // is itself disabled in this state and cannot receive it.
+  //
+  // Custom mode is exempt: an absent density is its normal starting state
+  // rather than a dead end, and the input is the only way out of it.
   useEffect(() => {
-    if (!disabled) return;
+    if (!disabled || customDensity) return;
     setEditing((was) => {
       if (was) containerRef.current?.focus();
       return false;
     });
-  }, [disabled]);
+  }, [disabled, customDensity]);
 
   function beginEditing() {
     // `raw` is already the displayed unit; `effective` is canonical.
@@ -108,17 +127,20 @@ export function DensityField({
     onChange(next);
   }
 
-  if (editing) {
+  if (showInput) {
     return (
       <div className="pfm-material-density pfm-material-density--editing" ref={inputRef}>
         <NumberField
           id={id}
           label={label}
-          value={text}
+          // Custom mode has no seeding step to fill `text`, so the field is
+          // driven by the caller's `raw` — which starts empty and is echoed
+          // back on every keystroke.
+          value={customDensity ? raw : text}
           error={error}
           onChange={handleChange}
         />
-        {override !== null && (
+        {showEditedBadge && (
           <span className="pfm-material-density__badge pfm-material-density__badge--float">
             {t("ui.densityEdited")}
           </span>
@@ -147,7 +169,7 @@ export function DensityField({
           </span>
         )}
 
-        {override !== null && (
+        {showEditedBadge && (
           <span className="pfm-material-density__badge">{t("ui.densityEdited")}</span>
         )}
 

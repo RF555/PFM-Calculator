@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { CUSTOM_MATERIAL_ID } from "../schema";
 import { calcReducer, initialState } from "../reducer";
 
 const base = initialState({ defaultUnit: "mm", defaultMassUnit: "kg", defaultQuantity: 1 });
@@ -193,5 +194,63 @@ describe("calcReducer", () => {
     expect(s.densityOverride).toBeNull();
     expect(s.densityRaw).toBe("");
     expect(s.densityError).toBe("");
+  });
+});
+
+/**
+ * Custom density is selected through the ordinary material dropdown, so it
+ * travels the same SELECT_MATERIAL path as any real material. These cover the
+ * state that path must leave behind for the form to treat it as its own mode.
+ */
+describe("calcReducer custom density", () => {
+  const custom = calcReducer(base, {
+    type: "SELECT_MATERIAL",
+    materialId: CUSTOM_MATERIAL_ID,
+  });
+
+  it("selects custom density as the material with no grade", () => {
+    expect(custom.materialId).toBe(CUSTOM_MATERIAL_ID);
+    expect(custom.gradeId).toBeNull();
+  });
+
+  // The field opens empty and untouched. `densityCleared` must stay false so
+  // the form suppresses the result via a null density — the "user deleted a
+  // figure" path would be a lie about a field nobody has typed in yet.
+  it("opens with an empty, untouched density field", () => {
+    expect(custom.densityOverride).toBeNull();
+    expect(custom.densityRaw).toBe("");
+    expect(custom.densityCleared).toBe(false);
+    expect(custom.densityError).toBe("");
+  });
+
+  it("accepts a typed density while no grade is selected", () => {
+    const s = calcReducer(custom, { type: "SET_DENSITY", raw: "2.7" });
+    expect(s.densityOverride).toBe(2700);
+    expect(s.gradeId).toBeNull();
+  });
+
+  // Leaving custom mode must not carry the hand-typed figure onto a catalog
+  // grade, which would quote a real material at an unrelated density.
+  it("drops the typed density when a real material is chosen afterwards", () => {
+    const s = calcReducer(
+      calcReducer(custom, { type: "SET_DENSITY", raw: "2.7" }),
+      { type: "SELECT_MATERIAL", materialId: "steel" }
+    );
+    expect(s.densityOverride).toBeNull();
+    expect(s.densityRaw).toBe("");
+  });
+
+  it("drops a catalog grade's override when switching into custom density", () => {
+    const withGrade = calcReducer(
+      calcReducer(base, { type: "SELECT_MATERIAL", materialId: "steel" }),
+      { type: "SELECT_GRADE", gradeId: "steel.carbon" }
+    );
+    const s = calcReducer(
+      calcReducer(withGrade, { type: "SET_DENSITY", raw: "7.8" }),
+      { type: "SELECT_MATERIAL", materialId: CUSTOM_MATERIAL_ID }
+    );
+    expect(s.gradeId).toBeNull();
+    expect(s.densityOverride).toBeNull();
+    expect(s.densityRaw).toBe("");
   });
 });

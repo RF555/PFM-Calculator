@@ -415,3 +415,113 @@ describe("CalculatorForm", () => {
     expect(screen.getByText("Custom notice.")).toBeInTheDocument();
   });
 });
+
+/**
+ * Custom density: the user supplies a density directly and never picks a
+ * material or grade. Everything downstream of the density — geometry,
+ * quantity, units — behaves exactly as it does for a catalog material.
+ */
+describe("CalculatorForm custom density", () => {
+  async function chooseCustom() {
+    await pick("Material", "Custom density");
+  }
+
+  const densityBox = () => screen.getByRole("textbox", { name: /density/i });
+
+  it("calculates from a hand-entered density with no grade selected", async () => {
+    setup();
+    await chooseCustom();
+    await userEvent.type(densityBox(), "2.7");
+    await pick("Shape", "Round Bar");
+    await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+
+    // π/4 × 50² × 1000 mm³ = 1963495.4 mm³ → ×2.7 g/cm³ = 5.3014 kg
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
+  });
+
+  it("disables the grade field and says why", async () => {
+    setup();
+    await chooseCustom();
+    const grade = screen.getByRole("combobox", { name: "Grade" });
+    expect(grade).toBeDisabled();
+    expect(grade).toHaveTextContent("Not needed for custom density");
+  });
+
+  it("offers the density input immediately, with no Edit step", async () => {
+    setup();
+    await chooseCustom();
+    expect(densityBox()).toHaveValue("");
+    expect(screen.queryByRole("button", { name: /edit/i })).not.toBeInTheDocument();
+  });
+
+  // Nothing to compute from until a density is typed, and an empty field must
+  // not fall through to some other material's figure.
+  it("withholds the result until a density is entered", async () => {
+    setup();
+    await chooseCustom();
+    await pick("Shape", "Round Bar");
+    await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
+  });
+
+  it("withholds the result while the density is out of range", async () => {
+    setup();
+    await chooseCustom();
+    await userEvent.type(densityBox(), "99999");
+    await pick("Shape", "Round Bar");
+    await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("—");
+    expect(screen.getByText(/Must be between/)).toBeInTheDocument();
+  });
+
+  // Regression guard for the mode switch: the hand-typed figure belonged to
+  // custom density, and carrying it over would quote real steel at it.
+  it("returns to the catalog density when a real material is chosen after", async () => {
+    setup();
+    await chooseCustom();
+    await userEvent.type(densityBox(), "2.7");
+    await pick("Shape", "Round Bar");
+    await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("5.3014 kg");
+
+    await pick("Material", "Steel");
+    await pick("Grade", "Carbon Steel");
+    // Steel's catalog 7.85 g/cm³, not the 2.7 typed a moment ago.
+    expect(screen.getByTestId("total-primary")).toHaveTextContent("15.4134 kg");
+  });
+
+  it("reports the result with no material or grade id", async () => {
+    const onCalculate = vi.fn();
+    setup({ onCalculate });
+    await chooseCustom();
+    await userEvent.type(densityBox(), "2.7");
+    await pick("Shape", "Round Bar");
+    await userEvent.type(screen.getByLabelText("Diameter (mm)"), "50");
+    await userEvent.type(screen.getByLabelText("Length (mm)"), "1000");
+
+    const last = onCalculate.mock.calls.at(-1)![0];
+    expect(last).not.toBeNull();
+    expect(last.materialId).toBeNull();
+    expect(last.gradeId).toBeNull();
+    expect(last.densityKgM3).toBe(2700);
+    expect(last.unitKg).toBeCloseTo(5.3014, 3);
+  });
+
+  it("returns to no material on reset", async () => {
+    setup();
+    await chooseCustom();
+    await userEvent.type(densityBox(), "2.7");
+    await userEvent.click(screen.getByRole("button", { name: "Reset" }));
+
+    expect(screen.getByRole("combobox", { name: "Material" }))
+      .toHaveTextContent("Select material");
+    expect(screen.getByRole("combobox", { name: "Grade" }))
+      .toHaveTextContent("Select a material first");
+  });
+});

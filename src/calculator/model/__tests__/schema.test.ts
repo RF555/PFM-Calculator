@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import materials from "../../data/materials.json";
-import { validateMaterials } from "../schema";
+import { CUSTOM_MATERIAL_ID, validateMaterials } from "../schema";
 
 describe("bundled materials data", () => {
   it("passes validation", () => {
@@ -42,6 +42,21 @@ describe("validateMaterials", () => {
 
   it("accepts a well-formed file", () => {
     expect(() => validateMaterials(valid)).not.toThrow();
+  });
+
+  // The custom-density entry is synthesised into the dropdown by id. A real
+  // material claiming that id would shadow it, so the collision is caught
+  // here — at the data boundary — rather than showing up as a dropdown row
+  // that selects the wrong thing.
+  it("rejects a material using the reserved custom-density id", () => {
+    const clash = {
+      version: 2,
+      materials: [
+        { id: CUSTOM_MATERIAL_ID, name: { he: "משהו", en: "Something" },
+          grades: [{ id: "x", name: { he: "א", en: "A" }, density: 7850 }] },
+      ],
+    };
+    expect(() => validateMaterials(clash)).toThrow(/reserved/i);
   });
 
   it("rejects a material with no grades", () => {

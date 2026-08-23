@@ -1189,6 +1189,14 @@
             "en": "Gr.12"
           },
           "density": 4500
+        },
+        {
+          "id": "titanium.gr-23-ti-6al-4v-eli",
+          "name": {
+            "he": "Gr.23 (Ti-6Al-4V ELI)",
+            "en": "Gr.23 (Ti-6Al-4V ELI)"
+          },
+          "density": 4430
         }
       ]
     },
@@ -1421,14 +1429,14 @@
       ]
     },
     {
-      "id": "specialty-refractory-metals",
+      "id": "special-metals",
       "name": {
-        "he": "מתכות מיוחדות ועקשוריות",
-        "en": "Specialty & Refractory Metals"
+        "he": "מתכות מיוחדות",
+        "en": "Special Metals"
       },
       "grades": [
         {
-          "id": "specialty-refractory-metals.gold",
+          "id": "special-metals.gold",
           "name": {
             "he": "זהב",
             "en": "Gold"
@@ -1436,7 +1444,7 @@
           "density": 19320
         },
         {
-          "id": "specialty-refractory-metals.molybdenum",
+          "id": "special-metals.molybdenum",
           "name": {
             "he": "מוליבדן",
             "en": "Molybdenum"
@@ -1444,7 +1452,7 @@
           "density": 10280
         },
         {
-          "id": "specialty-refractory-metals.platinum",
+          "id": "special-metals.platinum",
           "name": {
             "he": "פלטינה",
             "en": "Platinum"
@@ -1452,7 +1460,7 @@
           "density": 21450
         },
         {
-          "id": "specialty-refractory-metals.silver",
+          "id": "special-metals.silver",
           "name": {
             "he": "כסף",
             "en": "Silver"
@@ -1460,7 +1468,7 @@
           "density": 10490
         },
         {
-          "id": "specialty-refractory-metals.tantalum",
+          "id": "special-metals.tantalum",
           "name": {
             "he": "טנטלום",
             "en": "Tantalum"
@@ -1468,7 +1476,7 @@
           "density": 16650
         },
         {
-          "id": "specialty-refractory-metals.tin",
+          "id": "special-metals.tin",
           "name": {
             "he": "בדיל",
             "en": "Tin"
@@ -1476,7 +1484,7 @@
           "density": 7290
         },
         {
-          "id": "specialty-refractory-metals.zinc",
+          "id": "special-metals.zinc",
           "name": {
             "he": "אבץ",
             "en": "Zinc"
@@ -1484,7 +1492,7 @@
           "density": 7140
         },
         {
-          "id": "specialty-refractory-metals.zirconium",
+          "id": "special-metals.zirconium",
           "name": {
             "he": "זירקוניום",
             "en": "Zirconium"

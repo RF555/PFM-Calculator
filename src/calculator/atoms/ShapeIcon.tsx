@@ -161,8 +161,8 @@ function boreEdge(
 }
 
 /** Regular hexagon vertices for a given across-flats distance. */
-function hexVertices(cx: number, cy: number, flatToFlat: number): [number, number][] {
-  const r = flatToFlat / Math.sqrt(3); // circumradius from across-flats
+function hexVertices(cx: number, cy: number, acrossFlats: number): [number, number][] {
+  const r = acrossFlats / Math.sqrt(3); // circumradius from across-flats
   return Array.from({ length: 6 }, (_, i) => {
     // Flat top and bottom, matching how hex bar stock is measured.
     const a = (Math.PI / 180) * (30 + 60 * i);

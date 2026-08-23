@@ -63,12 +63,12 @@ export const SHAPES = {
   hexBar: {
     labelKey: "shape.hexBar",
     fields: [
-      { key: "flatToFlat", labelKey: "field.flatToFlat", notation: "A/F" },
+      { key: "acrossFlats", labelKey: "field.acrossFlats", notation: "A/F" },
       { key: "length", labelKey: "field.length", notation: "L" },
     ],
     constraints: [],
     // Area by across-flats F: side = F/sqrt(3), so area = (sqrt(3)/2)*F^2.
-    volume: (d) => (Math.sqrt(3) / 2) * sq(d.flatToFlat) * d.length,
+    volume: (d) => (Math.sqrt(3) / 2) * sq(d.acrossFlats) * d.length,
   },
 
   roundTubeOuter: {

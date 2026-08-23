@@ -84,7 +84,7 @@ describe("volumes match reference values", () => {
     ["roundBar", { diameter: 50, length: 1000 }, 15.4134],
     ["squareBar", { side: 50, length: 1000 }, 19.625],
     ["flatBar", { width: 50, thickness: 10, length: 1000 }, 3.925],
-    ["hexBar", { flatToFlat: 50, length: 1000 }, 16.9957],
+    ["hexBar", { acrossFlats: 50, length: 1000 }, 16.9957],
     ["roundTubeOuter", { outerDiameter: 50, wallThickness: 5, length: 1000 }, 5.5488],
     ["roundTubeInner", { innerDiameter: 40, wallThickness: 5, length: 1000 }, 5.5488],
     ["rectangularHollow", { width: 50, height: 30, wallThickness: 5, length: 1000 }, 5.495],
@@ -157,7 +157,7 @@ describe("hex bar against the industry steel formula", () => {
   // An external reference, so a regression cannot hide behind a matching
   // internal expected value.
   it.each([25, 50, 75])("matches 0.006798*F^2 for F=%i", (F) => {
-    const kg = weightKg(volumeMm3("hexBar", { flatToFlat: F, length: 1000 }), STEEL);
+    const kg = weightKg(volumeMm3("hexBar", { acrossFlats: F, length: 1000 }), STEEL);
     expect(kg).toBeCloseTo(0.006798 * F * F, 2);
   });
 });

@@ -6,7 +6,7 @@
 }
 
 .pfm-calc .pfm-label {
-  font-size: var(--pfm-fs-sm);
+  font-size: var(--pfm-fs-label);
   font-weight: 600;
   color: var(--pfm-muted);
 }

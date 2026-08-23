@@ -573,9 +573,10 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
     <>
       {span("L1", [11, 16], [11, 37], 7)}
       {span("L2", [11, 37], [32, 37], 7)}
-      {/* Anchored mid-wall on the upright, led straight up: L1 already occupies
-          the left margin, so a leader out that way would stack the labels. */}
-      {hint("t", [14, 20], [14, 6])}
+      {/* Spans the upright's top edge, the one place the wall is seen square-on
+          and the full 6 units wide. Offset up rather than out: L1 already
+          claims the left margin. */}
+      {span("t", [11, 16], [17, 16], -8, -5.5)}
       {span("L", [32, 37], [32 + ISO_DX, 37 + ISO_DY], 7)}
     </>
   ),

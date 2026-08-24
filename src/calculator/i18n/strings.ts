@@ -90,25 +90,22 @@ const en: Dictionary = {
   // Legal disclaimer. The summary is always visible; the points sit behind a
   // tap-only panel. Both languages carry identical content — an asymmetry
   // here would leave one audience worse informed.
-  "legal.summary":
-    "Theoretical estimate only — actual weight may differ. Not a quote or binding commitment.",
+  "legal.summary": "Theoretical weight, for estimation only — actual figures may differ.",
   "legal.why": "Why?",
   // Must contain "legal.why" verbatim — SC 2.5.3 Label in Name, so a speech-input
   // user can activate the control by saying the word they can see.
   "legal.whyLabel": "Why? Weights can vary from this estimate",
   "legal.close": "Close",
   "legal.heading": "Legal notice",
-  "legal.point1":
-    "Density is taken from the catalog as a nominal value; actual density varies between heats.",
-  // [[…]] marks a Latin/numeric run that must stay LTR inside RTL text.
+  "legal.point1": "Actual weight may vary due to manufacturing tolerances.",
   "legal.point2":
-    "Actual weight may differ due to manufacturing tolerances under standards such as [[EN 10029]] and [[ASTM A6]].",
-  "legal.point3": "For cut material, add a saw kerf allowance for each cut face.",
-  "legal.point4": "Displayed values are rounded for presentation.",
+    "The calculations exclude saw kerf allowance (which must be added separately for each cut face), and the figures are rounded for convenience and presentation.",
+  "legal.point3":
+    "The data, calculations, and results shown do not constitute a binding offer, a price quotation, a legal representation, or a commitment of any kind.",
+  "legal.point4":
+    "The calculation is intended to provide an indication only. It is the user's sole responsibility to verify the data entered and to confirm the weight, specification, and dimensions in writing with the company / supplier in an official order document before placing an order, arranging transport, or entering into an engagement.",
   "legal.point5":
-    "The results do not constitute an offer, a price quotation, or a binding commitment.",
-  "legal.point6":
-    "It is the user's responsibility to verify the values entered and to confirm the weight with the supplier before ordering.",
+    "The company shall bear no liability of any kind, direct or indirect, for any damage, loss, loss of profit, or expense incurred by the user or by a third party as a result of using these results or relying on them.",
 };
 
 const he: Dictionary = {
@@ -192,23 +189,22 @@ const he: Dictionary = {
   "a11y.increaseQuantity": "הוסף כמות",
   "a11y.densityOverridden": "צפיפות מותאמת: {value}, ערך מקורי {catalog}",
 
-  "legal.summary":
-    "משקל תיאורטי להערכה בלבד — ייתכנו הפרשים בפועל. אינו מהווה הצעת מחיר או התחייבות.",
+  "legal.summary": "משקל תיאורטי להערכה בלבד - ייתכנו הפרשים בפועל.",
   // The "?" sits LAST in logical order, as Hebrew punctuation does; the bidi
   // algorithm renders it at the visual left. Leading it renders on the wrong side.
   "legal.why": "למה?",
   "legal.whyLabel": "למה המשקלים משתנים?",
   "legal.close": "סגור",
   "legal.heading": "הבהרה משפטית",
-  "legal.point1":
-    "הצפיפות נלקחת מהקטלוג ומהווה ערך נומינלי; הצפיפות בפועל משתנה בין יציקות.",
+  "legal.point1": "המשקל בפועל עלול להשתנות בהתאם לסטיות ייצור (טולרנסים).",
   "legal.point2":
-    "המשקל בפועל עשוי להיות שונה בשל סטיות ייצור (טולרנסים) לפי תקנים כגון [[EN 10029]] ו-[[ASTM A6]].",
-  "legal.point3": "בחישוב עבור חיתוכים יש להוסיף פחת חיתוך בכל שטח חיתוך.",
-  "legal.point4": "הערכים המוצגים מעוגלים לצורכי תצוגה.",
-  "legal.point5": "אין בתוצאות משום הצעה, הצעת מחיר או התחייבות מחייבת.",
-  "legal.point6":
-    "באחריות המשתמש לוודא את הנתונים שהזין ולאמת את המשקל מול הספק לפני ביצוע הזמנה.",
+    "החישובים אינם כוללים פחת חיתוך (אותו יש להוסיף בנפרד לכל שטח חיתוך) והנתונים מעוגלים לצורכי נוחות ותצוגה.",
+  "legal.point3":
+    "הנתונים, החישובים והתוצאות המוצגים אינם מהווים הצעה מחייבת, הצעת מחיר, מצג משפטי או התחייבות מכל סוג שהוא.",
+  "legal.point4":
+    "החישוב מיועד לספק אינדיקציה בלבד. באחריות המשתמש בלבד לוודא את תקינות הנתונים שהזין ולאמת את המשקל, המפרט והמידות בכתב מול החברה / ספק במסמך הזמנה רשמי בטרם ביצוע הזמנה, שינוע או התקשרות.",
+  "legal.point5":
+    "החברה לא תישא באחריות מכל סוג שהוא, ישירה או עקיפה, לכל נזק, הפסד, אובדן רווח או הוצאה שייגרמו למשתמש או לצד שלישי כתוצאה משימוש בתוצאות אלו או מהסתמכות עליהן.",
 };
 
 export const STRINGS: Record<Language, Dictionary> = { he, en };

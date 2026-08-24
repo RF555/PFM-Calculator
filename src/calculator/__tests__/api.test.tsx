@@ -138,7 +138,7 @@ describe("public API", () => {
 
   it("renders the disclaimer with no props", () => {
     render(<MaterialCalculator defaultLanguage="en" />);
-    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+    expect(screen.getByText(/for estimation only/)).toBeInTheDocument();
   });
 
   it("lets a host replace the disclaimer copy in the active language", () => {
@@ -158,7 +158,7 @@ describe("public API", () => {
       // @ts-expect-error deliberately passing a non-Localized value
       <MaterialCalculator defaultLanguage="en" disclaimer={{ summary: "oops" }} />
     );
-    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+    expect(screen.getByText(/for estimation only/)).toBeInTheDocument();
   });
 
   it("falls back when a host supplies non-string points", () => {
@@ -166,7 +166,7 @@ describe("public API", () => {
       // @ts-expect-error deliberately passing non-string array entries
       <MaterialCalculator defaultLanguage="en" disclaimer={{ points: { he: [1], en: [1, 2] } }} />
     );
-    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+    expect(screen.getByText(/for estimation only/)).toBeInTheDocument();
   });
 
   it("falls back to the bundled copy when a host supplies a whitespace-only override", () => {
@@ -179,7 +179,7 @@ describe("public API", () => {
         }}
       />
     );
-    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+    expect(screen.getByText(/for estimation only/)).toBeInTheDocument();
   });
 
   it("gives two instances distinct disclaimer panel ids", () => {

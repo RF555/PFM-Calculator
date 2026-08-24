@@ -400,7 +400,7 @@ describe("CalculatorForm", () => {
 
   it("shows the disclaimer summary beneath the results", () => {
     setup();
-    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+    expect(screen.getByText(/for estimation only/)).toBeInTheDocument();
   });
 
   it("renders the disclaimer outside the results panel", () => {

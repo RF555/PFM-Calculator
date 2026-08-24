@@ -21,7 +21,6 @@ const POINT_KEYS = [
   "legal.point3",
   "legal.point4",
   "legal.point5",
-  "legal.point6",
 ];
 
 /**

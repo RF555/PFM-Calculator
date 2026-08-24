@@ -43,8 +43,9 @@ fails the test suite rather than surfacing in a quote.
 ## Legal disclaimer
 
 Every result carries a short, always-visible notice that the weight is
-theoretical and not binding, with the detail — mill tolerances, density
-variation between heats, saw kerf, rounding — behind a "Why" control.
+theoretical and estimative, with the detail — manufacturing tolerances, saw
+kerf, rounding, non-binding status, the user's duty to verify, and the limit
+of liability — behind a "Why" control.
 
 Hosts may replace the copy, but not remove it:
 

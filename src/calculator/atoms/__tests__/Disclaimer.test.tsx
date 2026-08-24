@@ -15,14 +15,14 @@ function renderEn(ui: React.ReactElement) {
 describe("Disclaimer", () => {
   it("shows the summary sentence without any interaction", () => {
     renderEn(<Disclaimer idPrefix="t" />);
-    expect(screen.getByText(/Theoretical estimate only/)).toBeInTheDocument();
+    expect(screen.getByText(/for estimation only/)).toBeInTheDocument();
   });
 
   it("keeps the panel hidden until the trigger is activated", () => {
     renderEn(<Disclaimer idPrefix="t" />);
     const trigger = screen.getByRole("button", { name: "Why?" });
     expect(trigger).toHaveAttribute("aria-expanded", "false");
-    expect(screen.queryByText(/varies between heats/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/manufacturing tolerances/)).not.toBeInTheDocument();
   });
 
   it("opens on click and marks the trigger expanded", async () => {
@@ -30,7 +30,7 @@ describe("Disclaimer", () => {
     await userEvent.click(screen.getByRole("button", { name: "Why?" }));
     expect(screen.getByRole("button", { name: "Why?" }))
       .toHaveAttribute("aria-expanded", "true");
-    expect(screen.getByText(/varies between heats/)).toBeInTheDocument();
+    expect(screen.getByText(/manufacturing tolerances/)).toBeInTheDocument();
   });
 
   it("closes when the trigger is activated again", async () => {
@@ -111,7 +111,10 @@ describe("Disclaimer", () => {
   it("isolates Latin runs inside Hebrew text with bdi", async () => {
     render(
       <LanguageProvider language="he" setLanguage={() => {}}>
-        <Disclaimer idPrefix="t" />
+        <Disclaimer
+          idPrefix="t"
+          text={{ points: ["לפי [[EN 10029]] ו-[[ASTM A6]]."] }}
+        />
       </LanguageProvider>
     );
     await userEvent.click(screen.getByRole("button", { name: "למה?" }));
@@ -123,7 +126,10 @@ describe("Disclaimer", () => {
   it("never leaks raw [[…]] markers into the rendered panel", async () => {
     const { container } = render(
       <LanguageProvider language="he" setLanguage={() => {}}>
-        <Disclaimer idPrefix="t" />
+        <Disclaimer
+          idPrefix="t"
+          text={{ points: ["לפי [[EN 10029]] ו-[[ASTM A6]]."] }}
+        />
       </LanguageProvider>
     );
     await userEvent.click(screen.getByRole("button", { name: "למה?" }));
@@ -172,13 +178,13 @@ describe("Disclaimer", () => {
     renderEn(<Disclaimer idPrefix="t" text={{ summary: "Custom notice." }} />);
     expect(screen.getByText("Custom notice.")).toBeInTheDocument();
     await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    expect(screen.getByText(/varies between heats/)).toBeInTheDocument();
+    expect(screen.getByText(/manufacturing tolerances/)).toBeInTheDocument();
   });
 
   it("ignores an empty points override rather than rendering an empty panel", async () => {
     renderEn(<Disclaimer idPrefix="t" text={{ points: [] }} />);
     await userEvent.click(screen.getByRole("button", { name: "Why?" }));
-    expect(screen.getByText(/varies between heats/)).toBeInTheDocument();
+    expect(screen.getByText(/manufacturing tolerances/)).toBeInTheDocument();
   });
 });
 

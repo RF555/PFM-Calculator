@@ -50,7 +50,6 @@ describe("dictionaries", () => {
       "legal.point3",
       "legal.point4",
       "legal.point5",
-      "legal.point6",
     ];
     for (const key of keys) {
       expect(STRINGS.en[key], `en.${key}`).toBeTruthy();

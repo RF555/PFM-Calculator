@@ -140,6 +140,54 @@ function span(
 }
 
 /**
+ * A diameter callout, drawn as the same dimension line every other measurement
+ * in the set uses: witness lines projected off the two sides of the circle, a
+ * dimension line spanning them clear of the artwork, and the letter on it.
+ *
+ * `span()` cannot be used directly because it projects its witness lines
+ * perpendicular to the measured edge; here the two anchors are the circle's
+ * left and right extremes and the witnesses must run parallel, up past the
+ * rim, to reach a dimension line above the shape.
+ *
+ * Above rather than below: the length span occupies the space under these
+ * profiles, so a diameter drawn there needs its label nudged aside to avoid
+ * it. The area over the front circle is clear, the extrusion leaning up and
+ * to the right.
+ *
+ * `clearR` is the radius the dimension line must sit above, which is not
+ * always the radius being measured: a tube's bore is drawn inside its outer
+ * rim, so an ID witness line starts at the bore and runs out past the metal
+ * before it reaches the dimension line.
+ */
+function diameter(
+  label: string,
+  cx: number,
+  cy: number,
+  r: number,
+  offset: number,
+  clearR = r
+): React.ReactNode {
+  // Anchors are the measured circle's horizontal extremes; the dimension line
+  // sits `offset` above whatever the callout has to clear.
+  const y = cy - clearR - offset;
+  const ends: [number, number][] = [[cx - r, cy], [cx + r, cy]];
+  return (
+    <g key={`${label}-dia`} data-hint="">
+      {ends.map(([x, ay]) => (
+        <line key={x} x1={x} y1={ay} x2={x} y2={y} data-hint-witness="" {...HINT_WITNESS} />
+      ))}
+      <line x1={cx - r} y1={y} x2={cx + r} y2={y} {...HINT_LINE} />
+      {ends.map(([x]) => (
+        <circle key={x} cx={x} cy={y} r={0.9} data-hint-dot="" fill="currentColor" stroke="none" opacity={0.8} />
+      ))}
+      <text x={cx} y={y - 3.5} textAnchor="middle" {...HINT_TEXT}>
+        {label}
+      </text>
+    </g>
+  );
+}
+
+/**
  * The interior edge seen through a hollow section's near opening: it starts at
  * the bore's bottom-left corner and recedes along the extrusion axis, parallel
  * to the body's own receding edges. Its length is solved rather than fixed —
@@ -233,22 +281,22 @@ function anglePoints(x: number, y: number, leg: number, t: number): string {
 }
 
 /**
- * A length of round tube in the same oblique projection as the solid bars: a
- * true circular near face with the bore set into it, the far cap pushed along
- * the extrusion axis, and the two tangents joining them.
- *
- * Both variants are the same pipe and differ only in which diameter the user
- * supplies, so the dashed marker spans the one being measured — the full outer
- * width, or the bore alone.
+ * Geometry shared by the three round profiles. The diameter callouts are drawn
+ * from these same values, so a dimension line cannot drift off the rim it
+ * measures.
  */
+const ROUND_R = 13.5;
+const ROUND_BORE = 7.5;
+const ROUND_C: [number, number] = [15, 28];
+
 /**
  * Endpoints of the round profiles' lower tangent — the edge whose run *is* the
  * bar's length. Derived from the same constants the drawing uses so the length
  * callout cannot drift away from the silhouette it measures.
  */
 const ROUND_NEAR: [number, number] = [
-  15 + (-ISO_DY / Math.hypot(ISO_DX, ISO_DY)) * 13.5,
-  28 + (ISO_DX / Math.hypot(ISO_DX, ISO_DY)) * 13.5,
+  ROUND_C[0] + (-ISO_DY / Math.hypot(ISO_DX, ISO_DY)) * ROUND_R,
+  ROUND_C[1] + (ISO_DX / Math.hypot(ISO_DX, ISO_DY)) * ROUND_R,
 ];
 /** roundBar and the tubes extrude to slightly different depths. */
 const roundFar = (depth: number): [number, number] => [
@@ -256,27 +304,29 @@ const roundFar = (depth: number): [number, number] => [
   ROUND_NEAR[1] + ISO_DY * depth,
 ];
 
-function roundTube(measures: "outer" | "inner"): React.ReactNode {
-  const R = 13.5;
-  const BORE = 7.5;
-  const [cx, cy] = [15, 28];
+/**
+ * A length of round tube in the same oblique projection as the solid bars: a
+ * true circular near face with the bore set into it, the far cap pushed along
+ * the extrusion axis, and the two tangents joining them.
+ *
+ * Both variants are the same pipe and differ only in which diameter the user
+ * supplies, which is carried entirely by the callout layer — the artwork is
+ * identical, so the bare icon stays an unannotated profile.
+ */
+function roundTube(): React.ReactNode {
+  const [cx, cy] = ROUND_C;
   // See roundBar: the grid caps this, not taste.
   const depth = 2.1;
   const [fx, fy] = [cx + ISO_DX * depth, cy + ISO_DY * depth];
   const len = Math.hypot(ISO_DX, ISO_DY);
-  const [nx, ny] = [(-ISO_DY / len) * R, (ISO_DX / len) * R];
-  const span = measures === "outer" ? R : BORE;
+  const [nx, ny] = [(-ISO_DY / len) * ROUND_R, (ISO_DX / len) * ROUND_R];
   return (
     <>
-      <path d={`M${fx + nx} ${fy + ny} A${R} ${R} 0 0 0 ${fx - nx} ${fy - ny}`} />
+      <path d={`M${fx + nx} ${fy + ny} A${ROUND_R} ${ROUND_R} 0 0 0 ${fx - nx} ${fy - ny}`} />
       <line x1={cx + nx} y1={cy + ny} x2={fx + nx} y2={fy + ny} />
       <line x1={cx - nx} y1={cy - ny} x2={fx - nx} y2={fy - ny} />
-      <circle cx={cx} cy={cy} r={R} />
-      <circle cx={cx} cy={cy} r={BORE} />
-      <line
-        x1={cx} y1={cy - span} x2={cx} y2={cy + span}
-        strokeWidth={1.2} strokeDasharray="3 2.5"
-      />
+      <circle cx={cx} cy={cy} r={ROUND_R} />
+      <circle cx={cx} cy={cy} r={ROUND_BORE} />
     </>
   );
 }
@@ -359,12 +409,6 @@ const ISO: Record<ShapeId, React.ReactNode> = {
         <line x1={cx + nx} y1={cy + ny} x2={fx + nx} y2={fy + ny} />
         <line x1={cx - nx} y1={cy - ny} x2={fx - nx} y2={fy - ny} />
         <circle cx={cx} cy={cy} r={r} />
-        {/* Dashed diameter, matching the tubes: marks the measured span so a
-            callout letter reads as a diameter, not a point on the rim. */}
-        <line
-          x1={cx} y1={cy - r} x2={cx} y2={cy + r}
-          strokeWidth={1.2} strokeDasharray="3 2.5"
-        />
       </>
     );
   })(),
@@ -400,8 +444,8 @@ const ISO: Record<ShapeId, React.ReactNode> = {
       </>
     );
   })(),
-  roundTubeOuter: roundTube("outer"),
-  roundTubeInner: roundTube("inner"),
+  roundTubeOuter: roundTube(),
+  roundTubeInner: roundTube(),
   // Hollow sections are opaque like the solid bars: outer body drawn as the
   // front face plus its two visible faces, with the bore set into that face.
   // With the body receding up and to the right, the bore's bottom-left corner
@@ -457,31 +501,36 @@ const ISO: Record<ShapeId, React.ReactNode> = {
  */
 const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
   /*
-   * Round profiles share roundTube()'s geometry: near face at (15,28), outer
-   * R 13.5, bore 7.5, extruded 2.1 along the axis.
+   * Round profiles share ROUND_C/ROUND_R geometry, extruded along the axis.
    *
-   * Diameter letters anchor on the dashed span that depicts them, and leave
-   * up-left so the leader exits between the circles rather than crossing the
-   * rim — a leader through the metal reads as sectioning the tube. Length is a
-   * span rather than a leader, running parallel to the lower tangent.
+   * All three diameters are drawn the same way, and the same way every other
+   * dimension in the set is drawn: witness lines off the circle's two sides, a
+   * dimension line above the artwork, the letter on it.
+   *
+   * Each spans the circle it actually names — D and OD the outer rim, ID the
+   * bore — so the line always measures the number the user types. ID's
+   * witnesses start at the bore and run out past the metal to reach a
+   * dimension line level with the other two.
+   *
+   * Length is a span running parallel to the lower tangent.
    */
   roundBar: (
     <>
-      {hint("D", [15, 28 - 13.5], [-2, 4])}
+      {diameter("D", ...ROUND_C, ROUND_R, 5)}
       {span("L", ROUND_NEAR, roundFar(1.95), 7)}
     </>
   ),
   roundTubeOuter: (
     <>
-      {hint("OD", [15, 28 - 13.5], [-2, 4])}
-      {hint("t", [15 - (7.5 + 13.5) / 2, 28], [-7, 28])}
+      {diameter("OD", ...ROUND_C, ROUND_R, 5)}
+      {hint("t", [ROUND_C[0] - (ROUND_BORE + ROUND_R) / 2, ROUND_C[1]], [-7, 28])}
       {span("L", ROUND_NEAR, roundFar(2.1), 7)}
     </>
   ),
   roundTubeInner: (
     <>
-      {hint("ID", [15, 28 - 7.5], [-2, 4])}
-      {hint("t", [15 - (7.5 + 13.5) / 2, 28], [-7, 28])}
+      {diameter("ID", ...ROUND_C, ROUND_BORE, 9, ROUND_R)}
+      {hint("t", [ROUND_C[0] - (ROUND_BORE + ROUND_R) / 2, ROUND_C[1]], [-7, 28])}
       {span("L", ROUND_NEAR, roundFar(2.1), 7)}
     </>
   ),
@@ -573,9 +622,10 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
     <>
       {span("L1", [11, 16], [11, 37], 7)}
       {span("L2", [11, 37], [32, 37], 7)}
-      {/* Anchored mid-wall on the upright, led straight up: L1 already occupies
-          the left margin, so a leader out that way would stack the labels. */}
-      {hint("t", [14, 20], [14, 6])}
+      {/* Spans the upright's top edge, the one place the wall is seen square-on
+          and the full 6 units wide. Offset up rather than out: L1 already
+          claims the left margin. */}
+      {span("t", [11, 16], [17, 16], -8, -5.5)}
       {span("L", [32, 37], [32 + ISO_DX, 37 + ISO_DY], 7)}
     </>
   ),

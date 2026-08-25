@@ -20,9 +20,14 @@ const ISO_DY = -5;
  * Shallower axis used only by the hex bar. Its upper-right face runs at
  * roughly the negative of the standard axis' slope, so at ISO_DX/DY the face
  * and the edge receding from it merge into a single stroke.
+ *
+ * Run long enough that the body reads as a length of bar rather than a nut:
+ * the extruded span exceeds the 22-unit across-flats width of the face. The
+ * slope is what keeps the faces distinct, so lengthening scales both
+ * components together and leaves it untouched.
  */
-const HEX_DX = 13;
-const HEX_DY = -3.5;
+const HEX_DX = 19.5;
+const HEX_DY = -5.25;
 
 /** Displaces a point along the extrusion axis by `n` depth units. */
 const iso = (x: number, y: number, n = 1): string =>
@@ -606,7 +611,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
       {/* A/F spans the left flat to the right flat, projected up above the top
           vertex; L follows the shallower HEX axis below, so the two labels sit
           on opposite sides of the drawing. */}
-      {span("A/F", [27, 17.65], [5, 17.65], 7.5)}
+      {span("A/F", [27, 17.65], [5, 17.65], 12)}
       {span("L", [16, 36.7], [16 + HEX_DX, 36.7 + HEX_DY], 8)}
     </>
   ),
@@ -661,7 +666,7 @@ const CENTRE: Partial<Record<`${"flat" | "iso"}:${ShapeId}`, [number, number]>> 
   "iso:roundTubeInner": [-0.45, 1.25],
   "iso:squareBar": [-0.5, 0.5],
   "iso:flatBar": [-1.5, -3],
-  "iso:hexBar": [1.5, 1.75],
+  "iso:hexBar": [-1.75, 2.63],
   "iso:rectangularHollow": [-1.75, 0.25],
   "iso:squareHollow": [-2.25, 1.25],
   "iso:angle": [-2, 0],

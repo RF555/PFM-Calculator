@@ -45,7 +45,7 @@ const DEPTH = {
   flatBar: 1.5,
   squareHollow: 1.5,
   rectangularHollow: 1.5,
-  angle: 2,
+  angle: 1.75,
   // The round profiles run deeper than the flat-faced shapes: their length is
   // carried by the crescent between the two caps, which needs room to open up.
   // Grid-capped rather than chosen — past ~2.15 the far cap leaves the 48-unit
@@ -697,7 +697,7 @@ const CENTRE: Partial<Record<`${"flat" | "iso"}:${ShapeId}`, [number, number]>> 
   "iso:hexBar": [-1.75, -0.37],
   "iso:rectangularHollow": [-1.75, 0.25],
   "iso:squareHollow": [-2.25, 1.25],
-  "iso:angle": [-0.84, -0.5],
+  "iso:angle": [0.28, -1.62],
 };
 
 interface Props {

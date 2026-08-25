@@ -43,8 +43,8 @@ const DEPTH = {
   sheet: 1.7,
   squareBar: 1.6,
   flatBar: 1.5,
-  squareHollow: 1.5,
-  rectangularHollow: 1.5,
+  squareHollow: 2,
+  rectangularHollow: 2,
   angle: 1.75,
   // The round profiles run deeper than the flat-faced shapes: their length is
   // carried by the crescent between the two caps, which needs room to open up.
@@ -695,8 +695,8 @@ const CENTRE: Partial<Record<`${"flat" | "iso"}:${ShapeId}`, [number, number]>> 
   "iso:squareBar": [-3.2, -1],
   "iso:flatBar": [-3.75, -4.25],
   "iso:hexBar": [-1.75, -0.37],
-  "iso:rectangularHollow": [-1.75, 0.25],
-  "iso:squareHollow": [-2.25, 1.25],
+  "iso:rectangularHollow": [0.89, -1.75],
+  "iso:squareHollow": [-1.52, -0.75],
   "iso:angle": [0.28, -1.62],
 };
 

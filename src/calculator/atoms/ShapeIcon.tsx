@@ -20,12 +20,46 @@ const ISO_DY = -5;
  * Shallower axis used only by the hex bar. Its upper-right face runs at
  * roughly the negative of the standard axis' slope, so at ISO_DX/DY the face
  * and the edge receding from it merge into a single stroke.
+ *
+ * Run long enough that the body reads as a length of bar rather than a nut:
+ * the extruded span exceeds the 22-unit across-flats width of the face. The
+ * slope is what keeps the faces distinct, so lengthening scales both
+ * components together and leaves it untouched.
  */
-const HEX_DX = 13;
-const HEX_DY = -3.5;
+const HEX_DX = 19.5;
+const HEX_DY = -5.25;
 
-/** Displaces a point along the extrusion axis by `n` depth units. */
-const iso = (x: number, y: number, n = 1): string =>
+/**
+ * How far each shape runs along the extrusion axis, in depth units.
+ *
+ * Named per shape because the depth is read twice — once by the drawing and
+ * once by the L callout that measures it — and the two must agree, or the
+ * dimension line reports a length the bar does not have.
+ *
+ * The relative values carry meaning: `sheet` runs deeper than `flatBar`, and
+ * that gap is what reads as panel versus strip.
+ */
+const DEPTH = {
+  sheet: 1.7,
+  squareBar: 1.6,
+  flatBar: 1.5,
+  squareHollow: 2,
+  rectangularHollow: 2,
+  angle: 1.75,
+  // The round profiles run deeper than the flat-faced shapes: their length is
+  // carried by the crescent between the two caps, which needs room to open up.
+  // Grid-capped rather than chosen — past ~2.15 the far cap leaves the 48-unit
+  // box, since the drawing spans 2r + ISO_DX * depth plus the stroke.
+  roundBar: 1.95,
+  roundTube: 2.1,
+} as const;
+
+/**
+ * Displaces a point along the extrusion axis by `n` depth units. `n` is
+ * required rather than defaulted: every shape names its depth in DEPTH, and a
+ * default would let a drawing and its L callout disagree without saying so.
+ */
+const iso = (x: number, y: number, n: number): string =>
   `${x + ISO_DX * n},${y + ISO_DY * n}`;
 
 /**
@@ -198,7 +232,7 @@ function diameter(
 function boreEdge(
   x: number, y: number,
   bx: number, by: number, bw: number,
-  depth = 1.5
+  depth: number
 ): { x1: number; y1: number; x2: number; y2: number } {
   // Run the body's full extrusion depth, but stop early at whichever bore edge
   // the axis reaches first, so the edge never escapes the opening.
@@ -315,8 +349,7 @@ const roundFar = (depth: number): [number, number] => [
  */
 function roundTube(): React.ReactNode {
   const [cx, cy] = ROUND_C;
-  // See roundBar: the grid caps this, not taste.
-  const depth = 2.1;
+  const depth = DEPTH.roundTube;
   const [fx, fy] = [cx + ISO_DX * depth, cy + ISO_DY * depth];
   const len = Math.hypot(ISO_DX, ISO_DY);
   const [nx, ny] = [(-ISO_DY / len) * ROUND_R, (ISO_DX / len) * ROUND_R];
@@ -377,13 +410,13 @@ const FLAT: Record<ShapeId, React.ReactNode> = {
 const ISO: Record<ShapeId, React.ReactNode> = {
   // A broad thin plate: wide in both plan axes, minimal thickness. Built like
   // squareBar and flatBar — a solid front face plus the two visible faces, so
-  // it reads as opaque. Depth runs 1.7 units against flatBar's 1, which is
-  // what separates the two: plate is a panel, flat bar is a strip.
+  // it reads as opaque. It runs deeper than flatBar, which is what separates
+  // the two: plate is a panel, flat bar is a strip.
   sheet: (
     <>
       <rect x="8" y="28" width="19" height="4" />
-      <polyline points={`8,28 ${iso(8, 28, 1.7)} ${iso(27, 28, 1.7)} 27,28`} />
-      <polyline points={`${iso(27, 28, 1.7)} ${iso(27, 32, 1.7)} 27,32`} />
+      <polyline points={`8,28 ${iso(8, 28, DEPTH.sheet)} ${iso(27, 28, DEPTH.sheet)} 27,28`} />
+      <polyline points={`${iso(27, 28, DEPTH.sheet)} ${iso(27, 32, DEPTH.sheet)} 27,32`} />
     </>
   ),
   // Same oblique projection as the boxy solids: the near face is drawn true (a
@@ -394,10 +427,8 @@ const ISO: Record<ShapeId, React.ReactNode> = {
     const r = 13.5;
     const [cx, cy] = [15, 28];
     // Long enough that the far cap clears the near one, or the crescent that
-    // gives the bar its length disappears inside the front circle. Capped by
-    // the grid: the drawing spans 2r + ISO_DX*depth plus the stroke, so past
-    // ~2.15 the far cap leaves the 48-unit box however the icon is centred.
-    const depth = 1.95;
+    // gives the bar its length disappears inside the front circle.
+    const depth = DEPTH.roundBar;
     const [fx, fy] = [cx + ISO_DX * depth, cy + ISO_DY * depth];
     // Tangents leave each circle perpendicular to the extrusion axis.
     const len = Math.hypot(ISO_DX, ISO_DY);
@@ -412,18 +443,20 @@ const ISO: Record<ShapeId, React.ReactNode> = {
       </>
     );
   })(),
+  // Extruded well past its own width so the bar reads as a cut length rather
+  // than a cube seen at an angle.
   squareBar: (
     <>
       <rect x="10" y="16" width="20" height="20" />
-      <polyline points={`10,16 ${iso(10, 16)} ${iso(30, 16)} 30,16`} />
-      <polyline points={`${iso(30, 16)} ${iso(30, 36)} 30,36`} />
+      <polyline points={`10,16 ${iso(10, 16, DEPTH.squareBar)} ${iso(30, 16, DEPTH.squareBar)} 30,16`} />
+      <polyline points={`${iso(30, 16, DEPTH.squareBar)} ${iso(30, 36, DEPTH.squareBar)} 30,36`} />
     </>
   ),
   flatBar: (
     <>
       <rect x="9" y="24" width="24" height="11" />
-      <polyline points={`9,24 ${iso(9, 24)} ${iso(33, 24)} 33,24`} />
-      <polyline points={`${iso(33, 24)} ${iso(33, 35)} 33,35`} />
+      <polyline points={`9,24 ${iso(9, 24, DEPTH.flatBar)} ${iso(33, 24, DEPTH.flatBar)} 33,24`} />
+      <polyline points={`${iso(33, 24, DEPTH.flatBar)} ${iso(33, 35, DEPTH.flatBar)} 33,35`} />
     </>
   ),
   // Extruded shallower than the other bars: a flat-topped hexagon's upper-right
@@ -458,18 +491,18 @@ const ISO: Record<ShapeId, React.ReactNode> = {
     <>
       <rect x="6" y="20" width="26" height="15" />
       <rect x="10" y="24" width="18" height="7" />
-      <polyline points={`6,20 ${iso(6, 20, 1.5)} ${iso(32, 20, 1.5)} 32,20`} />
-      <polyline points={`${iso(32, 20, 1.5)} ${iso(32, 35, 1.5)} 32,35`} />
-      <line {...boreEdge(10, 31, 10, 24, 18)} />
+      <polyline points={`6,20 ${iso(6, 20, DEPTH.rectangularHollow)} ${iso(32, 20, DEPTH.rectangularHollow)} 32,20`} />
+      <polyline points={`${iso(32, 20, DEPTH.rectangularHollow)} ${iso(32, 35, DEPTH.rectangularHollow)} 32,35`} />
+      <line {...boreEdge(10, 31, 10, 24, 18, DEPTH.rectangularHollow)} />
     </>
   ),
   squareHollow: (
     <>
       <rect x="10" y="17" width="19" height="19" />
       <rect x="14" y="21" width="11" height="11" />
-      <polyline points={`10,17 ${iso(10, 17, 1.5)} ${iso(29, 17, 1.5)} 29,17`} />
-      <polyline points={`${iso(29, 17, 1.5)} ${iso(29, 36, 1.5)} 29,36`} />
-      <line {...boreEdge(14, 32, 14, 21, 11)} />
+      <polyline points={`10,17 ${iso(10, 17, DEPTH.squareHollow)} ${iso(29, 17, DEPTH.squareHollow)} 29,17`} />
+      <polyline points={`${iso(29, 17, DEPTH.squareHollow)} ${iso(29, 36, DEPTH.squareHollow)} 29,36`} />
+      <line {...boreEdge(14, 32, 14, 21, 11, DEPTH.squareHollow)} />
     </>
   ),
   angle: (
@@ -482,11 +515,11 @@ const ISO: Record<ShapeId, React.ReactNode> = {
         toe. The heel's receding edge is occluded by the body and is left out —
         drawing it, or closing the back face, makes the L look transparent.
       */}
-      <polyline points={`11,16 ${iso(11, 16)} ${iso(17, 16)} 17,16`} />
-      <polyline points={`${iso(17, 16)} ${iso(17, 31)} ${iso(32, 31)} ${iso(32, 37)} 32,37`} />
+      <polyline points={`11,16 ${iso(11, 16, DEPTH.angle)} ${iso(17, 16, DEPTH.angle)} 17,16`} />
+      <polyline points={`${iso(17, 16, DEPTH.angle)} ${iso(17, 31, DEPTH.angle)} ${iso(32, 31, DEPTH.angle)} ${iso(32, 37, DEPTH.angle)} 32,37`} />
       {/* Both edges of the inner step recede into view through the notch. */}
-      <line x1={17} y1={31} x2={17 + ISO_DX} y2={31 + ISO_DY} />
-      <line x1={32} y1={31} x2={32 + ISO_DX} y2={31 + ISO_DY} />
+      <line x1={17} y1={31} x2={17 + ISO_DX * DEPTH.angle} y2={31 + ISO_DY * DEPTH.angle} />
+      <line x1={32} y1={31} x2={32 + ISO_DX * DEPTH.angle} y2={31 + ISO_DY * DEPTH.angle} />
     </>
   ),
 };
@@ -517,21 +550,21 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
   roundBar: (
     <>
       {diameter("D", ...ROUND_C, ROUND_R, 5)}
-      {span("L", ROUND_NEAR, roundFar(1.95), 7)}
+      {span("L", ROUND_NEAR, roundFar(DEPTH.roundBar), 7)}
     </>
   ),
   roundTubeOuter: (
     <>
       {diameter("OD", ...ROUND_C, ROUND_R, 5)}
       {hint("t", [ROUND_C[0] - (ROUND_BORE + ROUND_R) / 2, ROUND_C[1]], [-7, 28])}
-      {span("L", ROUND_NEAR, roundFar(2.1), 7)}
+      {span("L", ROUND_NEAR, roundFar(DEPTH.roundTube), 7)}
     </>
   ),
   roundTubeInner: (
     <>
       {diameter("ID", ...ROUND_C, ROUND_BORE, 9, ROUND_R)}
       {hint("t", [ROUND_C[0] - (ROUND_BORE + ROUND_R) / 2, ROUND_C[1]], [-7, 28])}
-      {span("L", ROUND_NEAR, roundFar(2.1), 7)}
+      {span("L", ROUND_NEAR, roundFar(DEPTH.roundTube), 7)}
     </>
   ),
 
@@ -550,7 +583,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
       {span("W", [10, 36], [30, 36], 7)}
       {/* Length along the bottom-right receding edge, offset down and out so
           the span sits below the solid rather than across it. */}
-      {span("L", [30, 36], [30 + ISO_DX, 36 + ISO_DY], 7)}
+      {span("L", [30, 36], [30 + ISO_DX * DEPTH.squareBar, 36 + ISO_DY * DEPTH.squareBar], 7)}
     </>
   ),
 
@@ -560,7 +593,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
     <>
       {span("W", [9, 35], [33, 35], 7)}
       {span("t", [9, 24], [9, 35], 6)}
-      {span("L", [33, 35], [33 + ISO_DX, 35 + ISO_DY], 7)}
+      {span("L", [33, 35], [33 + ISO_DX * DEPTH.flatBar, 35 + ISO_DY * DEPTH.flatBar], 7)}
     </>
   ),
 
@@ -570,7 +603,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
     <>
       {span("W", [8, 32], [27, 32], 7)}
       {span("t", [8, 28], [8, 32], 6)}
-      {span("L", [27, 32], [27 + ISO_DX * 1.7, 32 + ISO_DY * 1.7], 7)}
+      {span("L", [27, 32], [27 + ISO_DX * DEPTH.sheet, 32 + ISO_DY * DEPTH.sheet], 7)}
     </>
   ),
 
@@ -590,7 +623,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
           label itself, so a dimension line there is swallowed by the artwork.
           The dot sits mid-wall on the left edge. */}
       {hint("t", [12, 26.5], [1, 29])}
-      {span("L", [29, 36], [29 + ISO_DX * 1.5, 36 + ISO_DY * 1.5], 7)}
+      {span("L", [29, 36], [29 + ISO_DX * DEPTH.squareHollow, 36 + ISO_DY * DEPTH.squareHollow], 7)}
     </>
   ),
 
@@ -606,7 +639,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
       {/* A/F spans the left flat to the right flat, projected up above the top
           vertex; L follows the shallower HEX axis below, so the two labels sit
           on opposite sides of the drawing. */}
-      {span("A/F", [27, 17.65], [5, 17.65], 7.5)}
+      {span("A/F", [27, 17.65], [5, 17.65], 12)}
       {span("L", [16, 36.7], [16 + HEX_DX, 36.7 + HEX_DY], 8)}
     </>
   ),
@@ -626,7 +659,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
           and the full 6 units wide. Offset up rather than out: L1 already
           claims the left margin. */}
       {span("t", [11, 16], [17, 16], -8, -5.5)}
-      {span("L", [32, 37], [32 + ISO_DX, 37 + ISO_DY], 7)}
+      {span("L", [32, 37], [32 + ISO_DX * DEPTH.angle, 37 + ISO_DY * DEPTH.angle], 7)}
     </>
   ),
 
@@ -640,7 +673,7 @@ const HINTS: Partial<Record<ShapeId, React.ReactNode>> = {
           left edge, so the dot sits mid-wall along the top instead, with the
           leader angled up-left to keep clear of the body's back edge. */}
       {hint("t", [19, 22], [3, 13])}
-      {span("L", [32, 35], [32 + ISO_DX * 1.5, 35 + ISO_DY * 1.5], 7)}
+      {span("L", [32, 35], [32 + ISO_DX * DEPTH.rectangularHollow, 35 + ISO_DY * DEPTH.rectangularHollow], 7)}
     </>
   ),
 };
@@ -659,12 +692,12 @@ const CENTRE: Partial<Record<`${"flat" | "iso"}:${ShapeId}`, [number, number]>> 
   "iso:roundBar": [0.22, 0.87],
   "iso:roundTubeOuter": [-0.45, 1.25],
   "iso:roundTubeInner": [-0.45, 1.25],
-  "iso:squareBar": [-0.5, 0.5],
-  "iso:flatBar": [-1.5, -3],
-  "iso:hexBar": [1.5, 1.75],
-  "iso:rectangularHollow": [-1.75, 0.25],
-  "iso:squareHollow": [-2.25, 1.25],
-  "iso:angle": [-2, 0],
+  "iso:squareBar": [-3.2, -1],
+  "iso:flatBar": [-3.75, -4.25],
+  "iso:hexBar": [-1.75, -0.37],
+  "iso:rectangularHollow": [0.89, -1.75],
+  "iso:squareHollow": [-1.52, -0.75],
+  "iso:angle": [0.28, -1.62],
 };
 
 interface Props {

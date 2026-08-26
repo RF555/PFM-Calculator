@@ -822,7 +822,7 @@
         {
           "id": "copper.c10200-of-oxygen-free-copper",
           "name": {
-            "he": "C10200 OF",
+            "he": "C10200 OF (Oxygen-Free Copper)",
             "en": "C10200 OF (Oxygen-Free Copper)"
           },
           "density": 8940
@@ -830,7 +830,7 @@
         {
           "id": "copper.c11000-etp-pure-copper",
           "name": {
-            "he": "C11000 ETP",
+            "he": "C11000 Electrolytic Tough Pitch (ETP Pure Copper)",
             "en": "C11000 Electrolytic Tough Pitch (ETP Pure Copper)"
           },
           "density": 8960
@@ -838,7 +838,7 @@
         {
           "id": "copper.c12000-dtp-deoxidized-copper",
           "name": {
-            "he": "C12000 DTP",
+            "he": "C12000 DTP (Deoxidized Copper)",
             "en": "C12000 DTP (Deoxidized Copper)"
           },
           "density": 8960
@@ -846,7 +846,7 @@
         {
           "id": "copper.c14500-tellurium-copper",
           "name": {
-            "he": "C14500",
+            "he": "C14500 Tellurium Copper",
             "en": "C14500 Tellurium Copper"
           },
           "density": 8950
@@ -854,7 +854,7 @@
         {
           "id": "copper.c17200-beryllium-copper",
           "name": {
-            "he": "C17200",
+            "he": "C17200 Beryllium Copper",
             "en": "C17200 Beryllium Copper"
           },
           "density": 8250
@@ -862,7 +862,7 @@
         {
           "id": "copper.c81500-chromium-copper",
           "name": {
-            "he": "C81500",
+            "he": "C81500 Chromium Copper",
             "en": "C81500 Chromium Copper"
           },
           "density": 8820
@@ -870,7 +870,7 @@
         {
           "id": "copper.c10100-oxygen-free-electronic-copper",
           "name": {
-            "he": "C10100",
+            "he": "C10100 Oxygen Free ElectronicCopper",
             "en": "C10100 Oxygen Free ElectronicCopper"
           },
           "density": 8940
@@ -887,7 +887,7 @@
         {
           "id": "brass.c22000-commercial-bronze-90-percent-brass",
           "name": {
-            "he": "C22000",
+            "he": "C22000 Commercial Bronze (90% Brass)",
             "en": "C22000 Commercial Bronze (90% Brass)"
           },
           "density": 8800
@@ -895,7 +895,7 @@
         {
           "id": "brass.c23000-red-brass-85-percent-brass",
           "name": {
-            "he": "C23000",
+            "he": "C23000 Red Brass (85% Brass)",
             "en": "C23000 Red Brass (85% Brass)"
           },
           "density": 8750
@@ -903,7 +903,7 @@
         {
           "id": "brass.c26000-cartridge-brass-70-30",
           "name": {
-            "he": "C26000",
+            "he": "C26000 Brass (70/30)",
             "en": "C26000 Brass (70/30)"
           },
           "density": 8530
@@ -911,7 +911,7 @@
         {
           "id": "brass.c26800-yellow-brass",
           "name": {
-            "he": "C26800",
+            "he": "C26800 Yellow Brass",
             "en": "C26800 Yellow Brass"
           },
           "density": 8470
@@ -919,7 +919,7 @@
         {
           "id": "brass.c27000-yellow-brass",
           "name": {
-            "he": "C27000",
+            "he": "C27000 Yellow Brass",
             "en": "C27000 Yellow Brass"
           },
           "density": 8470
@@ -927,7 +927,7 @@
         {
           "id": "brass.c27400-yellow-brass",
           "name": {
-            "he": "C27400",
+            "he": "C27400 Yellow Brass",
             "en": "C27400 Yellow Brass"
           },
           "density": 8470
@@ -959,7 +959,7 @@
         {
           "id": "brass.c46400-naval-brass",
           "name": {
-            "he": "C46400 / CW719R",
+            "he": "C46400 / CW719R Naval Brass",
             "en": "C46400 / CW719R Naval Brass"
           },
           "density": 8410
@@ -991,7 +991,7 @@
         {
           "id": "brass.c69300-cw724r-lead-free-brass",
           "name": {
-            "he": "C69300 / CW724R",
+            "he": "C69300 / CW724R Lead free brass (Eco)",
             "en": "C69300 / CW724R Lead free brass (Eco)"
           },
           "density": 8300
@@ -1008,7 +1008,7 @@
         {
           "id": "bronze.c51000-phosphor-bronze",
           "name": {
-            "he": "C51000",
+            "he": "C51000 Phosphor Bronze",
             "en": "C51000 Phosphor Bronze"
           },
           "density": 8800
@@ -1016,7 +1016,7 @@
         {
           "id": "bronze.c54400-phosphor-bronze-free-cutting",
           "name": {
-            "he": "C54400",
+            "he": "C54400 Phosphor Bronze (Free-Cutting)",
             "en": "C54400 Phosphor Bronze (Free-Cutting)"
           },
           "density": 8890
@@ -1024,7 +1024,7 @@
         {
           "id": "bronze.c60800-aluminum-bronze-5-percent-al",
           "name": {
-            "he": "C60800",
+            "he": "C60800 Aluminum Bronze (5% Al)",
             "en": "C60800 Aluminum Bronze (5% Al)"
           },
           "density": 8170
@@ -1032,7 +1032,7 @@
         {
           "id": "bronze.c63000-aluminum-bronze-ni-al",
           "name": {
-            "he": "C63000",
+            "he": "C63000 Nickel Aluminum Bronze",
             "en": "C63000 Nickel Aluminum Bronze"
           },
           "density": 7580
@@ -1040,7 +1040,7 @@
         {
           "id": "bronze.c65500-silicon-bronze",
           "name": {
-            "he": "C65500",
+            "he": "C65500 Silicon Bronze",
             "en": "C65500 Silicon Bronze"
           },
           "density": 8520
@@ -1048,7 +1048,7 @@
         {
           "id": "bronze.c83600-gunmetal-lg2",
           "name": {
-            "he": "C83600",
+            "he": "C83600 Gunmetal (Rg5)",
             "en": "C83600 Gunmetal (Rg5)"
           },
           "density": 8800
@@ -1056,7 +1056,7 @@
         {
           "id": "bronze.c90700-gear-bronze",
           "name": {
-            "he": "C90700 / SAE 65",
+            "he": "C90700 / SAE 65 Tin Bronze",
             "en": "C90700 / SAE 65 Tin Bronze"
           },
           "density": 8770
@@ -1064,7 +1064,7 @@
         {
           "id": "bronze.c93200-bearing-bronze-sae-660",
           "name": {
-            "he": "C93200 / SAE 660 / Rg7",
+            "he": "C93200 / SAE 660 Bearing Bronze / Rg7",
             "en": "C93200 / SAE 660 Bearing Bronze / Rg7"
           },
           "density": 8910
@@ -1072,7 +1072,7 @@
         {
           "id": "bronze.c93700-bearing-bronze",
           "name": {
-            "he": "C93700 / SAE 64",
+            "he": "C93700 / SAE 64 High Leaded Tin Bronze",
             "en": "C93700 / SAE 64 High Leaded Tin Bronze"
           },
           "density": 8930
@@ -1080,7 +1080,7 @@
         {
           "id": "bronze.c95400-aluminum-bronze",
           "name": {
-            "he": "C95400",
+            "he": "C95400 Aluminum Bronze",
             "en": "C95400 Aluminum Bronze"
           },
           "density": 7650
@@ -1088,7 +1088,7 @@
         {
           "id": "bronze.c95500-aluminum-bronze-high-strength",
           "name": {
-            "he": "C95500",
+            "he": "C95500 Nickel Aluminum Bronze",
             "en": "C95500 Nickel Aluminum Bronze"
           },
           "density": 7530
@@ -1096,7 +1096,7 @@
         {
           "id": "bronze.c64200-silicon-aluminum-bronze",
           "name": {
-            "he": "C64200",
+            "he": "C64200 Silicon Aluminum Bronze",
             "en": "C64200 Silicon Aluminum Bronze"
           },
           "density": 7690
@@ -1104,7 +1104,7 @@
         {
           "id": "bronze.c69400-silicon-bronze",
           "name": {
-            "he": "C69400",
+            "he": "C69400 Silicon Bronze",
             "en": "C69400 Silicon Bronze"
           },
           "density": 8190
@@ -1112,7 +1112,7 @@
         {
           "id": "bronze.c90300-tin-bronze",
           "name": {
-            "he": "C90300",
+            "he": "C90300 Tin Bronze",
             "en": "C90300 Tin Bronze"
           },
           "density": 8800

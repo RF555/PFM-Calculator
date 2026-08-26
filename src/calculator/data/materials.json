@@ -1049,7 +1049,7 @@
           "id": "bronze.c83600-gunmetal-lg2",
           "name": {
             "he": "C83600",
-            "en": "C83600 Gunmetal (Rg7)"
+            "en": "C83600 Gunmetal (Rg5)"
           },
           "density": 8800
         },
@@ -1065,7 +1065,7 @@
           "id": "bronze.c93200-bearing-bronze-sae-660",
           "name": {
             "he": "C93200 / SAE 660 / Rg7",
-            "en": "C93200 / SAE 660 Bearing Bronze"
+            "en": "C93200 / SAE 660 Bearing Bronze / Rg7"
           },
           "density": 8910
         },
